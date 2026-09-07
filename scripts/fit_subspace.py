@@ -47,6 +47,25 @@ def fit_for_scenarios(rows: list[dict], scenario_ids: set[int], rank: int):
     return states, G, fit_low_rank_subspace(G, rank)
 
 
+def fit_raw_best_for_scenarios(rows: list[dict], scenario_ids: set[int], rank: int):
+    by_state: dict[str, list[dict]] = {}
+    for row in rows:
+        if int(row["scenario_id"]) in scenario_ids:
+            by_state.setdefault(str(row["state_id"]), []).append(row)
+    best = [max(group, key=lambda r: float(r["utility"])) for group in by_state.values()]
+    if len(best) < 2:
+        raise RuntimeError("not enough states for raw-best KV PCA")
+    M = np.stack([np.asarray(r["memory"], dtype=np.float64) for r in best])
+    M = M - M.mean(axis=0, keepdims=True)
+    return fit_low_rank_subspace(M, rank)
+
+
+def random_subspace(dim: int, rank: int, rng: np.random.Generator) -> np.ndarray:
+    rank = min(rank, dim)
+    q, _ = np.linalg.qr(rng.normal(size=(dim, rank)))
+    return q[:, :rank]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Fit and audit advantage-KV subspace")
     ap.add_argument("--records", default="results/pilot_sweep.jsonl")
@@ -68,6 +87,9 @@ def main() -> None:
     _, _, result_a = fit_for_scenarios(rows, half_a, args.rank)
     _, _, result_b = fit_for_scenarios(rows, half_b, args.rank)
     observed_overlap = subspace_overlap(result_a.basis, result_b.basis)
+    raw_a = fit_raw_best_for_scenarios(rows, half_a, args.rank)
+    raw_b = fit_raw_best_for_scenarios(rows, half_b, args.rank)
+    raw_best_overlap = subspace_overlap(raw_a.basis, raw_b.basis)
 
     rng = np.random.default_rng(args.seed)
     null_overlaps = []
@@ -80,6 +102,12 @@ def main() -> None:
         except RuntimeError:
             continue
     null95 = float(np.quantile(null_overlaps, 0.95)) if null_overlaps else float("nan")
+    dim = int(G_all.shape[1])
+    random_overlaps = [
+        subspace_overlap(random_subspace(dim, args.rank, rng), random_subspace(dim, args.rank, rng))
+        for _ in range(args.shuffle_repeats)
+    ]
+    random95 = float(np.quantile(random_overlaps, 0.95)) if random_overlaps else float("nan")
 
     mean_direction = G_all.mean(axis=0)
     if np.linalg.norm(mean_direction) > 0:
@@ -99,8 +127,11 @@ def main() -> None:
         "n_scenarios": len(scenario_ids),
         "explained_variance": result.explained_variance,
         "scenario_half_overlap": observed_overlap,
+        "raw_best_kv_half_overlap": raw_best_overlap,
         "shuffled_overlap_p95": null95,
-        "passes_overlap_null": bool(observed_overlap > null95) if np.isfinite(null95) else False,
+        "random_subspace_overlap_p95": random95,
+        "advantage_minus_raw_overlap": observed_overlap - raw_best_overlap,
+        "passes_overlap_null": bool(observed_overlap > null95 and observed_overlap > random95) if np.isfinite(null95) and np.isfinite(random95) else False,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2))
     print(json.dumps(summary, indent=2))
