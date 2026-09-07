@@ -1,0 +1,32 @@
+model:
+  name: zai-org/glm-4-voice-9b
+  quantization: int4
+  device: cuda:0
+  max_new_tokens: 256
+  temperature: 0.2
+  top_p: 0.8
+  audio_vocab_size: 16384
+
+experiment:
+  split: train
+  pilot_scenarios: 20
+  seeds: [0, 1, 2]
+  styles:
+    - neutral
+    - calm and confident
+    - firm and assertive
+    - empathetic and warm
+    - urgent but controlled
+    - hesitant and uncertain
+  kv_layers: [12, 16, 20, 24, 28, 32, 36, 39]
+  subspace_ranks: [4, 8, 16]
+  shuffle_repeats: 500
+  matched_transcript_min_rate: 0.80
+  min_state_utility_range: 0.05
+
+resources:
+  generation_batch_size: 1
+  kv_dtype: float16
+  kv_offload: cpu
+  waveform_roundtrip: false
+  context_cap_tokens: 3072
