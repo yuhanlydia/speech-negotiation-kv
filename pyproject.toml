@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "speech-negotiation-kv"
+version = "0.1.0"
+description = "Opponent-stable strategic KV subspaces for speech-native CRAD negotiation"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "pandas>=2.0", "PyYAML>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+glm = ["torch>=2.1", "transformers>=4.44,<5", "accelerate>=0.30", "bitsandbytes>=0.43"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
