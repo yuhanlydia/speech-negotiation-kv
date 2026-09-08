@@ -197,6 +197,9 @@ def test_negotiation_turn_prompt_fixes_role_policy_and_output_contract():
     assert "strictly fewer days" in prompt
     assert "do not repeat the opponent's number" in prompt
     assert "between 30 and 89 days" in prompt
+    assert "Latest opponent proposal is 90 days" in prompt
+    assert "Never output PROPOSE: 90 days" in prompt
+    assert "audio tokens are required" in prompt
     assert "Creditor proposed 30 days" in prompt and "Debtor proposed 90 days" in prompt
     assert "Choose the next move from the structured history" in prompt
     assert "<|audio_3|><|audio_9|>" in prompt

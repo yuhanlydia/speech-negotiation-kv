@@ -57,9 +57,33 @@ the audio loopback and terminal contract can produce real terminal outcomes.
 The attempted formal rerun was stopped at 27/720 branches by request and is
 excluded from analysis.
 
+## Final-code terminal smoke
+
+Artifact: `results/gate_e_terminal_smoke_final_v3.jsonl` (local, gitignored)
+
+This protocol-v7 run used one terminal scenario × two seeds × six styles:
+
+| check | result |
+|---|---:|
+| branches | 12/12 |
+| matched openings | 12/12 |
+| parseable moves | 29/29 |
+| strategically valid moves | 29/29 |
+| legal proposals | 17/17 |
+| policy-valid branches | 12/12 |
+| terminal outcomes | 12 agreements, 0 censored |
+| terminal completion | 100% |
+| valid early agreements | 12/12 |
+| consumed predecessor audio nonempty | 29/29 |
+
+Two final agreement generations had empty audio IDs. They were terminal leaves
+with no following opponent turn, so no empty audio was consumed by the policy.
+Every turn that did have a successor supplied nonempty audio IDs to it.
+
 ## Current decision
 
-The full test suite passes (`23 passed`). Gate E is still inconclusive because
-there is not yet a short post-fix smoke with complete terminal coverage under
-the final validator. Do not run Gate F, intervention, distillation, OPSD, or
-RL until that small smoke passes its terminal-coverage gate.
+The full test suite passes (`23 passed`). The final-code terminal smoke passes
+and authorizes a future formal Gate-E rerun. It does not itself test the
+immediate-influence versus long-horizon-value hypothesis. The interrupted
+27-branch partial rerun remains excluded. Do not run Gate F, intervention,
+distillation, OPSD, or RL until a formal Gate-E run passes its data gate.

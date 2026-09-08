@@ -241,15 +241,25 @@ against the research hypothesis. Three concrete issues were found:
 The fixes are now in `long_horizon.py` and `glm_voice.py`: continuation prompts
 include the opponent audio tokens, only the preregistered terminal subset gets
 a final-turn `AGREED`/`NO DEAL` contract, and an agreement is valid whenever it
-accepts the current latest proposal. A 12-branch real-GPU smoke after the first
-two fixes produced 11 agreements and 1 censored branch; it was a protocol
-smoke, not formal evidence. The final validator correction is covered by the
-tests. The full test suite passes (`23 passed`).
+accepts the current latest proposal. Protocol v7 also states the latest offer
+explicitly, forbids repeating it as a proposal, and requires interleaved audio.
+
+The final-code real-GPU terminal smoke used one terminal scenario × two seeds ×
+six styles (12 branches). It passed: 12/12 matched openings, 29/29 parseable and
+strategically valid moves, 17/17 legal proposals, 12/12 policy-valid branches,
+12/12 agreements, and 100% terminal completion. All 29 turns whose audio was
+consumed by a following opponent turn had nonempty audio IDs. Two terminal
+agreement outputs had no audio, but neither had a successor and therefore did
+not break the opponent-audio loop. All 12 early agreements were classified as
+valid. This is a protocol validation smoke, not hypothesis evidence. The full
+test suite passes (`23 passed`).
 
 The formal rerun was intentionally stopped after 27/720 branches to avoid
 spending another long GPU run. Those partial records are excluded from all
-claims. Gate E remains **inconclusive until a short, valid terminal smoke is
-re-run**; Gate F, intervention, distillation, OPSD, and RL remain blocked.
+claims. The terminal smoke authorizes a future formal Gate-E rerun, but no
+formal long-horizon conclusion has been made. Gate F, intervention,
+distillation, OPSD, and RL remain blocked until that formal Gate-E data gate
+passes.
 The detailed audit is in
 `docs/results/gate_e_long_horizon_debug.md`.
 

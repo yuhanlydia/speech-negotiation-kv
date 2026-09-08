@@ -19,7 +19,7 @@ _COUNTEROFFER_CUE_RE = re.compile(
     r"(?:how\s+about|aim\s+for|go\s+with|counteroffer(?:\s+is)?|propose(?:d)?|offer)\D{0,24}(\d{1,4})\s*days?\b",
     re.IGNORECASE,
 )
-GATE_E_PROTOCOL_VERSION = "gate-e-v6"
+GATE_E_PROTOCOL_VERSION = "gate-e-v7"
 
 
 @dataclass(frozen=True)
@@ -204,8 +204,15 @@ def negotiation_turn_prompt(*, role: str, opponent_audio_ids: list[int], scenari
         "Respond in 1-2 sentences and begin with exactly one decision marker: "
         "AGREED: N days if you accept the opponent's latest proposal; "
         "NO DEAL if you end the negotiation; or PROPOSE: N days if you counteroffer. "
-        "Use exactly one repayment term and do not claim agreement while changing the opponent's number."
+        "Use exactly one repayment term and do not claim agreement while changing the opponent's number. "
+        "Return GLM-4-Voice interleaved text/audio; audio tokens are required."
     )
+    latest_rule = ""
+    if latest_offer is not None:
+        latest_rule = (
+            f" Latest opponent proposal is {int(latest_offer)} days. "
+            f"Never output PROPOSE: {int(latest_offer)} days."
+        )
     counteroffer_rule = ""
     if int(transition) <= 2 and not force_terminal:
         counteroffer_rule = (
@@ -222,7 +229,7 @@ def negotiation_turn_prompt(*, role: str, opponent_audio_ids: list[int], scenari
         )
     return (
         f"<|system|>\n{identity} {objective} This is transition {int(transition)}. "
-        f"Use a {policy_style} vocal delivery. {contract}{counteroffer_rule}{range_rule}{terminal_rule}\n"
+        f"Use a {policy_style} vocal delivery. {contract}{latest_rule}{counteroffer_rule}{range_rule}{terminal_rule}\n"
         f"Dialogue history:\n{history_text}\n"
         f"<|user|>\n{audio_ids_to_prompt(opponent_audio_ids)}\n"
         "Choose the next move from the structured history and output the decision marker now."
