@@ -1,0 +1,450 @@
+{
+  "hypothesis": "shared_strategy_space_context_dependent_value",
+  "records": "results/gateA_glm_sweep.jsonl",
+  "kv": "results/gateA_action_last_audio_kv.npz",
+  "observation": "action",
+  "pooling": "last_audio",
+  "available_layers": [
+    16,
+    20,
+    24,
+    28,
+    32,
+    36
+  ],
+  "component": "kv",
+  "layer": null,
+  "n_rows": 120,
+  "n_states": 20,
+  "n_scenarios": 10,
+  "n_styles": 6,
+  "styles": [
+    "calm and confident",
+    "empathetic and warm",
+    "firm and assertive",
+    "hesitant and uncertain",
+    "neutral",
+    "urgent but controlled"
+  ],
+  "n_unique_balanced_splits": 126,
+  "split_evaluation": "bidirectional_mean_A_to_B_and_B_to_A",
+  "shuffle_scheme": "independent_style_permutation_within_state",
+  "shuffle_repeats": 1000,
+  "d1_style_decoding": {
+    "chance_accuracy": 0.16666666666666666,
+    "held_out_accuracy": {
+      "n": 126,
+      "mean": 0.5187169312169312,
+      "median": 0.5291666666666667,
+      "p05": 0.37916666666666665,
+      "p95": 0.65,
+      "min": 0.32499999999999996,
+      "max": 0.6833333333333333
+    },
+    "null_median_accuracy": {
+      "n": 1000,
+      "mean": 0.16610416666666666,
+      "median": 0.16666666666666666,
+      "p05": 0.125,
+      "p95": 0.2085416666666665,
+      "min": 0.1,
+      "max": 0.275
+    },
+    "permutation_p_value": 0.000999000999000999,
+    "split_null_p95": {
+      "n": 126,
+      "mean": 0.23707341269841273,
+      "median": 0.23374999999999962,
+      "p05": 0.23333333333333334,
+      "p95": 0.24166666666666667,
+      "min": 0.23333333333333334,
+      "max": 0.24166666666666667
+    },
+    "splits_above_own_null_p95": 126,
+    "fraction_splits_above_own_null_p95": 1.0,
+    "classes": [
+      "calm and confident",
+      "empathetic and warm",
+      "firm and assertive",
+      "hesitant and uncertain",
+      "neutral",
+      "urgent but controlled"
+    ],
+    "aggregate_bidirectional_confusion": [
+      [
+        501,
+        428,
+        199,
+        158,
+        652,
+        582
+      ],
+      [
+        402,
+        465,
+        244,
+        168,
+        278,
+        963
+      ],
+      [
+        199,
+        239,
+        1468,
+        19,
+        118,
+        477
+      ],
+      [
+        61,
+        87,
+        48,
+        2025,
+        17,
+        282
+      ],
+      [
+        614,
+        120,
+        4,
+        41,
+        1683,
+        58
+      ],
+      [
+        178,
+        389,
+        211,
+        5,
+        36,
+        1701
+      ]
+    ],
+    "passes": true
+  },
+  "d2_pairwise_style_directions": {
+    "multiple_testing": "Benjamini-Hochberg FDR 0.05 over 15 pairs",
+    "n_pairs": 15,
+    "n_pairs_passing_fdr": 14,
+    "pairs": [
+      {
+        "first_style": "calm and confident",
+        "second_style": "empathetic and warm",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.017119107765878088,
+        "cross_scenario_median_cosine": -0.01583111016441673,
+        "same_scenario_seed_mean_cosine": 0.2247871004272805,
+        "same_scenario_seed_median_cosine": 0.098795153992898,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.00026311524462516563,
+          "median": -0.0017755085376941883,
+          "p05": -0.024400336835644396,
+          "p95": 0.03505486113199074,
+          "min": -0.03672167617015725,
+          "max": 0.07973525102367354
+        },
+        "permutation_p_value": 0.16683316683316685,
+        "bh_fdr_q_value": 0.16683316683316685,
+        "passes_fdr_0_05": false
+      },
+      {
+        "first_style": "calm and confident",
+        "second_style": "firm and assertive",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.10510231361783234,
+        "cross_scenario_median_cosine": 0.10492556107243975,
+        "same_scenario_seed_mean_cosine": 0.0647176264298758,
+        "same_scenario_seed_median_cosine": 0.05077239296260583,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.00014116997765819595,
+          "median": -0.003366240753576256,
+          "p05": -0.02389499463694848,
+          "p95": 0.0360387222710421,
+          "min": -0.04225307410647756,
+          "max": 0.10672484849373139
+        },
+        "permutation_p_value": 0.001998001998001998,
+        "bh_fdr_q_value": 0.002997002997002997,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "calm and confident",
+        "second_style": "hesitant and uncertain",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.20317006824955922,
+        "cross_scenario_median_cosine": 0.22511321134282075,
+        "same_scenario_seed_mean_cosine": 0.2910962708333091,
+        "same_scenario_seed_median_cosine": 0.3239243737722957,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.00040099225867343524,
+          "median": -0.002974324855236337,
+          "p05": -0.02410800196799674,
+          "p95": 0.03371149212164733,
+          "min": -0.03661044197248704,
+          "max": 0.09973173481066355
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "calm and confident",
+        "second_style": "neutral",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.0364086162985667,
+        "cross_scenario_median_cosine": 0.012606848246546612,
+        "same_scenario_seed_mean_cosine": 0.231153404566462,
+        "same_scenario_seed_median_cosine": 0.18491704325594255,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": -0.0006390797368522989,
+          "median": -0.003220698873212322,
+          "p05": -0.025235337194089838,
+          "p95": 0.03283575993238472,
+          "min": -0.04286147359952971,
+          "max": 0.09894214207140024
+        },
+        "permutation_p_value": 0.04395604395604396,
+        "bh_fdr_q_value": 0.04709576138147568,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "calm and confident",
+        "second_style": "urgent but controlled",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.09570934832680224,
+        "cross_scenario_median_cosine": 0.09070768068956633,
+        "same_scenario_seed_mean_cosine": 0.16542549770186168,
+        "same_scenario_seed_median_cosine": 0.13484667779682843,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.0005196651868443941,
+          "median": -0.00211342431035512,
+          "p05": -0.023529544599676495,
+          "p95": 0.03585630447105895,
+          "min": -0.03905909178363255,
+          "max": 0.12813596901487698
+        },
+        "permutation_p_value": 0.001998001998001998,
+        "bh_fdr_q_value": 0.002997002997002997,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "empathetic and warm",
+        "second_style": "firm and assertive",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.0645253097391212,
+        "cross_scenario_median_cosine": 0.06731012003417175,
+        "same_scenario_seed_mean_cosine": 0.13020335172937808,
+        "same_scenario_seed_median_cosine": 0.22851088050624127,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": -0.0002479838320349284,
+          "median": -0.003050487411812338,
+          "p05": -0.024436676180667225,
+          "p95": 0.03313644606033167,
+          "min": -0.04004345183395588,
+          "max": 0.08936692138236972
+        },
+        "permutation_p_value": 0.003996003996003996,
+        "bh_fdr_q_value": 0.004995004995004995,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "empathetic and warm",
+        "second_style": "hesitant and uncertain",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.24515598814689266,
+        "cross_scenario_median_cosine": 0.32668602919627526,
+        "same_scenario_seed_mean_cosine": 0.4004586735550298,
+        "same_scenario_seed_median_cosine": 0.4365369776626702,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": -0.0006519752704701738,
+          "median": -0.0037111284070073026,
+          "p05": -0.02463597715007749,
+          "p95": 0.035803205604697366,
+          "min": -0.0382063583710912,
+          "max": 0.13245138430208706
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "empathetic and warm",
+        "second_style": "neutral",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.13259554488354838,
+        "cross_scenario_median_cosine": 0.10314252024926547,
+        "same_scenario_seed_mean_cosine": 0.24428541916615307,
+        "same_scenario_seed_median_cosine": 0.2245313068862662,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": -0.001320551707378591,
+          "median": -0.0033710952475203434,
+          "p05": -0.025222610338199107,
+          "p95": 0.031251613175561,
+          "min": -0.036234332098474584,
+          "max": 0.0801697520937215
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "empathetic and warm",
+        "second_style": "urgent but controlled",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.042384355645118374,
+        "cross_scenario_median_cosine": 0.011556585535588509,
+        "same_scenario_seed_mean_cosine": -0.002469746112803722,
+        "same_scenario_seed_median_cosine": -0.11716520330455965,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": -0.00045674404111833734,
+          "median": -0.003264766078057782,
+          "p05": -0.0246955479728692,
+          "p95": 0.03220995230208925,
+          "min": -0.03934411268428678,
+          "max": 0.08357732784641221
+        },
+        "permutation_p_value": 0.027972027972027972,
+        "bh_fdr_q_value": 0.0322754168908015,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "firm and assertive",
+        "second_style": "hesitant and uncertain",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.28553254822840607,
+        "cross_scenario_median_cosine": 0.32679530800229645,
+        "same_scenario_seed_mean_cosine": 0.4153427984730239,
+        "same_scenario_seed_median_cosine": 0.3847982708476214,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.00015656838430717568,
+          "median": -0.003087254090574338,
+          "p05": -0.02501958436442057,
+          "p95": 0.03574371923065844,
+          "min": -0.038794722836874025,
+          "max": 0.08860490608458187
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "firm and assertive",
+        "second_style": "neutral",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.20086403830708738,
+        "cross_scenario_median_cosine": 0.19598830259274147,
+        "same_scenario_seed_mean_cosine": 0.277017489401356,
+        "same_scenario_seed_median_cosine": 0.2792764628388137,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.00029639135881616305,
+          "median": -0.0028077800830126087,
+          "p05": -0.025905205639579574,
+          "p95": 0.035848578925353196,
+          "min": -0.03888397394779319,
+          "max": 0.09530728367410697
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "firm and assertive",
+        "second_style": "urgent but controlled",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.08183998436160674,
+        "cross_scenario_median_cosine": 0.06756591623521616,
+        "same_scenario_seed_mean_cosine": -0.13689132369631146,
+        "same_scenario_seed_median_cosine": -0.17145001810752697,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.0005354066769564688,
+          "median": -0.0023796769324180723,
+          "p05": -0.02511517004692261,
+          "p95": 0.037139650086434994,
+          "min": -0.03970634591862231,
+          "max": 0.11836850002505708
+        },
+        "permutation_p_value": 0.003996003996003996,
+        "bh_fdr_q_value": 0.004995004995004995,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "hesitant and uncertain",
+        "second_style": "neutral",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.24991498585045244,
+        "cross_scenario_median_cosine": 0.25009189138586296,
+        "same_scenario_seed_mean_cosine": 0.3458002172709724,
+        "same_scenario_seed_median_cosine": 0.3723498417340098,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": -0.0004682464987392948,
+          "median": -0.003926068218120939,
+          "p05": -0.024577370145885454,
+          "p95": 0.03466235814073052,
+          "min": -0.03871338390693379,
+          "max": 0.10922308443245002
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "hesitant and uncertain",
+        "second_style": "urgent but controlled",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.30978753487420063,
+        "cross_scenario_median_cosine": 0.28392109935253307,
+        "same_scenario_seed_mean_cosine": 0.341379729393255,
+        "same_scenario_seed_median_cosine": 0.2637650219427477,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": 0.0006308465992670292,
+          "median": -0.002732606553993891,
+          "p05": -0.02531329241614921,
+          "p95": 0.0387355456041083,
+          "min": -0.03910178632070265,
+          "max": 0.12477151845370323
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      },
+      {
+        "first_style": "neutral",
+        "second_style": "urgent but controlled",
+        "n_directions": 20,
+        "cross_scenario_mean_cosine": 0.2066197709785713,
+        "cross_scenario_median_cosine": 0.1572689480369016,
+        "same_scenario_seed_mean_cosine": 0.2038926827045146,
+        "same_scenario_seed_median_cosine": 0.24864085512066855,
+        "shuffled_mean_cosine": {
+          "n": 1000,
+          "mean": -0.000469146571850192,
+          "median": -0.004151146845123492,
+          "p05": -0.024713807522433223,
+          "p95": 0.034820194005299294,
+          "min": -0.041765526728494935,
+          "max": 0.08208225177337199
+        },
+        "permutation_p_value": 0.000999000999000999,
+        "bh_fdr_q_value": 0.001873126873126873,
+        "passes_fdr_0_05": true
+      }
+    ],
+    "passes": true
+  },
+  "gate_d_passes": true,
+  "gate_d_rule": "D1 p<=0.05 and median>chance, plus at least one positive D2 pair at BH-FDR q<=0.05"
+}

@@ -21,6 +21,13 @@ from speech_negotiation_kv.subspace import (
     subspace_overlap,
 )
 from speech_negotiation_kv.observations import observation_audio_ids
+from speech_negotiation_kv.strategy_geometry import (
+    benjamini_hochberg,
+    center_within_states,
+    cosine_centroid_accuracy,
+    pairwise_style_directions,
+    shuffle_labels_within_states,
+)
 from speech_negotiation_kv.sweep import MockSpeechBackend, run_one_turn_matched_sweep
 
 
@@ -139,6 +146,42 @@ def test_balanced_scenario_splits_enumerates_unique_complements():
     assert len(splits) == 126
     assert all(len(a) == len(b) == 5 and a.isdisjoint(b) for a, b in splits)
     assert len({frozenset(a) for a, _ in splits}) == 126
+
+
+def test_state_centered_style_geometry_transfers_across_scenarios():
+    features = np.array([
+        [11.0, 0.0], [9.0, 0.0],
+        [21.0, 2.0], [19.0, 2.0],
+        [-4.0, 7.0], [-6.0, 7.0],
+        [4.0, -3.0], [2.0, -3.0],
+    ])
+    states = np.array(["s0", "s0", "s1", "s1", "s2", "s2", "s3", "s3"])
+    styles = np.array(["a", "b"] * 4)
+    scenarios = np.repeat(np.arange(4), 2)
+    centered = center_within_states(features, states)
+    assert np.allclose(centered.mean(axis=0), 0.0)
+    accuracy, _ = cosine_centroid_accuracy(centered, styles, scenarios, {0, 1})
+    assert accuracy == 1.0
+
+
+def test_pairwise_style_direction_is_stable_across_scenarios():
+    features = np.array([[1.0, 0.0], [-1.0, 0.0]] * 3)
+    states = np.array(["s0", "s0", "s1", "s1", "s2", "s2"])
+    styles = np.array(["a", "b"] * 3)
+    scenarios = np.repeat(np.arange(3), 2)
+    result = pairwise_style_directions(features, styles, scenarios, states)
+    assert result[("a", "b")]["cross_scenario_mean_cosine"] > 0.99
+
+
+def test_style_shuffle_is_within_state_and_bh_is_monotone():
+    labels = np.array(["a", "b", "c", "a", "b", "c"])
+    states = np.array(["s0"] * 3 + ["s1"] * 3)
+    shuffled = shuffle_labels_within_states(labels, states, np.random.default_rng(7))
+    for state in ("s0", "s1"):
+        mask = states == state
+        assert sorted(shuffled[mask]) == sorted(labels[mask])
+    adjusted = benjamini_hochberg(np.array([0.01, 0.04, 0.03]))
+    assert np.allclose(adjusted, [0.03, 0.04, 0.04])
 
 
 def test_mock_sweep_keeps_semantics_fixed():

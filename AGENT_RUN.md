@@ -115,6 +115,25 @@ or RL unless the corrected advantage-specific result beats the shuffled null
 with reproducible seed-level directions. See
 `results/debug_gate_b_prime_report.md` for the completed pilot record.
 
+## 5.6 Gate D: strategy geometry before value modeling
+
+If B′ shows shared geometry but no stable advantage direction, test style
+representation without utility:
+
+```bash
+python scripts/run_strategy_geometry.py \
+  --records results/gateA_glm_sweep.jsonl \
+  --kv results/gateA_action_audio_kv.npz \
+  --shuffle-repeats 1000 \
+  --output results/gate_d_action_audio_summary.json
+```
+
+Gate D uses all 126 balanced 5/5 partitions bidirectionally, a within-state
+shuffled-style null, and BH-FDR over all 15 pairwise style directions. Gate D
+passes only when held-out style decoding is significant and at least one
+positive pairwise direction survives FDR. A pass authorizes long-horizon Gate
+E data collection, not Gate F, intervention, distillation, OPSD, or RL.
+
 ## 6. What to commit/push after the run
 
 Raw JSONL/NPZ/audio artifacts are intentionally gitignored. Keep them locally. Commit lightweight summaries so the research analysis can be reviewed from GitHub:

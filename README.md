@@ -185,6 +185,32 @@ effective-rank reporting. The completed pilot record is
 stable advantage-specific subspace, but it does not justify claiming that no
 shared K/V geometry exists.
 
+## Gate D — shared strategy geometry
+
+Gate D removes utility from the representation test. For every scenario/seed
+state it centers the six action K/V features, then asks whether vocal style can
+be decoded in held-out scenarios and whether oriented style-pair directions
+align across scenarios:
+
+```bash
+python scripts/run_strategy_geometry.py \
+  --records results/gateA_glm_sweep.jsonl \
+  --kv results/gateA_action_audio_kv.npz \
+  --shuffle-repeats 1000 \
+  --output results/gate_d_action_audio_summary.json
+```
+
+The 10-scenario pilot passes Gate D: audio-only held-out style accuracy has
+median 0.8500 versus chance/null median 0.1667 (`p=0.000999`), all 126
+balanced partitions exceed their shuffled-style p95, and 15/15 pairwise style
+directions pass BH-FDR. Last-audio accuracy is lower at 0.5292 but remains
+significant. See `results/gate_d_strategy_geometry_report.md`.
+
+This supports a **shared strategy space with context-dependent value**, not a
+globally winning direction. Gate E must next measure paired long-horizon
+utility before any contextual-value model, intervention, distillation, OPSD,
+or RL claim.
+
 ## Few-shot opponent adaptation (only after Gate B)
 
 The proposed low-dimensional opponent code is ridge-fitted from short probes:
