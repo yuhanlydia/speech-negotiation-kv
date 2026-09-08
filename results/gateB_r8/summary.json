@@ -1,5 +1,9 @@
 {
   "rank": 8,
+  "requested_rank": 8,
+  "effective_rank_all": 8,
+  "effective_rank_half_a": 8,
+  "effective_rank_half_b": 7,
   "n_rows": 120,
   "n_states": 16,
   "n_scenarios": 10,

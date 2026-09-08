@@ -122,6 +122,10 @@ def main() -> None:
     )
     summary = {
         "rank": args.rank,
+        "requested_rank": args.rank,
+        "effective_rank_all": int(result.basis.shape[1]),
+        "effective_rank_half_a": int(result_a.basis.shape[1]),
+        "effective_rank_half_b": int(result_b.basis.shape[1]),
         "n_rows": len(rows),
         "n_states": int(G_all.shape[0]),
         "n_scenarios": len(scenario_ids),

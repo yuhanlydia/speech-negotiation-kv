@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from itertools import combinations
 from typing import Iterable, Mapping, Any
 
 import numpy as np
@@ -11,6 +12,50 @@ class SubspaceResult:
     basis: np.ndarray
     singular_values: np.ndarray
     explained_variance: float
+
+
+def balanced_scenario_splits(scenario_ids: Iterable[int], *, half_size: int | None = None) -> list[tuple[set[int], set[int]]]:
+    """Enumerate unique complementary balanced splits, avoiding duplicate mirrors."""
+    ids = sorted({int(s) for s in scenario_ids})
+    if half_size is None:
+        if len(ids) % 2:
+            raise ValueError("scenario count must be even when half_size is omitted")
+        half_size = len(ids) // 2
+    half_size = int(half_size)
+    if half_size <= 0 or 2 * half_size != len(ids):
+        raise ValueError("half_size must partition all scenario IDs into two equal halves")
+    anchor = ids[0]
+    universe = set(ids)
+    return [
+        (set(left), universe - set(left))
+        for left in combinations(ids, half_size)
+        if anchor in left
+    ]
+
+
+def _average_ranks(values: np.ndarray) -> np.ndarray:
+    values = np.asarray(values, dtype=np.float64)
+    order = np.argsort(values, kind="mergesort")
+    ranks = np.empty(len(values), dtype=np.float64)
+    sorted_values = values[order]
+    start = 0
+    while start < len(values):
+        end = start + 1
+        while end < len(values) and sorted_values[end] == sorted_values[start]:
+            end += 1
+        ranks[order[start:end]] = (start + end - 1) / 2.0 + 1.0
+        start = end
+    return ranks
+
+
+def spearman_rank_correlation(a: Iterable[float], b: Iterable[float]) -> float:
+    a, b = np.asarray(list(a), dtype=np.float64), np.asarray(list(b), dtype=np.float64)
+    if a.shape != b.shape or a.size < 2:
+        raise ValueError("Spearman correlation needs paired arrays with at least two values")
+    ra, rb = _average_ranks(a), _average_ranks(b)
+    if np.allclose(ra, ra[0]) or np.allclose(rb, rb[0]):
+        return float("nan")
+    return float(np.corrcoef(ra, rb)[0, 1])
 
 
 def advantage_memory_directions(records: Iterable[Mapping[str, Any]]) -> tuple[list[str], np.ndarray]:

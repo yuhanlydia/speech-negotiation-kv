@@ -7,8 +7,20 @@ from torch import nn
 from speech_negotiation_kv.calibration import fit_ridge_opponent_code
 from speech_negotiation_kv.crad import normalized_creditor_utility, parse_offer_days, parse_agreement_days, split_crad
 from speech_negotiation_kv.glm_voice import audio_ids_to_prompt, partition_generated_token_ids, normalize_transcript
-from speech_negotiation_kv.kv_hooks import split_fused_qkv, apply_kv_delta, FusedQKVRecorder, FusedQKVSteerer
-from speech_negotiation_kv.subspace import advantage_memory_directions, fit_low_rank_subspace, subspace_overlap
+from speech_negotiation_kv.kv_hooks import (
+    split_fused_qkv,
+    apply_kv_delta,
+    FusedQKVRecorder,
+    FusedQKVSteerer,
+    pool_kv_tokens,
+)
+from speech_negotiation_kv.subspace import (
+    advantage_memory_directions,
+    balanced_scenario_splits,
+    fit_low_rank_subspace,
+    subspace_overlap,
+)
+from speech_negotiation_kv.observations import observation_audio_ids
 from speech_negotiation_kv.sweep import MockSpeechBackend, run_one_turn_matched_sweep
 
 
@@ -102,6 +114,31 @@ def test_kv_recorder_and_steerer():
     assert outputs[0].abs().sum().item() == 0.0
     assert outputs[1][..., 4:6].flatten().tolist() == [1.0, 0.0]
     assert outputs[1][..., 6:8].flatten().tolist() == [0.0, 2.0]
+
+
+def test_kv_pooling_can_isolate_audio_positions():
+    k = torch.tensor([[[1.0, 10.0], [2.0, 20.0], [3.0, 30.0]]])
+    v = torch.tensor([[[4.0, 40.0], [5.0, 50.0], [6.0, 60.0]]])
+    mask = torch.tensor([[False, True, True]])
+    k_audio, v_audio = pool_kv_tokens(k, v, mode="audio_only", token_mask=mask)
+    assert k_audio.tolist() == [2.5, 25.0]
+    assert v_audio.tolist() == [5.5, 55.0]
+    k_last, v_last = pool_kv_tokens(k, v, mode="last_audio", token_mask=mask)
+    assert k_last.tolist() == [3.0, 30.0]
+    assert v_last.tolist() == [6.0, 60.0]
+
+
+def test_observation_audio_ids_selects_action_or_response():
+    rec = {"audio_token_ids": [1, 2], "opponent_audio_token_ids": [3, 4]}
+    assert observation_audio_ids(rec, "action") == [1, 2]
+    assert observation_audio_ids(rec, "response") == [3, 4]
+
+
+def test_balanced_scenario_splits_enumerates_unique_complements():
+    splits = balanced_scenario_splits(list(range(10)), half_size=5)
+    assert len(splits) == 126
+    assert all(len(a) == len(b) == 5 and a.isdisjoint(b) for a, b in splits)
+    assert len({frozenset(a) for a, _ in splits}) == 126
 
 
 def test_mock_sweep_keeps_semantics_fixed():

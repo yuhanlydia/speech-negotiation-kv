@@ -3,6 +3,39 @@ from __future__ import annotations
 import torch
 
 
+def pool_kv_tokens(k: torch.Tensor, v: torch.Tensor, *, mode: str = "all",
+                   token_mask: torch.Tensor | None = None) -> tuple[torch.Tensor, torch.Tensor]:
+    """Pool K/V over an explicit token selection without mixing prompt content.
+
+    ``k`` and ``v`` are shaped ``[batch, sequence, width]``.  The audio mask is
+    supplied by the tokenizer caller because only that caller knows the model's
+    audio-token ID range.  A batch mean is taken after selection, so the result
+    remains one vector per projection as in the original extractor.
+    """
+    if k.ndim != 3 or v.ndim != 3 or k.shape[:2] != v.shape[:2]:
+        raise ValueError("K and V must be [batch, sequence, width] with matching batch/sequence")
+    if mode not in {"all", "audio_only", "last_audio"}:
+        raise ValueError(f"unknown pooling mode: {mode}")
+    if mode == "all":
+        selected_k, selected_v = k.reshape(-1, k.shape[-1]), v.reshape(-1, v.shape[-1])
+    else:
+        if token_mask is None:
+            raise ValueError(f"pooling mode {mode!r} requires token_mask")
+        mask = torch.as_tensor(token_mask, device=k.device, dtype=torch.bool)
+        if mask.ndim == 1:
+            mask = mask.unsqueeze(0)
+        if mask.shape != k.shape[:2] or not bool(mask.any()):
+            raise ValueError("token_mask must match [batch, sequence] and select at least one token")
+        if mode == "audio_only":
+            selected_k, selected_v = k[mask], v[mask]
+        else:
+            last_positions = mask.shape[1] - 1 - torch.flip(mask, dims=[1]).to(torch.int64).argmax(dim=1)
+            batch_positions = torch.arange(mask.shape[0], device=k.device)
+            selected_k = k[batch_positions, last_positions]
+            selected_v = v[batch_positions, last_positions]
+    return selected_k.float().mean(dim=0), selected_v.float().mean(dim=0)
+
+
 def split_fused_qkv(output: torch.Tensor, *, num_attention_heads: int, kv_channels: int, multi_query_group_num: int):
     q_size = int(num_attention_heads) * int(kv_channels)
     kv_size = int(multi_query_group_num) * int(kv_channels)
@@ -31,15 +64,19 @@ def apply_kv_delta(output: torch.Tensor, *, key_delta: torch.Tensor, value_delta
 
 
 class FusedQKVRecorder:
-    """Record pooled K/V projection outputs from ChatGLM-style fused query_key_value modules."""
-    def __init__(self, model, *, layer_indices, num_attention_heads, kv_channels, multi_query_group_num):
+    """Record pooled K/V outputs from ChatGLM-style fused query_key_value modules."""
+    def __init__(self, model, *, layer_indices, num_attention_heads, kv_channels, multi_query_group_num,
+                 pooling: str = "all", token_mask: torch.Tensor | None = None):
         self.model = model
         self.layer_indices = [int(i) for i in layer_indices]
         self.num_attention_heads = int(num_attention_heads)
         self.kv_channels = int(kv_channels)
         self.multi_query_group_num = int(multi_query_group_num)
+        self.pooling = str(pooling)
+        self.token_mask = token_mask
         self.handles = []
         self.values = {}
+        self.layer_values = {}
         self._modules = [m for name, m in model.named_modules() if name.endswith("query_key_value")]
         if not self._modules:
             raise ValueError("no ChatGLM-style query_key_value modules found")
@@ -56,13 +93,20 @@ class FusedQKVRecorder:
                 kv_channels=self.kv_channels,
                 multi_query_group_num=self.multi_query_group_num,
             )
-            k_pool = k.reshape(-1, k.shape[-1]).float().mean(dim=0)
-            v_pool = v.reshape(-1, v.shape[-1]).float().mean(dim=0)
+            k_pool, v_pool = pool_kv_tokens(k, v, mode=self.pooling, token_mask=self.token_mask)
+            self.layer_values[layer_idx] = (
+                k_pool.detach().to("cpu", dtype=torch.float16),
+                v_pool.detach().to("cpu", dtype=torch.float16),
+            )
             self.values[layer_idx] = torch.cat((k_pool, v_pool)).detach().to("cpu", dtype=torch.float16)
         return hook
 
     def clear(self):
         self.values.clear()
+        self.layer_values.clear()
+
+    def set_token_mask(self, token_mask: torch.Tensor | None):
+        self.token_mask = token_mask
 
     def __enter__(self):
         self.clear()

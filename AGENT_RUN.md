@@ -89,6 +89,32 @@ Primary Gate-B evidence:
 
 Continue only if the advantage-KV subspace reproducibility beats shuffled and random rank-matched nulls and is not merely reproduced by raw-best-KV PCA.
 
+## 5.5 Debug Gate B′ if the original Gate B is negative
+
+Do not interpret the original negative as proof that no strategic K/V geometry
+exists. The original extractor is post-response and full-prompt pooled. Run
+the corrected action-side diagnostic before closing the question:
+
+```bash
+python scripts/extract_kv.py \
+  --config configs/crad_16gb.yaml \
+  --records results/gateA_glm_sweep.jsonl \
+  --observation action --pooling audio_only \
+  --output results/gateA_action_audio_kv.npz
+python scripts/fit_gate_b_prime.py \
+  --records results/gateA_glm_sweep.jsonl \
+  --kv results/gateA_action_audio_kv.npz \
+  --shuffle-repeats 200 \
+  --output results/debug_gate_b_prime_action_audio_summary.json
+```
+
+Gate B′ must report same-scenario seed reproducibility and all unique balanced
+5/5 scenario splits (126 for the 10-scenario pilot). Keep action-side,
+last-audio, and per-layer controls separate. Do not proceed to Gate C, OPSD,
+or RL unless the corrected advantage-specific result beats the shuffled null
+with reproducible seed-level directions. See
+`results/debug_gate_b_prime_report.md` for the completed pilot record.
+
 ## 6. What to commit/push after the run
 
 Raw JSONL/NPZ/audio artifacts are intentionally gitignored. Keep them locally. Commit lightweight summaries so the research analysis can be reviewed from GitHub:

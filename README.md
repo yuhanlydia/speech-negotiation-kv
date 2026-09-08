@@ -157,6 +157,34 @@ done
 
 If Gate A fails, the speech strategic-channel hypothesis is unsupported for this model/setup. If A passes but B fails, keep the speech-negotiation phenomenon but drop the opponent-stable KV-subspace claim.
 
+### Debug Gate B′ after the original pilot
+
+The first pilot's Gate-B negative is measurement-limited: its extractor used
+post-response `opponent_audio_token_ids` and full-prompt mean pooling. Before
+interpreting that result as absence of a strategic subspace, use the corrected
+action-side diagnostic:
+
+```bash
+python scripts/extract_kv.py \
+  --config configs/crad_16gb.yaml \
+  --records results/gateA_glm_sweep.jsonl \
+  --observation action --pooling audio_only \
+  --output results/gateA_action_audio_kv.npz
+
+python scripts/fit_gate_b_prime.py \
+  --records results/gateA_glm_sweep.jsonl \
+  --kv results/gateA_action_audio_kv.npz \
+  --shuffle-repeats 200 \
+  --output results/debug_gate_b_prime_action_audio_summary.json
+```
+
+This diagnostic uses action-side audio tokens, all 126 balanced 5/5 splits
+for the 10-scenario pilot, same-scenario seed reproducibility, and explicit
+effective-rank reporting. The completed pilot record is
+`results/debug_gate_b_prime_report.md`. Its result is still negative for a
+stable advantage-specific subspace, but it does not justify claiming that no
+shared K/V geometry exists.
+
 ## Few-shot opponent adaptation (only after Gate B)
 
 The proposed low-dimensional opponent code is ridge-fitted from short probes:
