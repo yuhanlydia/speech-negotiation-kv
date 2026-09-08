@@ -143,3 +143,19 @@ class GLMVoiceBackend:
             "<|assistant|>streaming_transcription\n"
         )
         return self.generate(prompt, seed=seed)
+
+    def respond_negotiation_turn(self, *, role: str, opponent_audio_ids: list[int], scenario: dict,
+                                 history: list[dict], transition: int, seed: int,
+                                 policy_style: str = "neutral", force_terminal: bool = False) -> VoiceGeneration:
+        from .long_horizon import negotiation_turn_prompt
+
+        prompt = negotiation_turn_prompt(
+            role=role,
+            opponent_audio_ids=opponent_audio_ids,
+            scenario=scenario,
+            history=history,
+            transition=transition,
+            policy_style=policy_style,
+            force_terminal=force_terminal,
+        )
+        return self.generate(prompt, seed=seed)

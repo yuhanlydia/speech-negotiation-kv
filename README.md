@@ -211,6 +211,48 @@ globally winning direction. Gate E must next measure paired long-horizon
 utility before any contextual-value model, intervention, distillation, OPSD,
 or RL claim.
 
+## Gate E — long-horizon debugging record
+
+The first real Gate-E run used the intended 20 scenarios × 6 seeds × 6 vocal
+styles protocol (720 branches, H=4, with the preregistered five-scenario
+terminal subset allowed to continue to H=8). It completed all 720 branches,
+but it was not a valid long-horizon result:
+
+- 717/720 opening transcripts matched;
+- 6,443/6,447 generated moves were parseable;
+- 6,437/6,447 moves passed the strategic-direction check;
+- the 180-branch terminal subset produced 177 `censored` and only 3 `no_deal`
+  outcomes; it produced no agreement outcome;
+- all 720 branches had no measured terminal utility at H=4.
+
+The failure was an implementation/protocol failure, not evidence for or
+against the research hypothesis. Three concrete issues were found:
+
+1. `negotiation_turn_prompt()` accepted `opponent_audio_ids` but discarded
+   them. Continuation turns therefore used dialogue text without the opponent
+   audio-token loopback.
+2. The final turn of the H=8 terminal subset did not require a terminal
+   decision. GLM continued producing proposals, so the run was overwhelmingly
+   censored.
+3. The strategic validator incorrectly rejected an exact early acceptance
+   (`AGREED` at transition < 3), although the protocol and tests allow early
+   agreement.
+
+The fixes are now in `long_horizon.py` and `glm_voice.py`: continuation prompts
+include the opponent audio tokens, only the preregistered terminal subset gets
+a final-turn `AGREED`/`NO DEAL` contract, and an agreement is valid whenever it
+accepts the current latest proposal. A 12-branch real-GPU smoke after the first
+two fixes produced 11 agreements and 1 censored branch; it was a protocol
+smoke, not formal evidence. The final validator correction is covered by the
+tests. The full test suite passes (`23 passed`).
+
+The formal rerun was intentionally stopped after 27/720 branches to avoid
+spending another long GPU run. Those partial records are excluded from all
+claims. Gate E remains **inconclusive until a short, valid terminal smoke is
+re-run**; Gate F, intervention, distillation, OPSD, and RL remain blocked.
+The detailed audit is in
+`docs/results/gate_e_long_horizon_debug.md`.
+
 ## Few-shot opponent adaptation (only after Gate B)
 
 The proposed low-dimensional opponent code is ridge-fitted from short probes:

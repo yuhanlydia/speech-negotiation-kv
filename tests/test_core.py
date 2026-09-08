@@ -6,7 +6,7 @@ from torch import nn
 
 from speech_negotiation_kv.calibration import fit_ridge_opponent_code
 from speech_negotiation_kv.crad import normalized_creditor_utility, parse_offer_days, parse_agreement_days, split_crad
-from speech_negotiation_kv.glm_voice import audio_ids_to_prompt, partition_generated_token_ids, normalize_transcript
+from speech_negotiation_kv.glm_voice import VoiceGeneration, audio_ids_to_prompt, partition_generated_token_ids, normalize_transcript
 from speech_negotiation_kv.kv_hooks import (
     split_fused_qkv,
     apply_kv_delta,
@@ -14,6 +14,15 @@ from speech_negotiation_kv.kv_hooks import (
     FusedQKVSteerer,
     pool_kv_tokens,
 )
+from speech_negotiation_kv.long_horizon import (
+    is_strategically_valid_move,
+    negotiation_turn_prompt,
+    paired_turn_seed,
+    parse_negotiation_move,
+    run_long_horizon_branch,
+    score_terminal_outcome,
+)
+from speech_negotiation_kv.long_horizon_analysis import style_ranking_correlations
 from speech_negotiation_kv.subspace import (
     advantage_memory_directions,
     balanced_scenario_splits,
@@ -53,6 +62,178 @@ def test_glm_audio_token_helpers():
     text, audio = partition_generated_token_ids([10, 1000, 1001, 11, 9999], audio_offset=1000, audio_vocab_size=4, stop_token_ids={9999})
     assert text == [10, 11] and audio == [0, 1]
     assert normalize_transcript("We need 30 days!") == normalize_transcript("we need 30 days")
+
+
+def test_negotiation_move_parser_is_conservative_about_terminal_outcomes():
+    agreement = parse_negotiation_move("AGREED: 45 days.", latest_offer=45)
+    assert agreement.kind == "agreement" and agreement.days == 45
+    inferred = parse_negotiation_move("I accept your latest proposal.", latest_offer=50)
+    assert inferred.kind == "agreement" and inferred.days == 50
+    assert parse_negotiation_move("NO DEAL. We are ending talks.", latest_offer=45).kind == "no_deal"
+    proposal = parse_negotiation_move("PROPOSE: 60 days.", latest_offer=45)
+    assert proposal.kind == "proposal" and proposal.days == 60
+    negated = parse_negotiation_move(
+        "I can't agree to 30 days. Let's aim for 21 days.", latest_offer=30
+    )
+    assert negated.kind == "proposal" and negated.days == 21
+    assert parse_negotiation_move("Let us keep discussing.", latest_offer=45).kind == "invalid"
+
+
+def test_terminal_scoring_and_paired_turn_seed():
+    assert math.isclose(score_terminal_outcome("agreement", 45, 30, 120), 5 / 6)
+    assert score_terminal_outcome("no_deal", None, 30, 120) == 0.0
+    assert score_terminal_outcome("censored", None, 30, 120) is None
+    assert paired_turn_seed(4242424242, branch_seed=3, transition=2, actor="creditor") == \
+        paired_turn_seed(4242424242, branch_seed=3, transition=2, actor="creditor")
+    assert paired_turn_seed(4242424242, branch_seed=3, transition=2, actor="creditor") != \
+        paired_turn_seed(4242424242, branch_seed=3, transition=2, actor="debtor")
+
+
+def test_strategic_move_validation_enforces_counteroffer_direction():
+    assert is_strategically_valid_move(
+        parse_negotiation_move("PROPOSE: 45 days", latest_offer=60),
+        role="creditor", latest_offer=60, creditor_target=30, debtor_target=120, transition=2,
+    )
+    assert not is_strategically_valid_move(
+        parse_negotiation_move("PROPOSE: 60 days", latest_offer=60),
+        role="creditor", latest_offer=60, creditor_target=30, debtor_target=120, transition=2,
+    )
+    assert is_strategically_valid_move(
+        parse_negotiation_move("PROPOSE: 70 days", latest_offer=60),
+        role="debtor", latest_offer=60, creditor_target=30, debtor_target=120, transition=2,
+    )
+    assert is_strategically_valid_move(
+        parse_negotiation_move("AGREED: 60 days", latest_offer=60),
+        role="debtor", latest_offer=60, creditor_target=30, debtor_target=120, transition=2,
+    )
+
+
+def test_long_horizon_branch_restores_neutral_policy_and_terminates():
+    class Backend:
+        def __init__(self):
+            self.calls = []
+
+        def render_exact(self, text, style, *, seed):
+            self.calls.append(("renderer", style, seed, 0))
+            return VoiceGeneration(text, [101], [101])
+
+        def respond_audio(self, audio_ids, scenario, *, seed):
+            self.calls.append(("debtor_opening", "base", seed, 1))
+            return VoiceGeneration("PROPOSE: 60 days.", [60], [60])
+
+        def respond_negotiation_turn(self, *, role, opponent_audio_ids, scenario, history,
+                                     transition, seed, policy_style, force_terminal=False):
+            self.calls.append((role, policy_style, seed, transition))
+            if role == "creditor" and transition == 2:
+                return VoiceGeneration("PROPOSE: 45 days.", [45], [45])
+            if role == "debtor":
+                return VoiceGeneration("PROPOSE: 55 days.", [55], [55])
+            return VoiceGeneration("AGREED: 55 days.", [54], [54])
+
+    scenario = {
+        "Creditor Name": "A", "Debtor Name": "B",
+        "Creditor Target Days": 30, "Debtor Target Days": 120,
+    }
+    backend = Backend()
+    result = run_long_horizon_branch(
+        scenario, scenario_id=0, style="firm and assertive", branch_seed=2,
+        backend=backend, horizon=4, max_horizon=4, base_seed=100,
+    )
+    assert result["outcome"] == "agreement"
+    assert result["agreement_days"] == 55
+    assert result["rounds"] == 2
+    assert result["policy_valid"] is True
+    assert result["turns"][0]["policy_style"] == "firm and assertive"
+    assert backend.calls[1][0] == "debtor_opening"
+    assert all(call[1] == "neutral" for call in backend.calls[2:])
+
+
+def test_long_horizon_branch_keeps_unresolved_outcome_censored():
+    class Backend:
+        def render_exact(self, text, style, *, seed):
+            return VoiceGeneration(text, [101], [101])
+
+        def respond_audio(self, audio_ids, scenario, *, seed):
+            return VoiceGeneration("PROPOSE: 70 days.", [70], [70])
+
+        def respond_negotiation_turn(self, *, role, opponent_audio_ids, scenario, history,
+                                     transition, seed, policy_style, force_terminal=False):
+            days = 70 if role == "debtor" else 40
+            return VoiceGeneration(f"PROPOSE: {days} days.", [days], [days])
+
+    scenario = {
+        "Creditor Name": "A", "Debtor Name": "B",
+        "Creditor Target Days": 30, "Debtor Target Days": 120,
+    }
+    result = run_long_horizon_branch(
+        scenario, scenario_id=0, style="neutral", branch_seed=0,
+        backend=Backend(), horizon=4, max_horizon=4, base_seed=100,
+    )
+    assert result["outcome"] == "censored"
+    assert result["utility"] is None
+    assert result["rounds"] == 4
+
+
+def test_negotiation_turn_prompt_fixes_role_policy_and_output_contract():
+    scenario = {
+        "Creditor Name": "A", "Debtor Name": "B",
+        "Creditor Target Days": 30, "Debtor Target Days": 120,
+    }
+    prompt = negotiation_turn_prompt(
+        role="creditor", opponent_audio_ids=[3, 9], scenario=scenario,
+        history=[
+            {"actor": "creditor", "move_kind": "proposal", "move_days": 30},
+            {"actor": "debtor", "move_kind": "proposal", "move_days": 90},
+        ],
+        transition=2, policy_style="neutral",
+    )
+    assert "You are A, the creditor" in prompt
+    assert "prefer repayment within 30 days" in prompt
+    assert "neutral" in prompt
+    assert "AGREED: N days" in prompt and "NO DEAL" in prompt and "PROPOSE: N days" in prompt
+    assert "must counteroffer" in prompt
+    assert "may accept the exact latest proposal" in prompt
+    assert "do not use NO DEAL" in prompt
+    assert "strictly fewer days" in prompt
+    assert "do not repeat the opponent's number" in prompt
+    assert "between 30 and 89 days" in prompt
+    assert "Creditor proposed 30 days" in prompt and "Debtor proposed 90 days" in prompt
+    assert "Choose the next move from the structured history" in prompt
+    assert "<|audio_3|><|audio_9|>" in prompt
+
+
+def test_negotiation_turn_prompt_includes_terminal_contract_for_final_subset_turn():
+    scenario = {
+        "Creditor Name": "A", "Debtor Name": "B",
+        "Creditor Target Days": 30, "Debtor Target Days": 120,
+    }
+    prompt = negotiation_turn_prompt(
+        role="debtor", opponent_audio_ids=[7], scenario=scenario,
+        history=[
+            {"actor": "creditor", "move_kind": "proposal", "move_days": 45},
+        ],
+        transition=8, policy_style="neutral", force_terminal=True,
+    )
+    assert "<|audio_7|>" in prompt
+    assert "final decision" in prompt
+    assert "must output either AGREED:" in prompt and "or NO DEAL" in prompt
+    assert "must not use PROPOSE" in prompt
+
+
+def test_long_horizon_style_ranking_detects_reversal():
+    rows = []
+    for state in ("s0", "s1"):
+        for index, style in enumerate(("a", "b", "c")):
+            rows.append({
+                "state_id": state,
+                "style": style,
+                "immediate_offer_utility": float(index),
+                "utility": float(2 - index),
+            })
+    result = style_ranking_correlations(rows, expected_styles={"a", "b", "c"})
+    assert result["n_complete_states"] == 2
+    assert result["spearman"]["median"] == -1.0
+    assert result["best_style_agreement_rate"] == 0.0
 
 
 def test_advantage_direction_cancels_state_content():
