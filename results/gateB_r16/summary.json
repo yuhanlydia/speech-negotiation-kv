@@ -1,0 +1,13 @@
+{
+  "rank": 16,
+  "n_rows": 120,
+  "n_states": 16,
+  "n_scenarios": 10,
+  "explained_variance": 1.0,
+  "scenario_half_overlap": 0.19279190506241428,
+  "raw_best_kv_half_overlap": 0.17116397023619148,
+  "shuffled_overlap_p95": 0.23547559619647976,
+  "random_subspace_overlap_p95": 0.005920392140442298,
+  "advantage_minus_raw_overlap": 0.0216279348262228,
+  "passes_overlap_null": false
+}

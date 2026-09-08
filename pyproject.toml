@@ -11,7 +11,13 @@ dependencies = ["numpy>=1.24", "pandas>=2.0", "PyYAML>=6.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
-glm = ["torch>=2.1", "transformers>=4.44,<5", "accelerate>=0.30", "bitsandbytes>=0.43"]
+glm = [
+  "torch>=2.1",
+  "transformers==4.44.1",
+  "accelerate==0.34.2",
+  "bitsandbytes>=0.43",
+  "tiktoken>=0.7",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
