@@ -1,0 +1,37 @@
+model:
+  name: zai-org/glm-4-voice-9b
+  quantization: int4
+  device: cuda:0
+  max_new_tokens: 96
+  temperature: 0.2
+  top_p: 0.8
+  audio_vocab_size: 16384
+
+experiment:
+  split: train
+  scenario_start: 20
+  scenarios: 10
+  seeds: [10, 11, 12, 13, 14, 15]
+  styles:
+    - neutral
+    - calm and confident
+    - firm and assertive
+    - empathetic and warm
+    - urgent but controlled
+    - hesitant and uncertain
+  horizon: 8
+  terminal_max_horizon: 12
+  terminal_scenarios: [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+  base_seed: 4242424242
+  matched_transcript_min_rate: 0.95
+  parseable_move_min_rate: 0.95
+  strategically_valid_move_min_rate: 0.95
+  terminal_subset_min_completion_rate: 0.95
+  strong_spearman_lower_bound: 0.30
+  top1_min_rate: 0.50
+  median_regret_max: 0.05
+
+resources:
+  generation_batch_size: 1
+  waveform_roundtrip: false
+  context_cap_tokens: 2048

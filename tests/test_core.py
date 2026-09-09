@@ -23,6 +23,7 @@ from speech_negotiation_kv.long_horizon import (
     score_terminal_outcome,
 )
 from speech_negotiation_kv.long_horizon_analysis import style_ranking_correlations
+from speech_negotiation_kv.gate_e2 import terminal_state_metrics
 from speech_negotiation_kv.subspace import (
     advantage_memory_directions,
     balanced_scenario_splits,
@@ -238,6 +239,26 @@ def test_long_horizon_style_ranking_detects_reversal():
     assert result["n_complete_states"] == 2
     assert result["spearman"]["median"] == -1.0
     assert result["best_style_agreement_rate"] == 0.0
+
+
+def test_gate_e2_reports_tie_aware_regret_for_immediate_best():
+    rows = []
+    terminal = {"a": 0.8, "b": 0.2, "c": 0.1}
+    immediate = {"a": 0.9, "b": 0.9, "c": 0.2}
+    for style in ("a", "b", "c"):
+        rows.append({
+            "state_id": "crad:20:opening:seed10",
+            "style": style,
+            "immediate_offer_utility": immediate[style],
+            "utility": terminal[style],
+            "outcome": "agreement",
+            "policy_valid": True,
+        })
+    result = terminal_state_metrics(rows, expected_styles={"a", "b", "c"})
+    assert result["n_complete_states"] == 1
+    assert result["per_state"][0]["immediate_best_styles"] == ["a", "b"]
+    assert math.isclose(result["per_state"][0]["regret"], 0.3)
+    assert result["top1_agreement_rate"] == 1.0
 
 
 def test_exploratory_gate_f_uses_scenario_held_out_state_metrics():

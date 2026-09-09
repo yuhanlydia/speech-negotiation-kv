@@ -31,6 +31,7 @@ def main() -> None:
     parser.add_argument("--data", default="data/credit_recovery_scenarios.csv")
     parser.add_argument("--output", default="results/gate_e_long_horizon.jsonl")
     parser.add_argument("--limit-scenarios", type=int, default=None)
+    parser.add_argument("--scenario-start", type=int, default=None)
     parser.add_argument("--seeds", type=int, nargs="*", default=None)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--fresh", action="store_true", help="refuse to overwrite an existing output")
@@ -42,7 +43,11 @@ def main() -> None:
     train, test = split_crad(frame)
     part = train if experiment.get("split", "train") == "train" else test
     scenario_count = int(args.limit_scenarios or experiment["scenarios"])
-    part = part.iloc[:scenario_count]
+    scenario_start = int(
+        args.scenario_start if args.scenario_start is not None
+        else experiment.get("scenario_start", 0)
+    )
+    part = part.iloc[scenario_start:scenario_start + scenario_count]
     styles = [str(style) for style in experiment["styles"]]
     seeds = list(args.seeds) if args.seeds else [int(seed) for seed in experiment["seeds"]]
     horizon = int(experiment["horizon"])
