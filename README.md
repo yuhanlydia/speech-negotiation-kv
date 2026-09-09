@@ -1,327 +1,137 @@
 # Speech Negotiation KV
 
-Research code for testing **opponent-stable strategic K/V subspaces** in speech-native CRAD negotiation.
+Research code for **speech-native adversarial negotiation**, internal vocal-strategy geometry, and short-horizon strategy distillation on CRAD.
 
-## Current research question
+## Current scientific result
 
-The immediate hypothesis is not "KV steering always helps". We first test whether matched speech interventions reveal a low-dimensional internal memory geometry that is stable across CRAD scenarios for the same frozen opponent:
+The project no longer treats a single opponent-stable advantage K/V direction as the main hypothesis. The current evidence is:
+
+- **Gate A — vocal causal channel: PASS.** With the words held fixed, changing vocal delivery changes the frozen opponent's next offer and utility proxy.
+- **Gate B / B′ — fixed advantage subspace: NOT SUPPORTED.** Corrected action-side K/V did not recover a cross-scenario advantage-specific subspace above the shuffled-utility null.
+- **Gate D — shared strategy geometry: STRONG PASS.** Action-side vocal styles transfer across held-out CRAD scenarios: median six-way decoding accuracy `0.8500` versus chance `0.1667`, all `126/126` balanced scenario splits exceed their own shuffled p95, and `15/15` pairwise style directions pass BH-FDR.
+- **Gate E2 — short-horizon value sufficiency: STRONG CONFIRMATORY PASS.** On fresh CRAD scenarios 20--29, seeds 10--15, and six styles (`360` long-horizon branches), immediate first-response utility predicts terminal utility with mean within-state Spearman `0.6586`, bootstrap 95% CI `[0.5677, 0.7642]`, tie-aware best-style agreement `0.950`, and median regret `0.0000`.
+
+The current paper hypothesis is therefore:
 
 \[
-\Delta m_{s,o} \approx B_o c_s.
+\boxed{\text{stable vocal-strategy geometry} + \text{short-horizon value sufficiency}}
 \]
 
-The key estimator uses **advantage-weighted matched K/V differences**, not PCA over successful raw K/V, because raw K/V is dominated by scenario text, numbers and turn position.
+A one-step opponent reaction may provide cheap supervision for a strategy that would otherwise require an expensive long-horizon rollout to evaluate.
 
-## Current confirmatory status: Gate E2
+## Current method phase: Gate F / Gate G
 
-The fresh confirmatory Gate E2 run is complete on CRAD train scenarios 20--29,
-seeds 10--15, and six matched vocal styles (360 branches total). The frozen
-GLM-4-Voice-9B int4 setup used batch 1 and continued every branch through the
-terminal protocol (H=8, then H=12 with an explicit timeout NO DEAL rule).
+The repo now implements the next method phase. **Follow `GATE_F_RUN.md` rather than the old Gate-A/B execution order.**
 
-The pre-registered E2 data gate passes: matched semantics 1.000, parseable
-moves 1.000, strategically valid moves 0.985, terminal completion 1.000, and
-60/60 complete terminal states (the requirement was 54/60). Immediate utility
-predicts terminal utility with mean within-state Spearman 0.659, bootstrap 95%
-CI [0.568, 0.764], tie-aware best-style agreement 0.950, and median regret
-0.000. Thus the pre-registered strong-alignment criteria pass.
+### Gate F — short-horizon strategy distillation
 
-This result is recorded as `formal_gate_e2` and does not claim that a learned
-selector or intervention method has been demonstrated. Twenty branches reached
-the explicit H=12 timeout and were recorded as protocol-forced NO DEAL; the
-summary also reports a stricter policy-valid-only sensitivity analysis (47/60
-complete states). Full details are in
-`docs/results/gate_e2_formal_v3_report.md` and
-`results/gate_e2_formal_v3_summary.json`.
+For state `s` and vocal strategy `z`, Gate F learns a small selector from **one-step utility only**. The geometry-aware scorer is
 
-## What to run now
+\[
+q_\theta(s,z)=\phi(s)^\top W c_z,
+\]
 
-The repo currently implements the next **Gate A / Gate B** experiments. Do **not** start OPSD/RL before these pass.
+where `c_z` is the fixed Gate-D strategy coordinate and `phi(s)` contains deterministic CRAD opening-state features. GLM-4-Voice weights remain frozen.
 
-- **Gate A — vocal causal channel:** same words, different GLM speech realization must measurably change the frozen opponent's next offer / CRAD utility proxy.
-- **Gate B — stable strategic subspace:** advantage-KV directions must be low-rank and reproducible across disjoint scenario halves, above shuffled-advantage controls.
-- **Gate C — steering:** only after Gate B, test correct-direction vs sign-flip / shuffled / orthogonal K/V steering on held-out CRAD utility.
+The training target is a tie-aware soft teacher from centered immediate utility. States with zero strategy spread are automatically down-weighted. The formal selector is compared against:
 
-The full design is in `docs/superpowers/specs/2026-09-07-speech-negotiation-kv-design.md` and the implementation/run plan is in `docs/superpowers/plans/2026-09-07-speech-negotiation-kv.md`.
+- global per-style lookup / best fixed style;
+- a matched state × one-hot-style ridge head with no Gate-D geometry;
+- neutral and deterministic-random opening policies;
+- the geometry-aware selector.
 
-## Why token-loopback speech?
+### Gate G1 — geometry necessity
 
-GLM-4-Voice represents generated speech as discrete `<|audio_N|>` tokens. On a 16 GB GPU, the primary experiment passes those generated audio IDs **directly** to the opponent as speech input. It does not load the waveform decoder or Whisper-VQ tokenizer, so only one 9B model copy is resident. This preserves the speech modality while making the causal pilot feasible on 16 GB.
+Compare the geometry-aware selector against the matched one-hot style head on the same train labels, state features, ridge grid, and held-out robustness scenarios. Parameter counts are reported explicitly.
 
-A later confirmatory experiment can decode -> waveform -> re-tokenize on 24 GB. Do not pay that cost before the basic phenomenon passes.
+### Gate G2 — unseen-strategy generalization
 
-## 16 GB setup
+Leave one vocal strategy out of all value-training rows. The geometry model still receives its pre-existing Gate-D coordinate at test time, while the one-hot head has no learned held-out class parameter and uses the pre-registered state-mean fallback. Report held-out-style correlation, pairwise sign accuracy, all-six Top-1, and regret.
+
+## Fixed data split
+
+Do not change these ranges after seeing results:
+
+| Purpose | CRAD scenarios |
+|---|---:|
+| Gate D / earlier mechanism pilots | 0--19 |
+| Gate E2 fresh confirmation | 20--29 |
+| Gate F one-step train | 30--59 |
+| Gate F validation / ridge selection | 60--69 |
+| Gate G robustness | 70--79 |
+| **Final held-out terminal benchmark** | **80--99** |
+
+Default Gate-F one-step teacher seeds are `20--25`. Final held-out terminal seeds are `30--35`.
+
+## Formal Gate-F pass rule
+
+The final benchmark runs one selected opening style on CRAD 80--99; every later turn uses the same frozen neutral continuation policy and the Gate-E2 terminal protocol (`H=8`, then at most `H=12`).
+
+Primary metric: terminal CRAD utility, paired by `(scenario, seed)`.
+
+Gate F passes only if
+
+\[
+\operatorname{LCB}_{95\%}\left[
+U_{\text{geometry}}-U_{\text{best-fixed}}
+\right] > 0.
+\]
+
+Secondary outputs include agreement/no-deal rate, rounds, forced-timeout provenance, selected-style distribution, regret, and paired deltas versus neutral/random/one-hot when available.
+
+Until this final held-out terminal gate passes, **do not start K/V causal steering (G4), OPSD, GRPO, LoRA/SFT, cross-model transfer, or cross-domain transfer.**
+
+## Exact run instructions
+
+Use:
 
 ```bash
-git pull
-python -m venv .venv
+git pull origin main
 source .venv/bin/activate
-pip install -e '.[dev]'
-python scripts/download_crad.py
+pip install -e '.[dev,glm]'
 pytest -q
 ```
 
-The tests do not download GLM weights.
+Then follow the complete command sequence in:
 
-Before a real GLM run:
+- `GATE_F_RUN.md`
+- `configs/crad_gate_f_16gb.yaml`
+- `docs/superpowers/specs/2026-09-09-short-horizon-strategy-distillation-design.md`
+- `docs/superpowers/plans/2026-09-09-gate-f-g-strategy-distillation.md`
 
-```bash
-pip install -e '.[glm]'
-export CUDA_VISIBLE_DEVICES=0
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-```
+The run contract covers:
 
-Default 16 GB settings are in `configs/crad_16gb.yaml`:
+1. one-step teacher collection on scenarios 30--59 (`1080` branches);
+2. validation teacher collection on 60--69 (`360` branches);
+3. CPU fitting of geometry / one-hot / style-lookup selectors;
+4. robustness teacher collection on 70--79 (`360` branches) and Gate G1/G2;
+5. final terminal evaluation on 80--99 (`120` states per method);
+6. paired-bootstrap Gate-F analysis.
 
-- GLM-4-Voice-9B, NF4/int4;
+Raw JSONL / K/V NPZ / audio artifacts remain local and gitignored. Commit lightweight summaries and reports only.
+
+## Model and resource mode
+
+Primary experiments use:
+
+- `zai-org/glm-4-voice-9b`;
+- NF4/int4;
 - one model copy;
-- generation microbatch = 1;
-- no speech decoder / waveform roundtrip;
-- six selected K/V layers: 16,20,24,28,32,36;
-- K/V pooled then immediately fp16 CPU offload;
-- pilot = 10 CRAD train scenarios x 2 seeds x 6 speech styles.
+- generation microbatch `1`;
+- direct discrete audio-token loopback;
+- no waveform decoder / tokenizer roundtrip in the primary 16 GB path.
 
-## 0. Pipeline dry run
+The method fitting and Gate-G analyses are NumPy/CPU-only after one-step teacher data and Gate-D coordinates exist.
 
-Always run this first. It tests the record format, scoring and paired sweep without loading a model.
+## Key result records
 
-```bash
-python scripts/run_sweep.py \
-  --config configs/crad_16gb.yaml \
-  --split train \
-  --limit-scenarios 10 \
-  --seeds 0 1 \
-  --dry-run \
-  --output results/dryrun_sweep.jsonl
-```
-
-Expected: 120 branches, `matched_semantics_rate=1.000`, non-zero utility variation.
-
-## 1. Gate A — real GLM matched speech sweep
-
-```bash
-python scripts/run_sweep.py \
-  --config configs/crad_16gb.yaml \
-  --split train \
-  --limit-scenarios 10 \
-  --seeds 0 1 \
-  --output results/gateA_glm_sweep.jsonl
-```
-
-Each state uses the same creditor sentence across styles. Only the speaker receives the private style control. The debtor receives generated **audio tokens only**. Branches whose decoded transcript changes are marked `matched_semantics=false` and are excluded from the main subspace analysis.
-
-Inspect these before scaling:
-
-1. matched transcript rate should be >= 0.80;
-2. debtor responses should contain parseable day proposals;
-3. at least a meaningful subset of states should show utility spread across styles;
-4. no systematic role reversal or audio-token-empty output.
-
-If the matched rate is poor, repair the rendering prompt before any K/V analysis.
-
-## 2. Extract K/V memory statistics
-
-```bash
-python scripts/extract_kv.py \
-  --config configs/crad_16gb.yaml \
-  --records results/gateA_glm_sweep.jsonl \
-  --output results/gateA_kv.npz
-```
-
-The extractor discovers ChatGLM-style fused `query_key_value` modules, splits Q/K/V using model config (`num_attention_heads`, `kv_channels`, `multi_query_group_num`), pools K and V per selected layer, casts to fp16 and offloads immediately.
-
-The feature represents the creditor's internal state **after receiving the debtor's spoken response**.
-
-## 3. Gate B — advantage-KV subspace
-
-```bash
-python scripts/fit_subspace.py \
-  --records results/gateA_glm_sweep.jsonl \
-  --kv results/gateA_kv.npz \
-  --rank 8 \
-  --shuffle-repeats 200 \
-  --output-dir results/gateB_r8
-```
-
-The state-level direction is
-
-\[
-g_s=\sum_k \frac{U_k-\bar U}{\sum_j |U_j-\bar U|+\epsilon}(m_k-\bar m).
-\]
-
-The script reports:
-
-- number of informative matched states;
-- rank-r explained variance;
-- scenario-half subspace overlap;
-- 95th percentile overlap under within-state utility shuffling;
-- whether observed overlap beats that null.
-
-Run ranks 4/8/16 before any claim:
-
-```bash
-for r in 4 8 16; do
-  python scripts/fit_subspace.py \
-    --records results/gateA_glm_sweep.jsonl \
-    --kv results/gateA_kv.npz \
-    --rank $r --shuffle-repeats 200 \
-    --output-dir results/gateB_r${r}
-done
-```
-
-## Stop / continue rule
-
-**Continue toward steering + OPSD/RL only if:**
-
-1. speech realization produces a reproducible opponent-policy effect under matched transcripts;
-2. scenario-half strategic-subspace overlap beats the shuffled null;
-3. the result is not explained by raw successful-KV PCA or a random rank-matched basis.
-
-If Gate A fails, the speech strategic-channel hypothesis is unsupported for this model/setup. If A passes but B fails, keep the speech-negotiation phenomenon but drop the opponent-stable KV-subspace claim.
-
-### Debug Gate B′ after the original pilot
-
-The first pilot's Gate-B negative is measurement-limited: its extractor used
-post-response `opponent_audio_token_ids` and full-prompt mean pooling. Before
-interpreting that result as absence of a strategic subspace, use the corrected
-action-side diagnostic:
-
-```bash
-python scripts/extract_kv.py \
-  --config configs/crad_16gb.yaml \
-  --records results/gateA_glm_sweep.jsonl \
-  --observation action --pooling audio_only \
-  --output results/gateA_action_audio_kv.npz
-
-python scripts/fit_gate_b_prime.py \
-  --records results/gateA_glm_sweep.jsonl \
-  --kv results/gateA_action_audio_kv.npz \
-  --shuffle-repeats 200 \
-  --output results/debug_gate_b_prime_action_audio_summary.json
-```
-
-This diagnostic uses action-side audio tokens, all 126 balanced 5/5 splits
-for the 10-scenario pilot, same-scenario seed reproducibility, and explicit
-effective-rank reporting. The completed pilot record is
-`results/debug_gate_b_prime_report.md`. Its result is still negative for a
-stable advantage-specific subspace, but it does not justify claiming that no
-shared K/V geometry exists.
-
-## Gate D — shared strategy geometry
-
-Gate D removes utility from the representation test. For every scenario/seed
-state it centers the six action K/V features, then asks whether vocal style can
-be decoded in held-out scenarios and whether oriented style-pair directions
-align across scenarios:
-
-```bash
-python scripts/run_strategy_geometry.py \
-  --records results/gateA_glm_sweep.jsonl \
-  --kv results/gateA_action_audio_kv.npz \
-  --shuffle-repeats 1000 \
-  --output results/gate_d_action_audio_summary.json
-```
-
-The 10-scenario pilot passes Gate D: audio-only held-out style accuracy has
-median 0.8500 versus chance/null median 0.1667 (`p=0.000999`), all 126
-balanced partitions exceed their shuffled-style p95, and 15/15 pairwise style
-directions pass BH-FDR. Last-audio accuracy is lower at 0.5292 but remains
-significant. See `results/gate_d_strategy_geometry_report.md`.
-
-This supports a **shared strategy space with context-dependent value**, not a
-globally winning direction. Gate E must next measure paired long-horizon
-utility before any contextual-value model, intervention, distillation, OPSD,
-or RL claim.
-
-## Gate E — long-horizon debugging record
-
-The first real Gate-E run used the intended 20 scenarios × 6 seeds × 6 vocal
-styles protocol (720 branches, H=4, with the preregistered five-scenario
-terminal subset allowed to continue to H=8). It completed all 720 branches,
-but it was not a valid long-horizon result:
-
-- 717/720 opening transcripts matched;
-- 6,443/6,447 generated moves were parseable;
-- 6,437/6,447 moves passed the strategic-direction check;
-- the 180-branch terminal subset produced 177 `censored` and only 3 `no_deal`
-  outcomes; it produced no agreement outcome;
-- all 720 branches had no measured terminal utility at H=4.
-
-The failure was an implementation/protocol failure, not evidence for or
-against the research hypothesis. Three concrete issues were found:
-
-1. `negotiation_turn_prompt()` accepted `opponent_audio_ids` but discarded
-   them. Continuation turns therefore used dialogue text without the opponent
-   audio-token loopback.
-2. The final turn of the H=8 terminal subset did not require a terminal
-   decision. GLM continued producing proposals, so the run was overwhelmingly
-   censored.
-3. The strategic validator incorrectly rejected an exact early acceptance
-   (`AGREED` at transition < 3), although the protocol and tests allow early
-   agreement.
-
-The fixes are now in `long_horizon.py` and `glm_voice.py`: continuation prompts
-include the opponent audio tokens, only the preregistered terminal subset gets
-a final-turn `AGREED`/`NO DEAL` contract, and an agreement is valid whenever it
-accepts the current latest proposal. Protocol v7 also states the latest offer
-explicitly, forbids repeating it as a proposal, and requires interleaved audio.
-
-The final-code real-GPU terminal smoke used one terminal scenario × two seeds ×
-six styles (12 branches). It passed: 12/12 matched openings, 29/29 parseable and
-strategically valid moves, 17/17 legal proposals, 12/12 policy-valid branches,
-12/12 agreements, and 100% terminal completion. All 29 turns whose audio was
-consumed by a following opponent turn had nonempty audio IDs. Two terminal
-agreement outputs had no audio, but neither had a successor and therefore did
-not break the opponent-audio loop. All 12 early agreements were classified as
-valid. This is a protocol validation smoke, not hypothesis evidence. The full
-test suite passes (`23 passed`).
-
-The formal rerun was intentionally stopped after 27/720 branches to avoid
-spending another long GPU run. Those partial records are excluded from all
-claims. The terminal smoke authorizes a future formal Gate-E rerun, but no
-formal long-horizon conclusion has been made. Gate F, intervention,
-distillation, OPSD, and RL remain blocked until that formal Gate-E data gate
-passes.
-The detailed audit is in
-`docs/results/gate_e_long_horizon_debug.md`.
-
-### Formal Gate E v7 result
-
-The formal 720-branch v7 run completed. Basic execution quality passed:
-matched opening rate `0.9958`, parseable move rate `0.9982`, and
-strategically-valid move rate `0.9799`. The 180-branch terminal subset had
-`173/180` terminal outcomes (`0.9611`). However, only `20/30` terminal
-`(scenario, seed)` states had all six styles complete; the preregistered
-threshold is `24/30`. Therefore Gate E is
-`inconclusive_data_gate_failed`, and its descriptive Spearman statistics are
-not a hypothesis claim. Gate F and downstream intervention remain blocked.
-See `docs/results/gate_e_formal_v7_report.md`.
-
-An exploratory CPU Gate-F analysis on the 20 complete states is recorded in
-`docs/results/gate_f_exploratory_report.md`. The contextual bilinear model had
-Top-1 `0.45` versus `0.40` for global/style lookup, but this is incomplete
-sample evidence only; it is not a Gate-F pass and does not authorize
-intervention, distillation, OPSD, or RL.
-
-## Few-shot opponent adaptation (only after Gate B)
-
-The proposed low-dimensional opponent code is ridge-fitted from short probes:
-
-\[
-\hat w_o=(C^TC+\lambda I)^{-1}C^T\Delta U.
-\]
-
-Utility code is in `speech_negotiation_kv.calibration`; the CLI accepts an NPZ containing `C` and `delta_utility`:
-
-```bash
-python scripts/fit_opponent_code.py --probes results/new_opponent_probes.npz
-```
-
-Do not interpret this as an opponent-specific claim until at least a second frozen speech model/policy is added. With GLM-vs-GLM only, Gate B tests **same-opponent cross-scenario stability**.
-
-## 24 GB mode
-
-`configs/crad_24gb.yaml` increases scenario count, selected layers and decoding budget. Keep the algorithm identical. A 24 GB result is a throughput/confirmation run, not a different method.
+- Original Gate A/B report: `results/GATE_REPORT.md`
+- Corrected Gate B′: `results/debug_gate_b_prime_report.md`
+- Gate D strategy geometry: `results/gate_d_strategy_geometry_report.md`
+- Formal Gate E v7 (inconclusive coverage): `docs/results/gate_e_formal_v7_report.md`
+- Formal Gate E2 confirmation: `docs/results/gate_e2_formal_v3_report.md`
+- Gate E2 summary: `results/gate_e2_formal_v3_summary.json`
+- Earlier exploratory contextual Gate F: `docs/results/gate_f_exploratory_report.md` (historical only; not the current formal method)
 
 ## Tests
 
@@ -329,14 +139,4 @@ Do not interpret this as an opponent-specific claim until at least a second froz
 pytest -q
 ```
 
-Tests cover:
-
-- CRAD scoring and 80/20 split;
-- day/agreement parsing;
-- matched advantage centering;
-- low-rank subspace recovery and overlap;
-- ridge opponent-code recovery;
-- fused multi-query Q/K/V splitting;
-- K/V-only steering;
-- deterministic matched-sweep semantics;
-- GLM audio special-token formatting.
+The repo tests cover CRAD scoring/parsing, long-horizon terminal protocol, matched speech semantics, K/V extraction and subspace controls, Gate-D geometry, Gate-E2 metrics, and the new short-horizon selector primitives including tie-aware teachers, geometry/one-hot scoring, regret, bootstrap deltas, and unseen-strategy valuation.
