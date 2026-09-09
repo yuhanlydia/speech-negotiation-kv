@@ -37,6 +37,7 @@ from speech_negotiation_kv.strategy_geometry import (
     pairwise_style_directions,
     shuffle_labels_within_states,
 )
+from speech_negotiation_kv.gate_f import evaluate_state_predictions, leave_one_scenario_out
 from speech_negotiation_kv.sweep import MockSpeechBackend, run_one_turn_matched_sweep
 
 
@@ -237,6 +238,20 @@ def test_long_horizon_style_ranking_detects_reversal():
     assert result["n_complete_states"] == 2
     assert result["spearman"]["median"] == -1.0
     assert result["best_style_agreement_rate"] == 0.0
+
+
+def test_exploratory_gate_f_uses_scenario_held_out_state_metrics():
+    rows = [
+        {"state_id": "s0", "scenario_id": 0, "style": "a", "utility": 0.1, "prediction": 0.2},
+        {"state_id": "s0", "scenario_id": 0, "style": "b", "utility": 0.9, "prediction": 0.8},
+        {"state_id": "s1", "scenario_id": 1, "style": "a", "utility": 0.8, "prediction": 0.7},
+        {"state_id": "s1", "scenario_id": 1, "style": "b", "utility": 0.2, "prediction": 0.3},
+    ]
+    result = evaluate_state_predictions(rows, expected_styles={"a", "b"})
+    assert result["n_complete_states"] == 2
+    assert math.isclose(result["spearman"]["median"], 1.0)
+    assert result["top1_accuracy"] == 1.0
+    assert leave_one_scenario_out([0, 1]) == [({1}, {0}), ({0}, {1})]
 
 
 def test_advantage_direction_cancels_state_content():

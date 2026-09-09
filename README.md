@@ -275,6 +275,12 @@ threshold is `24/30`. Therefore Gate E is
 not a hypothesis claim. Gate F and downstream intervention remain blocked.
 See `docs/results/gate_e_formal_v7_report.md`.
 
+An exploratory CPU Gate-F analysis on the 20 complete states is recorded in
+`docs/results/gate_f_exploratory_report.md`. The contextual bilinear model had
+Top-1 `0.45` versus `0.40` for global/style lookup, but this is incomplete
+sample evidence only; it is not a Gate-F pass and does not authorize
+intervention, distillation, OPSD, or RL.
+
 ## Few-shot opponent adaptation (only after Gate B)
 
 The proposed low-dimensional opponent code is ridge-fitted from short probes:

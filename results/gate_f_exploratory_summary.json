@@ -1,0 +1,91 @@
+{
+  "exploratory": true,
+  "formal_gate_e_passed": false,
+  "paper_pass_authorized": false,
+  "records": "results/gate_e_formal_v7.jsonl",
+  "gate_d_records": "results/gateA_glm_sweep.jsonl",
+  "gate_d_kv": "results/gateA_action_audio_kv.npz",
+  "n_complete_terminal_states": 20,
+  "n_terminal_scenarios": 5,
+  "held_out_split": "leave_one_terminal_scenario_out",
+  "state_features": [
+    "creditor_target",
+    "debtor_target",
+    "bargaining_gap",
+    "opening_offer",
+    "previous_concession",
+    "round_fraction"
+  ],
+  "style_coordinate_metadata": {
+    "source": "Gate-D action-audio K/V style prototypes",
+    "rank": 5,
+    "observation": "action",
+    "pooling": "audio_only",
+    "available_layers": [
+      16,
+      20,
+      24,
+      28,
+      32,
+      36
+    ]
+  },
+  "models": {
+    "style_lookup": "global per-style mean",
+    "global_strategy": "ridge utility from Gate-D style coordinate c_z",
+    "state_only": "ridge utility from phi(s)",
+    "contextual_bilinear": "ridge utility from phi(s) tensor c_z",
+    "full_kv": "unavailable: formal Gate-E records contain no K/V captures"
+  },
+  "metrics": {
+    "style_lookup": {
+      "n_complete_states": 20,
+      "spearman": {
+        "n": 18,
+        "mean": -0.034041557147479716,
+        "median": 0.030860669992418384,
+        "p05": -0.6768122330722123,
+        "p95": 0.6546536707079772
+      },
+      "top1_accuracy": 0.4,
+      "per_state_count": 18
+    },
+    "global_strategy": {
+      "n_complete_states": 20,
+      "spearman": {
+        "n": 18,
+        "mean": -0.034041557147479716,
+        "median": 0.030860669992418384,
+        "p05": -0.6768122330722123,
+        "p95": 0.6546536707079772
+      },
+      "top1_accuracy": 0.4,
+      "per_state_count": 18
+    },
+    "state_only": {
+      "n_complete_states": 20,
+      "spearman": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "p05": null,
+        "p95": null
+      },
+      "top1_accuracy": 0.35,
+      "per_state_count": 0
+    },
+    "contextual_bilinear": {
+      "n_complete_states": 20,
+      "spearman": {
+        "n": 18,
+        "mean": 0.02813867213473876,
+        "median": 0.06546536707079773,
+        "p05": -0.4181385474774569,
+        "p95": 0.6546536707079772
+      },
+      "top1_accuracy": 0.45,
+      "per_state_count": 18
+    }
+  },
+  "interpretation": "exploratory_only_due_to_gate_e_data_gate_failure"
+}
