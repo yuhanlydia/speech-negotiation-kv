@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "speech-negotiation-kv"
 version = "0.1.0"
-description = "Opponent-stable strategic KV subspaces for speech-native CRAD negotiation"
+description = "Speech-native negotiation, vocal-strategy geometry, and short-horizon strategy distillation"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.24", "pandas>=2.0", "PyYAML>=6.0"]
 
