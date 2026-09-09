@@ -1,0 +1,1637 @@
+{
+  "records": "results/gate_e_formal_v7.jsonl",
+  "expected_branches": 720,
+  "n_branches": 720,
+  "matched_semantics_rate": 0.9958333333333333,
+  "parseable_move_rate": 0.9981701738334858,
+  "strategically_valid_move_rate": 0.979871912168344,
+  "policy_valid_branch_rate": 0.9430555555555555,
+  "horizon_completion_rate": 0.9444444444444444,
+  "horizon_outcomes": {
+    "agreement": 677,
+    "censored": 37,
+    "no_deal": 3,
+    "invalid": 3
+  },
+  "terminal_subset_expected_branches": 180,
+  "terminal_subset_branches": 180,
+  "terminal_subset_completion_rate": 0.9611111111111111,
+  "terminal_subset_outcomes": {
+    "agreement": 173,
+    "censored": 7
+  },
+  "terminal_subset_complete_state_rate": 0.6666666666666666,
+  "horizon_style_ranking": {
+    "n_complete_states": 87,
+    "n_informative_states": 65,
+    "spearman": {
+      "n": 65,
+      "mean": 0.40905646006448415,
+      "median": 0.632455532033676,
+      "p05": -0.984,
+      "p95": 1.0
+    },
+    "best_style_agreement_rate": 0.8160919540229885,
+    "per_state": [
+      {
+        "state_id": "crad:0:opening:seed0",
+        "spearman": 0.20000000000000007,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:0:opening:seed1",
+        "spearman": 0.316227766016838,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:0:opening:seed2",
+        "spearman": 0.20000000000000007,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:0:opening:seed3",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:10:opening:seed0",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:10:opening:seed2",
+        "spearman": 0.20000000000000007,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:10:opening:seed3",
+        "spearman": 0.632455532033676,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:10:opening:seed4",
+        "spearman": 0.316227766016838,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:10:opening:seed5",
+        "spearman": 0.316227766016838,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:11:opening:seed0",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:11:opening:seed3",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:11:opening:seed5",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:12:opening:seed0",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:12:opening:seed1",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:12:opening:seed4",
+        "spearman": 0.9999999999999999,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ]
+      },
+      {
+        "state_id": "crad:13:opening:seed0",
+        "spearman": -1.0,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:13:opening:seed1",
+        "spearman": -1.0,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:13:opening:seed2",
+        "spearman": 0.9486832980505139,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:13:opening:seed3",
+        "spearman": 0.9797958971132713,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:13:opening:seed5",
+        "spearman": -1.0,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:14:opening:seed0",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:14:opening:seed2",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:14:opening:seed3",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:14:opening:seed4",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:14:opening:seed5",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:15:opening:seed0",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:15:opening:seed1",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:15:opening:seed4",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ]
+      },
+      {
+        "state_id": "crad:15:opening:seed5",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:16:opening:seed0",
+        "spearman": 0.7071067811865475,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:16:opening:seed2",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:16:opening:seed3",
+        "spearman": 0.632455532033676,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:16:opening:seed4",
+        "spearman": 0.7071067811865477,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:17:opening:seed0",
+        "spearman": 0.6642111641550715,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:17:opening:seed1",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:17:opening:seed2",
+        "spearman": 0.674199862463242,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:17:opening:seed3",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:17:opening:seed4",
+        "spearman": 0.20000000000000007,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:17:opening:seed5",
+        "spearman": 0.49999999999999994,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:18:opening:seed0",
+        "spearman": 0.0,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:18:opening:seed1",
+        "spearman": 0.7627700713964739,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:18:opening:seed2",
+        "spearman": -0.31622776601683794,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:18:opening:seed3",
+        "spearman": 0.44721359549995804,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:18:opening:seed4",
+        "spearman": 0.8454027929649519,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:18:opening:seed5",
+        "spearman": 0.44721359549995804,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:19:opening:seed3",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:19:opening:seed5",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:1:opening:seed0",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:1:opening:seed1",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ]
+      },
+      {
+        "state_id": "crad:1:opening:seed2",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:1:opening:seed3",
+        "spearman": 0.7071067811865477,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:1:opening:seed4",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:1:opening:seed5",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:2:opening:seed3",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:2:opening:seed4",
+        "spearman": 0.8798826901281199,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:2:opening:seed5",
+        "spearman": 0.447213595499958,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:3:opening:seed0",
+        "spearman": 0.8853648783083365,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:3:opening:seed1",
+        "spearman": 0.36514837167011077,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:3:opening:seed2",
+        "spearman": -0.316227766016838,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:3:opening:seed3",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:3:opening:seed4",
+        "spearman": 0.8980265101338745,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "neutral"
+        ]
+      },
+      {
+        "state_id": "crad:3:opening:seed5",
+        "spearman": 0.49999999999999994,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed0",
+        "spearman": 0.9066928292470475,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed1",
+        "spearman": 0.9999999999999999,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed2",
+        "spearman": 0.3015113445777636,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed3",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "neutral"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed5",
+        "spearman": 0.6363636363636362,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:5:opening:seed1",
+        "spearman": 0.28284271247461906,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:5:opening:seed3",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:5:opening:seed4",
+        "spearman": -1.0,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:6:opening:seed0",
+        "spearman": 0.7826237921249265,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:6:opening:seed1",
+        "spearman": 0.840168050416806,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:6:opening:seed2",
+        "spearman": 0.31622776601683794,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:6:opening:seed4",
+        "spearman": 0.693103280083672,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:6:opening:seed5",
+        "spearman": 0.7071067811865477,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:7:opening:seed0",
+        "spearman": -0.7745966692414834,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "calm and confident"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm"
+        ]
+      },
+      {
+        "state_id": "crad:7:opening:seed1",
+        "spearman": 0.060606060606060594,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:7:opening:seed2",
+        "spearman": -0.5333333333333334,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:7:opening:seed3",
+        "spearman": -0.11180339887498951,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:7:opening:seed4",
+        "spearman": -0.8798826901281199,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:7:opening:seed5",
+        "spearman": -0.92,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:8:opening:seed2",
+        "spearman": 0.9837387536759294,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:8:opening:seed4",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:9:opening:seed1",
+        "spearman": 0.26967994498529685,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:9:opening:seed2",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:9:opening:seed4",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:9:opening:seed5",
+        "spearman": 0.632455532033676,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      }
+    ]
+  },
+  "terminal_style_ranking": {
+    "n_complete_states": 20,
+    "n_informative_states": 18,
+    "spearman": {
+      "n": 18,
+      "mean": 0.6932607096971866,
+      "median": 0.7745966692414834,
+      "p05": 0.20000000000000007,
+      "p95": 1.0
+    },
+    "best_style_agreement_rate": 0.95,
+    "per_state": [
+      {
+        "state_id": "crad:0:opening:seed0",
+        "spearman": 0.20000000000000007,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:0:opening:seed1",
+        "spearman": 0.316227766016838,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:0:opening:seed2",
+        "spearman": 0.20000000000000007,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:0:opening:seed3",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:0:opening:seed4",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:12:opening:seed0",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:12:opening:seed1",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:12:opening:seed4",
+        "spearman": 0.9999999999999999,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ]
+      },
+      {
+        "state_id": "crad:16:opening:seed2",
+        "spearman": 0.7745966692414834,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:16:opening:seed3",
+        "spearman": 0.632455532033676,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:16:opening:seed4",
+        "spearman": 0.7071067811865477,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed0",
+        "spearman": 0.9066928292470475,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed1",
+        "spearman": 0.9999999999999999,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "outcome_best_styles": [
+          "hesitant and uncertain"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed2",
+        "spearman": 0.3015113445777636,
+        "best_style_overlap": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "firm and assertive"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed3",
+        "spearman": 1.0,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "neutral"
+        ]
+      },
+      {
+        "state_id": "crad:4:opening:seed5",
+        "spearman": 0.6363636363636362,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:8:opening:seed0",
+        "spearman": 0.20000000000000007,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:8:opening:seed2",
+        "spearman": 0.9837387536759294,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident"
+        ],
+        "outcome_best_styles": [
+          "calm and confident"
+        ]
+      },
+      {
+        "state_id": "crad:8:opening:seed4",
+        "spearman": null,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "neutral"
+        ],
+        "outcome_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ]
+      },
+      {
+        "state_id": "crad:8:opening:seed5",
+        "spearman": 0.8454027929649519,
+        "best_style_overlap": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "outcome_best_styles": [
+          "urgent but controlled"
+        ]
+      }
+    ]
+  },
+  "terminal_spearman_mean_bootstrap_95": {
+    "mean": 0.6932607096971866,
+    "lower_95": 0.5475673707071518,
+    "upper_95": 0.8286399243242183,
+    "repeats": 10000
+  },
+  "data_gate_passes": false,
+  "interpretation": "inconclusive_data_gate_failed",
+  "gate_f_authorized": false
+}

@@ -263,6 +263,18 @@ passes.
 The detailed audit is in
 `docs/results/gate_e_long_horizon_debug.md`.
 
+### Formal Gate E v7 result
+
+The formal 720-branch v7 run completed. Basic execution quality passed:
+matched opening rate `0.9958`, parseable move rate `0.9982`, and
+strategically-valid move rate `0.9799`. The 180-branch terminal subset had
+`173/180` terminal outcomes (`0.9611`). However, only `20/30` terminal
+`(scenario, seed)` states had all six styles complete; the preregistered
+threshold is `24/30`. Therefore Gate E is
+`inconclusive_data_gate_failed`, and its descriptive Spearman statistics are
+not a hypothesis claim. Gate F and downstream intervention remain blocked.
+See `docs/results/gate_e_formal_v7_report.md`.
+
 ## Few-shot opponent adaptation (only after Gate B)
 
 The proposed low-dimensional opponent code is ridge-fitted from short probes:
