@@ -1,0 +1,181 @@
+{
+  "gate": "F_terminal",
+  "expected_states_per_method": 120,
+  "common_paired_states": 120,
+  "complete": true,
+  "methods": {
+    "geometry": {
+      "path": "results/gate_f_test_geometry.jsonl",
+      "n_terminal": 120,
+      "utility": {
+        "n": 120,
+        "mean": 0.6270127272196288,
+        "median": 0.65,
+        "p05": 0.0,
+        "p95": 0.968
+      },
+      "rounds": {
+        "n": 120,
+        "mean": 2.625,
+        "median": 1.0,
+        "p05": 1.0,
+        "p95": 12.0
+      },
+      "outcomes": {
+        "agreement": 109,
+        "no_deal": 11
+      },
+      "forced_no_deal": 11,
+      "selected_styles": {
+        "urgent but controlled": 42,
+        "empathetic and warm": 54,
+        "neutral": 18,
+        "firm and assertive": 6
+      }
+    },
+    "onehot": {
+      "path": "results/gate_f_test_onehot.jsonl",
+      "n_terminal": 120,
+      "utility": {
+        "n": 120,
+        "mean": 0.6270127272196288,
+        "median": 0.65,
+        "p05": 0.0,
+        "p95": 0.968
+      },
+      "rounds": {
+        "n": 120,
+        "mean": 2.625,
+        "median": 1.0,
+        "p05": 1.0,
+        "p95": 12.0
+      },
+      "outcomes": {
+        "agreement": 109,
+        "no_deal": 11
+      },
+      "forced_no_deal": 11,
+      "selected_styles": {
+        "urgent but controlled": 42,
+        "empathetic and warm": 54,
+        "neutral": 18,
+        "firm and assertive": 6
+      }
+    },
+    "best_fixed": {
+      "path": "results/gate_f_test_best_fixed.jsonl",
+      "n_terminal": 120,
+      "utility": {
+        "n": 120,
+        "mean": 0.6321322675239716,
+        "median": 0.7785234899328859,
+        "p05": 0.0,
+        "p95": 0.9684721804511278
+      },
+      "rounds": {
+        "n": 120,
+        "mean": 2.716666666666667,
+        "median": 1.0,
+        "p05": 1.0,
+        "p95": 12.0
+      },
+      "outcomes": {
+        "agreement": 109,
+        "no_deal": 11
+      },
+      "forced_no_deal": 11,
+      "selected_styles": {
+        "empathetic and warm": 120
+      }
+    },
+    "neutral": {
+      "path": "results/gate_f_test_neutral.jsonl",
+      "n_terminal": 120,
+      "utility": {
+        "n": 120,
+        "mean": 0.6395021234614042,
+        "median": 0.65,
+        "p05": 0.2178899082568808,
+        "p95": 0.9642857142857143
+      },
+      "rounds": {
+        "n": 120,
+        "mean": 1.85,
+        "median": 1.0,
+        "p05": 1.0,
+        "p95": 12.0
+      },
+      "outcomes": {
+        "agreement": 114,
+        "no_deal": 6
+      },
+      "forced_no_deal": 6,
+      "selected_styles": {
+        "neutral": 120
+      }
+    },
+    "random": {
+      "path": "results/gate_f_test_random.jsonl",
+      "n_terminal": 120,
+      "utility": {
+        "n": 120,
+        "mean": 0.6058422599109279,
+        "median": 0.65,
+        "p05": 0.0,
+        "p95": 0.9642857142857143
+      },
+      "rounds": {
+        "n": 120,
+        "mean": 3.0833333333333335,
+        "median": 1.0,
+        "p05": 1.0,
+        "p95": 12.0
+      },
+      "outcomes": {
+        "agreement": 106,
+        "no_deal": 14
+      },
+      "forced_no_deal": 14,
+      "selected_styles": {
+        "neutral": 20,
+        "calm and confident": 15,
+        "urgent but controlled": 27,
+        "hesitant and uncertain": 22,
+        "empathetic and warm": 19,
+        "firm and assertive": 17
+      }
+    }
+  },
+  "geometry_paired_deltas": {
+    "best_fixed": {
+      "n": 120,
+      "mean_delta": -0.0051195403043427625,
+      "lower_95": -0.04712983209808416,
+      "upper_95": 0.03889165334300187,
+      "repeats": 10000
+    },
+    "neutral": {
+      "n": 120,
+      "mean_delta": -0.01248939624177548,
+      "lower_95": -0.06739742931143416,
+      "upper_95": 0.041960254803522334,
+      "repeats": 10000
+    },
+    "onehot": {
+      "n": 120,
+      "mean_delta": 0.0,
+      "lower_95": 0.0,
+      "upper_95": 0.0,
+      "repeats": 10000
+    },
+    "random": {
+      "n": 120,
+      "mean_delta": 0.021170467308700824,
+      "lower_95": -0.03737000946884548,
+      "upper_95": 0.08060528508651126,
+      "repeats": 10000
+    }
+  },
+  "pass_rule": "geometry vs best_fixed paired bootstrap 95% CI lower bound > 0",
+  "gate_f_passes": false
+}

@@ -81,6 +81,21 @@ Secondary outputs include agreement/no-deal rate, rounds, forced-timeout provena
 
 Until this final held-out terminal gate passes, **do not start K/V causal steering (G4), OPSD, GRPO, LoRA/SFT, cross-model transfer, or cross-domain transfer.**
 
+### Formal Gate F result
+
+The first complete held-out Gate F evaluation is now recorded. All five
+methods have 120/120 terminal states on CRAD scenarios 80--99. Geometry has
+mean terminal utility `0.6270`, versus `0.6321` for best-fixed, `0.6395` for
+neutral, and `0.6058` for random. The pre-registered geometry-minus-best-fixed
+paired delta is `-0.0051`, with bootstrap 95% CI `[-0.0471, 0.0389]`.
+
+Therefore `gate_f_passes=false`. Gate G1 also found identical Top-1 accuracy
+for geometry and one-hot (`0.7500` each). This is a valid negative method
+result: the one-step selector did not improve held-out terminal utility over
+the fixed-style baseline, so G4 K/V steering, OPSD, GRPO and fine-tuning
+remain blocked. Details are in
+`docs/results/gate_f_terminal_report.md`.
+
 ## Exact run instructions
 
 Use:
