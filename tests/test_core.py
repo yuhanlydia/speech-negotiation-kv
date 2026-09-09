@@ -176,6 +176,14 @@ def test_long_horizon_branch_keeps_unresolved_outcome_censored():
     assert result["utility"] is None
     assert result["rounds"] == 4
 
+    terminal_result = run_long_horizon_branch(
+        scenario, scenario_id=0, style="neutral", branch_seed=0,
+        backend=Backend(), horizon=4, max_horizon=5, base_seed=100,
+    )
+    assert terminal_result["outcome"] == "no_deal"
+    assert terminal_result["utility"] == 0.0
+    assert terminal_result["terminal_forced_no_deal"] is True
+
 
 def test_negotiation_turn_prompt_fixes_role_policy_and_output_contract():
     scenario = {

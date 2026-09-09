@@ -273,6 +273,7 @@ def run_long_horizon_branch(scenario: dict, *, scenario_id: int, style: str, bra
     rounds = 0
     h4_outcome = outcome if outcome == "invalid" else "censored"
     h4_agreement_days = None
+    terminal_forced_no_deal = False
 
     def take_turn(role: str, transition: int, audio_ids: list[int], *, force_terminal: bool = False) -> tuple[NegotiationMove, list[int]]:
         generation = backend.respond_negotiation_turn(
@@ -368,6 +369,14 @@ def run_long_horizon_branch(scenario: dict, *, scenario_id: int, style: str, bra
             if outcome in {"agreement", "no_deal"}:
                 break
 
+    if max_horizon > horizon and rounds >= max_horizon and outcome == "censored":
+        # The terminal subset has an explicit timeout rule.  Do not silently
+        # treat a model that ignored the final AGREED/NO DEAL contract as an
+        # unresolved record: record the protocol-forced NO DEAL separately.
+        outcome = "no_deal"
+        agreement_days = None
+        terminal_forced_no_deal = True
+
     if rounds < horizon and outcome in {"agreement", "no_deal"}:
         h4_outcome = outcome
         h4_agreement_days = agreement_days if outcome == "agreement" else None
@@ -398,6 +407,7 @@ def run_long_horizon_branch(scenario: dict, *, scenario_id: int, style: str, bra
         "outcome": outcome,
         "success": bool(outcome == "agreement"),
         "agreement_days": agreement_days,
+        "terminal_forced_no_deal": terminal_forced_no_deal,
         "utility": score_terminal_outcome(outcome, agreement_days, creditor_target, debtor_target),
         "latest_offer_days": latest_offer,
         "latest_offer_proxy_utility": normalized_creditor_utility(
