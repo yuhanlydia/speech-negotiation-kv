@@ -1,0 +1,1798 @@
+{
+  "formal_gate_e2": true,
+  "confirmatory": true,
+  "exploratory": false,
+  "records": "results/gate_e2_formal_v3.jsonl",
+  "protocol": {
+    "scenario_ids": [
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "seeds": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "styles": [
+      "calm and confident",
+      "empathetic and warm",
+      "firm and assertive",
+      "hesitant and uncertain",
+      "neutral",
+      "urgent but controlled"
+    ],
+    "horizon": 8,
+    "terminal_max_horizon": 12
+  },
+  "expected_branches": 360,
+  "n_branches": 360,
+  "key_set_matches": true,
+  "matched_semantics_rate": 1.0,
+  "parseable_move_rate": 1.0,
+  "strategically_valid_move_rate": 0.9849624060150376,
+  "terminal_expected_branches": 360,
+  "terminal_branches": 360,
+  "terminal_completion_rate": 1.0,
+  "terminal_outcomes": {
+    "agreement": 339,
+    "no_deal": 21
+  },
+  "expected_terminal_states": 60,
+  "complete_terminal_states": 60,
+  "complete_terminal_state_rate": 1.0,
+  "terminal_metrics": {
+    "n_complete_states": 60,
+    "n_informative_states": 43,
+    "spearman": {
+      "n": 43,
+      "mean": 0.6585952408472516,
+      "median": 0.7463517925331651,
+      "p05": 0.17960530202677488,
+      "p95": 0.995486371063223
+    },
+    "top1_agreement_rate": 0.95,
+    "regret": {
+      "n": 60,
+      "mean": 0.05337786001419826,
+      "median": 0.0,
+      "p05": 0.0,
+      "p95": 0.1870909744696151
+    },
+    "per_state": [
+      {
+        "state_id": "crad:20:opening:seed10",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed11",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "neutral"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed12",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed13",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed14",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.1071428571428571
+      },
+      {
+        "state_id": "crad:20:opening:seed15",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:21:opening:seed10",
+        "spearman": 0.4242640687119286,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:21:opening:seed11",
+        "spearman": 0.7071067811865477,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:21:opening:seed12",
+        "spearman": 0.750366479376867,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:21:opening:seed13",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "regret": 0.16393442622950827
+      },
+      {
+        "state_id": "crad:21:opening:seed14",
+        "spearman": 0.6956083436402525,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:21:opening:seed15",
+        "spearman": 0.7921180343813395,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.07650273224043713
+      },
+      {
+        "state_id": "crad:22:opening:seed10",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:22:opening:seed11",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm"
+        ],
+        "regret": 0.1506024096385542
+      },
+      {
+        "state_id": "crad:22:opening:seed12",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:22:opening:seed13",
+        "spearman": 0.632455532033676,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.11566265060240966
+      },
+      {
+        "state_id": "crad:22:opening:seed14",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:22:opening:seed15",
+        "spearman": 0.632455532033676,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed10",
+        "spearman": 0.8333333333333335,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed11",
+        "spearman": 0.9548637106322311,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed12",
+        "spearman": 0.8980265101338745,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident"
+        ],
+        "terminal_best_styles": [
+          "calm and confident"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed13",
+        "spearman": 0.7184212081070995,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed14",
+        "spearman": 0.7463517925331651,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed15",
+        "spearman": 0.46697378526961475,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:24:opening:seed10",
+        "spearman": 0.8528028654224418,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:24:opening:seed11",
+        "spearman": 0.8944271909999161,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:24:opening:seed12",
+        "spearman": 0.7888934916555407,
+        "best_style_agreement": false,
+        "immediate_best_styles": [
+          "calm and confident"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm"
+        ],
+        "regret": 0.04347826086956519
+      },
+      {
+        "state_id": "crad:24:opening:seed13",
+        "spearman": 0.5902432522055577,
+        "best_style_agreement": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "urgent but controlled"
+        ],
+        "regret": 0.02898550724637683
+      },
+      {
+        "state_id": "crad:24:opening:seed14",
+        "spearman": 0.674199862463242,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:24:opening:seed15",
+        "spearman": 0.9393364366277243,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "regret": 0.02898550724637672
+      },
+      {
+        "state_id": "crad:25:opening:seed10",
+        "spearman": 0.8980265101338745,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed11",
+        "spearman": 0.7184212081070996,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed12",
+        "spearman": 0.1796053020267749,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed13",
+        "spearman": 0.3592106040535498,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed14",
+        "spearman": 0.33806170189140666,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed15",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.18518518518518512
+      },
+      {
+        "state_id": "crad:26:opening:seed10",
+        "spearman": 1.0,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 1.1102230246251565e-16
+      },
+      {
+        "state_id": "crad:26:opening:seed11",
+        "spearman": 0.7745966692414834,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0014285714285714457
+      },
+      {
+        "state_id": "crad:26:opening:seed12",
+        "spearman": 0.8898984166292195,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:26:opening:seed13",
+        "spearman": -0.23836564731139806,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "calm and confident"
+        ],
+        "regret": 0.6571428571428573
+      },
+      {
+        "state_id": "crad:26:opening:seed14",
+        "spearman": 0.9486832980505139,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:26:opening:seed15",
+        "spearman": 1.0,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed10",
+        "spearman": 0.6928203230275508,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed11",
+        "spearman": 0.17960530202677488,
+        "best_style_agreement": false,
+        "immediate_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "urgent but controlled"
+        ],
+        "regret": 0.43859649122807015
+      },
+      {
+        "state_id": "crad:27:opening:seed12",
+        "spearman": 0.5000000000000001,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed13",
+        "spearman": 0.31622776601683794,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "firm and assertive"
+        ],
+        "regret": 0.17543859649122806
+      },
+      {
+        "state_id": "crad:27:opening:seed14",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed15",
+        "spearman": 0.8944271909999161,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "urgent but controlled"
+        ],
+        "regret": 0.06578947368421062
+      },
+      {
+        "state_id": "crad:28:opening:seed10",
+        "spearman": 0.20000000000000007,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.07766990291262144
+      },
+      {
+        "state_id": "crad:28:opening:seed11",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.08090614886731406
+      },
+      {
+        "state_id": "crad:28:opening:seed12",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.14239482200647247
+      },
+      {
+        "state_id": "crad:28:opening:seed13",
+        "spearman": 0.7745966692414834,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.09320388349514563
+      },
+      {
+        "state_id": "crad:28:opening:seed14",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:28:opening:seed15",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.22330097087378642
+      },
+      {
+        "state_id": "crad:29:opening:seed10",
+        "spearman": 1.0,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed11",
+        "spearman": 0.0,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed12",
+        "spearman": 0.27386127875258304,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed13",
+        "spearman": 0.8261843893231646,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed14",
+        "spearman": 0.9486832980505139,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed15",
+        "spearman": 0.8528028654224418,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      }
+    ]
+  },
+  "policy_valid_terminal_metrics": {
+    "n_complete_states": 47,
+    "n_informative_states": 32,
+    "spearman": {
+      "n": 32,
+      "mean": 0.6705318492082447,
+      "median": 0.748359135955016,
+      "p05": 0.19082238591204875,
+      "p95": 0.9751750408477271
+    },
+    "top1_agreement_rate": 0.9787234042553191,
+    "regret": {
+      "n": 47,
+      "mean": 0.03278393150535984,
+      "median": 0.0,
+      "p05": 0.0,
+      "p95": 0.159934821252222
+    },
+    "per_state": [
+      {
+        "state_id": "crad:20:opening:seed10",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed11",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "neutral"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed12",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed13",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:20:opening:seed15",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.06926406926406947
+      },
+      {
+        "state_id": "crad:21:opening:seed10",
+        "spearman": 0.4242640687119286,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:21:opening:seed11",
+        "spearman": 0.7071067811865477,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:21:opening:seed12",
+        "spearman": 0.750366479376867,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:21:opening:seed13",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "regret": 0.16393442622950827
+      },
+      {
+        "state_id": "crad:22:opening:seed10",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:22:opening:seed11",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm"
+        ],
+        "regret": 0.1506024096385542
+      },
+      {
+        "state_id": "crad:22:opening:seed12",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:22:opening:seed14",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed10",
+        "spearman": 0.8333333333333335,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed11",
+        "spearman": 0.9548637106322311,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed12",
+        "spearman": 0.8980265101338745,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident"
+        ],
+        "terminal_best_styles": [
+          "calm and confident"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed13",
+        "spearman": 0.7184212081070995,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed14",
+        "spearman": 0.7463517925331651,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:23:opening:seed15",
+        "spearman": 0.46697378526961475,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:24:opening:seed11",
+        "spearman": 0.8944271909999161,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:24:opening:seed13",
+        "spearman": 0.5902432522055577,
+        "best_style_agreement": false,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "urgent but controlled"
+        ],
+        "regret": 0.02898550724637683
+      },
+      {
+        "state_id": "crad:24:opening:seed15",
+        "spearman": 0.9393364366277243,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "hesitant and uncertain"
+        ],
+        "regret": 0.02898550724637672
+      },
+      {
+        "state_id": "crad:25:opening:seed10",
+        "spearman": 0.8980265101338745,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed11",
+        "spearman": 0.7184212081070996,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed12",
+        "spearman": 0.1796053020267749,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "neutral"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed13",
+        "spearman": 0.3592106040535498,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed14",
+        "spearman": 0.33806170189140666,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:25:opening:seed15",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.18518518518518512
+      },
+      {
+        "state_id": "crad:26:opening:seed10",
+        "spearman": 1.0,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 1.1102230246251565e-16
+      },
+      {
+        "state_id": "crad:26:opening:seed11",
+        "spearman": 0.7745966692414834,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0014285714285714457
+      },
+      {
+        "state_id": "crad:26:opening:seed12",
+        "spearman": 0.8898984166292195,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:26:opening:seed14",
+        "spearman": 0.9486832980505139,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:26:opening:seed15",
+        "spearman": 1.0,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed10",
+        "spearman": 0.6928203230275508,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed12",
+        "spearman": 0.5000000000000001,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed13",
+        "spearman": 0.31622776601683794,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "firm and assertive"
+        ],
+        "regret": 0.17543859649122806
+      },
+      {
+        "state_id": "crad:27:opening:seed14",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:27:opening:seed15",
+        "spearman": 0.8944271909999161,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "urgent but controlled"
+        ],
+        "regret": 0.06578947368421062
+      },
+      {
+        "state_id": "crad:28:opening:seed10",
+        "spearman": 0.20000000000000007,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.07766990291262144
+      },
+      {
+        "state_id": "crad:28:opening:seed11",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.08090614886731406
+      },
+      {
+        "state_id": "crad:28:opening:seed12",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.14239482200647247
+      },
+      {
+        "state_id": "crad:28:opening:seed13",
+        "spearman": 0.7745966692414834,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive"
+        ],
+        "regret": 0.09320388349514563
+      },
+      {
+        "state_id": "crad:28:opening:seed14",
+        "spearman": null,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "terminal_best_styles": [
+          "calm and confident",
+          "empathetic and warm",
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed11",
+        "spearman": 0.0,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed12",
+        "spearman": 0.27386127875258304,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "firm and assertive"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed13",
+        "spearman": 0.8261843893231646,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "empathetic and warm",
+          "hesitant and uncertain",
+          "neutral",
+          "urgent but controlled"
+        ],
+        "regret": 0.0
+      },
+      {
+        "state_id": "crad:29:opening:seed14",
+        "spearman": 0.9486832980505139,
+        "best_style_agreement": true,
+        "immediate_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "terminal_best_styles": [
+          "firm and assertive",
+          "hesitant and uncertain",
+          "neutral"
+        ],
+        "regret": 0.0
+      }
+    ]
+  },
+  "spearman_mean_bootstrap_95": {
+    "mean": 0.6585952408472516,
+    "lower_95": 0.5676903442393089,
+    "upper_95": 0.7393253282900313,
+    "repeats": 10000
+  },
+  "top1_agreement_rate": 0.95,
+  "median_regret": 0.0,
+  "data_gate_passes": true,
+  "positive_alignment_passes": true,
+  "strong_alignment_passes": true,
+  "interpretation": "supports_strong_immediate_predicts_terminal"
+}

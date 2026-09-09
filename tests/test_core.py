@@ -268,6 +268,11 @@ def test_gate_e2_reports_tie_aware_regret_for_immediate_best():
     assert result["per_state"][0]["immediate_best_styles"] == ["a", "b"]
     assert math.isclose(result["per_state"][0]["regret"], 0.3)
     assert result["top1_agreement_rate"] == 1.0
+    rows[-1]["policy_valid"] = False
+    assert terminal_state_metrics(rows, expected_styles={"a", "b", "c"})["n_complete_states"] == 1
+    assert terminal_state_metrics(
+        rows, expected_styles={"a", "b", "c"}, require_policy_valid=True
+    )["n_complete_states"] == 0
 
 
 def test_exploratory_gate_f_uses_scenario_held_out_state_metrics():

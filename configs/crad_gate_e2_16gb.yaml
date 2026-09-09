@@ -27,6 +27,7 @@ experiment:
   parseable_move_min_rate: 0.95
   strategically_valid_move_min_rate: 0.95
   terminal_subset_min_completion_rate: 0.95
+  terminal_state_min_completion_rate: 0.90
   strong_spearman_lower_bound: 0.30
   top1_min_rate: 0.50
   median_regret_max: 0.05

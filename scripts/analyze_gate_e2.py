@@ -81,6 +81,9 @@ def main() -> None:
         if expected_terminal_keys else 0.0
     )
     metrics = terminal_state_metrics(terminal_rows, expected_styles=styles)
+    policy_valid_metrics = terminal_state_metrics(
+        terminal_rows, expected_styles=styles, require_policy_valid=True
+    )
     expected_states = len(terminal_scenarios & scenario_ids) * len(seeds)
     complete_state_rate = (
         float(metrics["n_complete_states"] / expected_states) if expected_states else 0.0
@@ -93,7 +96,7 @@ def main() -> None:
         and strategic_rate >= float(experiment["strategically_valid_move_min_rate"])
         and terminal_completion_rate >= float(experiment["terminal_subset_min_completion_rate"])
         and metrics["n_complete_states"] >= int(np.ceil(
-            float(experiment["terminal_subset_min_completion_rate"]) * expected_states
+            float(experiment["terminal_state_min_completion_rate"]) * expected_states
         ))
     )
     correlations = [
@@ -150,6 +153,7 @@ def main() -> None:
         "complete_terminal_states": metrics["n_complete_states"],
         "complete_terminal_state_rate": complete_state_rate,
         "terminal_metrics": metrics,
+        "policy_valid_terminal_metrics": policy_valid_metrics,
         "spearman_mean_bootstrap_95": bootstrap,
         "top1_agreement_rate": metrics["top1_agreement_rate"],
         "median_regret": median_regret,

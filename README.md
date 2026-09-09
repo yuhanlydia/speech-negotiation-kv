@@ -12,6 +12,28 @@ The immediate hypothesis is not "KV steering always helps". We first test whethe
 
 The key estimator uses **advantage-weighted matched K/V differences**, not PCA over successful raw K/V, because raw K/V is dominated by scenario text, numbers and turn position.
 
+## Current confirmatory status: Gate E2
+
+The fresh confirmatory Gate E2 run is complete on CRAD train scenarios 20--29,
+seeds 10--15, and six matched vocal styles (360 branches total). The frozen
+GLM-4-Voice-9B int4 setup used batch 1 and continued every branch through the
+terminal protocol (H=8, then H=12 with an explicit timeout NO DEAL rule).
+
+The pre-registered E2 data gate passes: matched semantics 1.000, parseable
+moves 1.000, strategically valid moves 0.985, terminal completion 1.000, and
+60/60 complete terminal states (the requirement was 54/60). Immediate utility
+predicts terminal utility with mean within-state Spearman 0.659, bootstrap 95%
+CI [0.568, 0.764], tie-aware best-style agreement 0.950, and median regret
+0.000. Thus the pre-registered strong-alignment criteria pass.
+
+This result is recorded as `formal_gate_e2` and does not claim that a learned
+selector or intervention method has been demonstrated. Twenty branches reached
+the explicit H=12 timeout and were recorded as protocol-forced NO DEAL; the
+summary also reports a stricter policy-valid-only sensitivity analysis (47/60
+complete states). Full details are in
+`docs/results/gate_e2_formal_v3_report.md` and
+`results/gate_e2_formal_v3_summary.json`.
+
 ## What to run now
 
 The repo currently implements the next **Gate A / Gate B** experiments. Do **not** start OPSD/RL before these pass.

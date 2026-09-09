@@ -22,19 +22,22 @@ def _distribution(values: list[float]) -> dict[str, Any]:
 
 
 def terminal_state_metrics(
-    rows: Iterable[Mapping[str, Any]], *, expected_styles: set[str]
+    rows: Iterable[Mapping[str, Any]], *, expected_styles: set[str],
+    require_policy_valid: bool = False,
 ) -> dict[str, Any]:
     """Compare immediate and terminal style rankings within complete states.
 
-    A state is complete only when every expected style has a policy-valid,
-    terminal agreement/no-deal row with finite immediate and terminal utility.
+    A state is complete only when every expected style has a terminal
+    agreement/no-deal row with finite immediate and terminal utility.  The
+    optional policy-valid filter is reported as a sensitivity analysis because
+    E2 gates terminal coverage and strategic-valid move rate separately.
     Best-style agreement is tie-aware.  If immediate best is tied, regret is
     the terminal oracle utility minus the mean terminal utility of those tied
     immediate-best styles.
     """
     groups: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for row in rows:
-        if not row.get("policy_valid"):
+        if require_policy_valid and not row.get("policy_valid"):
             continue
         if row.get("outcome") not in {"agreement", "no_deal"}:
             continue
