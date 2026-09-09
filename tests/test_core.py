@@ -64,6 +64,7 @@ def test_glm_audio_token_helpers():
     text, audio = partition_generated_token_ids([10, 1000, 1001, 11, 9999], audio_offset=1000, audio_vocab_size=4, stop_token_ids={9999})
     assert text == [10, 11] and audio == [0, 1]
     assert normalize_transcript("We need 30 days!") == normalize_transcript("we need 30 days")
+    assert normalize_transcript("We need 6 days") == normalize_transcript("We need six days")
 
 
 def test_negotiation_move_parser_is_conservative_about_terminal_outcomes():

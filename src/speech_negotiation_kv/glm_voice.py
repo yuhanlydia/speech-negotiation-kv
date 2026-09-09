@@ -6,6 +6,16 @@ from typing import Iterable
 
 _SPECIAL_RE = re.compile(r"<\|[^>]+\|>")
 _NON_WORD_RE = re.compile(r"[^a-z0-9]+")
+_NUMBER_WORDS = {
+    "zero": "0", "one": "1", "two": "2", "three": "3", "four": "4",
+    "five": "5", "six": "6", "seven": "7", "eight": "8", "nine": "9",
+    "ten": "10", "eleven": "11", "twelve": "12", "thirteen": "13",
+    "fourteen": "14", "fifteen": "15", "sixteen": "16", "seventeen": "17",
+    "eighteen": "18", "nineteen": "19", "twenty": "20", "thirty": "30",
+    "forty": "40", "fifty": "50", "sixty": "60", "seventy": "70",
+    "eighty": "80", "ninety": "90",
+}
+_NUMBER_WORD_RE = re.compile(r"\b(" + "|".join(_NUMBER_WORDS) + r")\b")
 
 
 def audio_ids_to_prompt(audio_ids: Iterable[int]) -> str:
@@ -32,6 +42,7 @@ def partition_generated_token_ids(token_ids: Iterable[int], *, audio_offset: int
 
 def normalize_transcript(text: str) -> str:
     text = _SPECIAL_RE.sub(" ", text or "").lower()
+    text = _NUMBER_WORD_RE.sub(lambda match: _NUMBER_WORDS[match.group(1)], text)
     return " ".join(_NON_WORD_RE.sub(" ", text).split())
 
 
