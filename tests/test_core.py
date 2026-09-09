@@ -5,7 +5,13 @@ import torch
 from torch import nn
 
 from speech_negotiation_kv.calibration import fit_ridge_opponent_code
-from speech_negotiation_kv.crad import normalized_creditor_utility, parse_offer_days, parse_agreement_days, split_crad
+from speech_negotiation_kv.crad import (
+    normalized_creditor_utility,
+    parse_agreement_days,
+    parse_offer_days,
+    parse_proposal_days,
+    split_crad,
+)
 from speech_negotiation_kv.glm_voice import VoiceGeneration, audio_ids_to_prompt, partition_generated_token_ids, normalize_transcript
 from speech_negotiation_kv.kv_hooks import (
     split_fused_qkv,
@@ -50,6 +56,25 @@ def test_crad_score_and_parsing():
     assert parse_offer_days("We can repay the balance in 60 days.") == 60
     assert parse_agreement_days("Agreed. We accept repayment within 55 days.") == 55
     assert parse_agreement_days("We propose 55 days instead.") is None
+
+
+def test_proposal_parser_prefers_offer_cue_over_referenced_targets():
+    assert parse_proposal_days(
+        "Twenty days is too tight. How about a term of 120 days?"
+    ) == 120
+    assert parse_proposal_days(
+        "How about 30 days? It is shorter than your proposed 20 days."
+    ) == 30
+    assert parse_proposal_days(
+        "A 16-day term is tight. How about a 20-day term?"
+    ) == 20
+
+
+def test_proposal_parser_rejects_truncated_or_ambiguous_response():
+    assert parse_proposal_days(
+        "A 58-day term fits our cash flow. Let us find a middle ground. What about"
+    ) is None
+    assert parse_proposal_days("We can repay the balance in 60 days.") == 60
 
 
 def test_fixed_crad_split():

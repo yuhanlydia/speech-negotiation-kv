@@ -19,6 +19,7 @@ from speech_negotiation_kv.short_horizon_selector import (
     pairwise_unseen_style_accuracy,
     score_geometry_selector,
     score_onehot_selector,
+    teacher_targets_and_weights,
 )
 from speech_negotiation_kv.subspace import spearman_rank_correlation
 
@@ -121,13 +122,16 @@ def main() -> None:
     for held_out in styles:
         seen = [style for style in styles if style != held_out]
         mask = train_labels != held_out
+        subset_teacher_targets, subset_row_weights = teacher_targets_and_weights(
+            train_y[mask], train_states[mask], temperature=teacher_temperature
+        )
         geometry = fit_geometry_selector(
-            train_phi[mask], train_c[mask], train_y[mask] / teacher_temperature, train_states[mask],
-            ridge=artifact["geometry"]["ridge"],
+            train_phi[mask], train_c[mask], subset_teacher_targets, train_states[mask],
+            ridge=artifact["geometry"]["ridge"], row_weights=subset_row_weights,
         )
         onehot = fit_onehot_selector(
-            train_phi[mask], train_labels[mask], train_y[mask] / teacher_temperature, train_states[mask],
-            styles=seen, ridge=artifact["onehot"]["ridge"],
+            train_phi[mask], train_labels[mask], subset_teacher_targets, train_states[mask],
+            styles=seen, ridge=artifact["onehot"]["ridge"], row_weights=subset_row_weights,
         )
         geometry_pred = score_geometry_selector(geometry, test_phi, test_c)
 

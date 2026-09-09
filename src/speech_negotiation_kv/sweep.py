@@ -5,7 +5,7 @@ from typing import Iterable, Protocol
 
 import pandas as pd
 
-from .crad import normalized_creditor_utility, parse_offer_days
+from .crad import normalized_creditor_utility, parse_proposal_days
 from .glm_voice import VoiceGeneration, normalize_transcript
 from .records import BranchRecord
 
@@ -55,7 +55,7 @@ def run_one_turn_matched_sweep(df: pd.DataFrame, *, backend: SweepBackend, style
                 speaker = backend.render_exact(semantic, style, seed=int(seed))
                 matched = normalize_transcript(speaker.transcript) == semantic_norm
                 opponent = backend.respond_audio(speaker.audio_token_ids, scenario, seed=int(seed))
-                offer = parse_offer_days(opponent.transcript)
+                offer = parse_proposal_days(opponent.transcript)
                 utility = normalized_creditor_utility(
                     int(scenario["Creditor Target Days"]),
                     int(scenario["Debtor Target Days"]),

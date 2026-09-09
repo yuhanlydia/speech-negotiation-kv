@@ -7,6 +7,17 @@ from typing import Optional
 import pandas as pd
 
 _DAY_RE = re.compile(r"\b(\d{1,4})\s*(?:calendar\s+)?days?\b", re.IGNORECASE)
+_DAY_TOKEN = r"(\d{1,4})\s*(?:-\s*)?(?:calendar\s+)?days?\b"
+_HOW_ABOUT_RE = re.compile(
+    r"\b(?:how|what)\s+about\b(?:(?![.!?]).){0,120}?" + _DAY_TOKEN,
+    re.IGNORECASE | re.DOTALL,
+)
+_FIRST_PERSON_PROPOSAL_RE = re.compile(
+    r"\b(?:we|i)\s+(?:can\s+)?(?:propose|suggest|offer|recommend|counteroffer)"
+    r"(?:(?![.!?]).){0,80}?" + _DAY_TOKEN,
+    re.IGNORECASE | re.DOTALL,
+)
+_ANY_DAY_RE = re.compile(r"\b" + _DAY_TOKEN, re.IGNORECASE)
 _ACCEPT_RE = re.compile(r"\b(?:agree(?:d)?|accept(?:ed)?|deal|settle(?:d)?|confirm(?:ed)?)\b", re.IGNORECASE)
 
 
@@ -23,6 +34,19 @@ def normalized_creditor_utility(creditor_target_days: int, debtor_target_days: i
 def parse_offer_days(text: str) -> Optional[int]:
     match = _DAY_RE.search(text or "")
     return int(match.group(1)) if match else None
+
+
+def parse_proposal_days(text: str) -> Optional[int]:
+    """Parse the proposed term without mistaking referenced targets for it."""
+    value = str(text or "")
+    for pattern in (_HOW_ABOUT_RE, _FIRST_PERSON_PROPOSAL_RE):
+        match = pattern.search(value)
+        if match:
+            return int(match.group(1))
+    if re.search(r"\b(?:how|what)\s+about\b", value, re.IGNORECASE):
+        return None
+    candidates = [int(candidate) for candidate in _ANY_DAY_RE.findall(value)]
+    return candidates[0] if len(candidates) == 1 else None
 
 
 def parse_agreement_days(text: str) -> Optional[int]:

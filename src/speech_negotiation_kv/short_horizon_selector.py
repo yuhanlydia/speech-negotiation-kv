@@ -5,6 +5,32 @@ from typing import Any, Iterable, Mapping, Sequence
 
 import numpy as np
 
+from .crad import normalized_creditor_utility, parse_proposal_days
+
+
+def relabel_teacher_rows(
+    rows: Iterable[Mapping[str, Any]], *, scenario_targets: Mapping[int, tuple[int, int]]
+) -> list[dict[str, Any]]:
+    """Recompute one-step teacher labels from the saved opponent transcript."""
+    corrected: list[dict[str, Any]] = []
+    for source in rows:
+        row = dict(source)
+        scenario_id = int(row["scenario_id"])
+        if scenario_id not in scenario_targets:
+            raise ValueError(f"missing targets for scenario {scenario_id}")
+        creditor_target, debtor_target = scenario_targets[scenario_id]
+        original = row.get("opponent_offer_days")
+        offer = parse_proposal_days(str(row.get("opponent_transcript", "")))
+        row["original_opponent_offer_days"] = original
+        row["opponent_offer_days"] = offer
+        row["utility"] = (
+            normalized_creditor_utility(creditor_target, debtor_target, offer)
+            if offer is not None else None
+        )
+        row["teacher_label_status"] = "reparsed" if offer is not None else "unparseable"
+        corrected.append(row)
+    return corrected
+
 
 def teacher_distribution(utilities: np.ndarray, *, temperature: float = 0.1) -> np.ndarray:
     values = np.asarray(utilities, dtype=np.float64)
@@ -19,6 +45,23 @@ def teacher_distribution(utilities: np.ndarray, *, temperature: float = 0.1) -> 
     logits -= logits.max()
     probabilities = np.exp(logits)
     return probabilities / probabilities.sum()
+
+
+def teacher_targets_and_weights(
+    utilities: np.ndarray, state_ids: Sequence[str], *, temperature: float = 0.1
+) -> tuple[np.ndarray, np.ndarray]:
+    values = np.asarray(utilities, dtype=np.float64)
+    ids = np.asarray(state_ids, dtype=object)
+    if values.ndim != 1 or len(values) != len(ids):
+        raise ValueError("utilities and state_ids must have aligned rows")
+    targets = np.empty_like(values)
+    weights = np.empty_like(values)
+    for state in dict.fromkeys(ids.tolist()):
+        mask = ids == state
+        state_values = values[mask]
+        targets[mask] = teacher_distribution(state_values, temperature=temperature)
+        weights[mask] = state_values.max() - state_values.min()
+    return targets, weights
 
 
 def state_spread_weights(utility_matrix: np.ndarray) -> np.ndarray:
@@ -141,10 +184,14 @@ def fit_geometry_selector(
     state_ids: Sequence[str],
     *,
     ridge: float = 1.0,
+    row_weights: np.ndarray | None = None,
 ) -> dict[str, Any]:
     phi = np.asarray(state_features, dtype=np.float64)
     coords = np.asarray(style_coordinates, dtype=np.float64)
-    y, weights = _center_targets_by_state(utilities, state_ids)
+    y, default_weights = _center_targets_by_state(utilities, state_ids)
+    weights = default_weights if row_weights is None else np.asarray(row_weights, dtype=np.float64)
+    if weights.shape != y.shape:
+        raise ValueError("row_weights must align with utilities")
     mean, scale = _fit_state_standardizer(phi)
     design = _interaction_design(phi, coords, state_mean=mean, state_scale=scale)
     coefficients = _weighted_ridge(design, y, weights, ridge)
@@ -192,6 +239,7 @@ def fit_onehot_selector(
     *,
     styles: Sequence[str],
     ridge: float = 1.0,
+    row_weights: np.ndarray | None = None,
 ) -> dict[str, Any]:
     ordered = [str(style) for style in styles]
     model = fit_geometry_selector(
@@ -200,6 +248,7 @@ def fit_onehot_selector(
         utilities,
         state_ids,
         ridge=ridge,
+        row_weights=row_weights,
     )
     model["kind"] = "onehot"
     model["styles"] = ordered

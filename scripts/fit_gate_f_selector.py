@@ -19,6 +19,7 @@ from speech_negotiation_kv.short_horizon_selector import (
     prototype_style_coordinates,
     score_geometry_selector,
     score_onehot_selector,
+    teacher_targets_and_weights,
 )
 from speech_negotiation_kv.strategy_geometry import center_within_states
 
@@ -125,7 +126,9 @@ def main() -> None:
 
     coordinates, coordinate_metadata = load_style_coordinates(args.gate_d_records, args.gate_d_kv, styles)
     train_phi, train_labels, train_c, train_y, train_states = row_arrays(train_rows, frame, coordinates)
-    train_teacher_logits = train_y / teacher_temperature
+    train_teacher_targets, train_row_weights = teacher_targets_and_weights(
+        train_y, train_states, temperature=teacher_temperature
+    )
     val_phi, val_labels, val_c, _, _ = row_arrays(val_rows, frame, coordinates)
 
     best_geometry = None
@@ -133,7 +136,10 @@ def main() -> None:
     best_geometry_ridge = None
     geometry_grid = []
     for ridge in ridge_grid:
-        model = fit_geometry_selector(train_phi, train_c, train_teacher_logits, train_states, ridge=ridge)
+        model = fit_geometry_selector(
+            train_phi, train_c, train_teacher_targets, train_states,
+            ridge=ridge, row_weights=train_row_weights,
+        )
         predictions = score_geometry_selector(model, val_phi, val_c)
         metric = evaluate_selector_states(prediction_rows(val_rows, predictions), expected_styles=set(styles))
         geometry_grid.append({"ridge": ridge, "metrics": metric})
@@ -145,7 +151,10 @@ def main() -> None:
     best_onehot_ridge = None
     onehot_grid = []
     for ridge in ridge_grid:
-        model = fit_onehot_selector(train_phi, train_labels, train_teacher_logits, train_states, styles=styles, ridge=ridge)
+        model = fit_onehot_selector(
+            train_phi, train_labels, train_teacher_targets, train_states,
+            styles=styles, ridge=ridge, row_weights=train_row_weights,
+        )
         predictions = score_onehot_selector(model, val_phi, val_labels)
         metric = evaluate_selector_states(prediction_rows(val_rows, predictions), expected_styles=set(styles))
         onehot_grid.append({"ridge": ridge, "metrics": metric})
@@ -188,7 +197,8 @@ def main() -> None:
         "n_validation_states": len({str(row["state_id"]) for row in val_rows}),
         "styles": styles,
         "teacher_temperature": teacher_temperature,
-        "teacher_target": "within-state centered immediate utility / temperature",
+        "teacher_target": "softmax(centered immediate utility / temperature)",
+        "teacher_weight": "within-state immediate utility spread",
         "coordinate_metadata": coordinate_metadata,
         "geometry": {
             "selected_ridge": best_geometry_ridge,

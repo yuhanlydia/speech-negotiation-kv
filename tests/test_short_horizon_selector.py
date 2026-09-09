@@ -13,6 +13,8 @@ from speech_negotiation_kv.short_horizon_selector import (
     evaluate_selector_states,
     paired_bootstrap_mean_delta,
     pairwise_unseen_style_accuracy,
+    relabel_teacher_rows,
+    teacher_targets_and_weights,
 )
 
 
@@ -22,6 +24,16 @@ def test_teacher_distribution_is_tie_aware_and_spread_weight_zero_for_flat_state
     assert p[1] > p[0]
     flat = state_spread_weights(np.array([[0.5, 0.5, 0.5], [0.1, 0.9, 0.2]]))
     assert np.allclose(flat, [0.0, 0.8])
+
+
+def test_teacher_targets_use_soft_distribution_and_raw_utility_spread_weights():
+    utilities = np.array([0.0, 1.0, 0.5, 0.5])
+    targets, weights = teacher_targets_and_weights(
+        utilities, ["s0", "s0", "s1", "s1"], temperature=0.1
+    )
+    assert targets[1] > targets[0]
+    assert np.allclose(targets[2:], [0.5, 0.5])
+    assert np.allclose(weights, [1.0, 1.0, 0.0, 0.0])
 
 
 def test_opening_state_features_are_finite_and_scale_invariant_in_ratio_feature():
@@ -76,6 +88,19 @@ def test_geometry_and_onehot_selectors_fit_state_conditioned_rankings():
     assert np.corrcoef(op, y)[0, 1] > 0.99
 
 
+def test_geometry_selector_accepts_explicit_teacher_row_weights():
+    phi = np.zeros((4, 1))
+    coords = np.array([[-1.0], [1.0], [-1.0], [1.0]])
+    targets = np.array([0.0, 1.0, 1.0, 0.0])
+    states = np.array(["signal", "signal", "ignored", "ignored"])
+    model = fit_geometry_selector(
+        phi, coords, targets, states, ridge=1e-6,
+        row_weights=np.array([1.0, 1.0, 0.0, 0.0]),
+    )
+    prediction = score_geometry_selector(model, phi[:2], coords[:2])
+    assert prediction[1] > prediction[0]
+
+
 def test_state_metrics_are_tie_aware_and_report_regret():
     rows = [
         {"state_id": "s", "style": "a", "utility": 0.9, "prediction": 1.0},
@@ -124,3 +149,26 @@ def test_geometry_selector_can_value_unseen_style_coordinate():
     prediction = score_geometry_selector(model, test_phi, test_c)
     truth = np.asarray([0.5 + 0.1 * x * coords[held_out] for x in [-2.0, -1.0, 1.0, 2.0]])
     assert np.corrcoef(prediction, truth)[0, 1] > 0.99
+
+
+def test_relabel_teacher_rows_reparses_proposal_and_marks_truncation_missing():
+    rows = [
+        {
+            "scenario_id": 30,
+            "opponent_transcript": "20 days is too tight. How about 120 days?",
+            "opponent_offer_days": 20,
+            "utility": 1.0,
+        },
+        {
+            "scenario_id": 30,
+            "opponent_transcript": "Our target is 158 days. What about",
+            "opponent_offer_days": 158,
+            "utility": 0.0,
+        },
+    ]
+    corrected = relabel_teacher_rows(rows, scenario_targets={30: (20, 158)})
+    assert corrected[0]["opponent_offer_days"] == 120
+    assert math.isclose(corrected[0]["utility"], (158 - 120) / (158 - 20))
+    assert corrected[0]["original_opponent_offer_days"] == 20
+    assert corrected[1]["opponent_offer_days"] is None
+    assert corrected[1]["utility"] is None
