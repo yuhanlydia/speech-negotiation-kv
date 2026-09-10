@@ -113,9 +113,20 @@ Use `dyn_var/dyn_var.jsonl` + `audio_dataset_en/dyn_var/`, 60 items with catalog
 
 ## 6. Scale selection: dev only
 
-The development split is deterministic: item index `% 5 == 0`. Tune only `alpha in {0.25, 0.5, 1.0, 1.5}` on that 20% slice. Freeze one scale per task family before generating the remaining 80%.
+The development split is deterministic: catalog-covered item index `% 5 == 0`. Tune only `alpha in {0.25, 0.5, 1.0, 1.5}` on that 20% slice. Freeze one scale per task family before generating the remaining 80%.
 
-The CLI currently accepts `--scale`; an agent should create dev JSONL/audio slices by deterministic index without changing order. Do not inspect held-out judge scores when selecting alpha.
+The runner enforces this directly with `--split dev` and `--split heldout`. Do not create an alternative split and do not inspect held-out judge scores when selecting alpha. After judging the four dev scales, freeze alpha with:
+
+```bash
+python scripts/select_parageo_scale.py \
+  --score 0.25=DEV_ALPHA_025_SCORE.json \
+  --score 0.5=DEV_ALPHA_05_SCORE.json \
+  --score 1.0=DEV_ALPHA_10_SCORE.json \
+  --score 1.5=DEV_ALPHA_15_SCORE.json \
+  --output results/parageo_static_scale.json
+```
+
+Exact score ties select the smallest alpha.
 
 ## 7. Example generation commands
 
@@ -126,7 +137,7 @@ python scripts/run_speechparaling_pilot.py \
   --config configs/parageo_speechparaling_pilot.yaml \
   --prompt-jsonl "$SPEECHPARALING_ROOT/jsonl_prompt_en/para_con/short_sin.jsonl" \
   --audio-dir "$SPEECHPARALING_ROOT/audio_dataset_en/para_con/con_short_sin" \
-  --task static --method prompt_only --limit 80 \
+  --task static --method prompt_only --limit 80 --split heldout \
   --output-dir results/parageo_outputs/prompt_only/output_en/para_con/con_short_sin
 ```
 
@@ -137,7 +148,7 @@ python scripts/run_speechparaling_pilot.py \
   --config configs/parageo_speechparaling_pilot.yaml \
   --prompt-jsonl "$SPEECHPARALING_ROOT/jsonl_prompt_en/para_con/short_sin.jsonl" \
   --audio-dir "$SPEECHPARALING_ROOT/audio_dataset_en/para_con/con_short_sin" \
-  --task static --method parageo_static --limit 80 --scale 1.0 \
+  --task static --method parageo_static --limit 80 --split heldout --scale FROZEN_STATIC_ALPHA \
   --output-dir results/parageo_outputs/parageo/output_en/para_con/con_short_sin
 ```
 
@@ -148,7 +159,7 @@ python scripts/run_speechparaling_pilot.py \
   --config configs/parageo_speechparaling_pilot.yaml \
   --prompt-jsonl "$SPEECHPARALING_ROOT/jsonl_prompt_en/para_con/short_multi.jsonl" \
   --audio-dir "$SPEECHPARALING_ROOT/audio_dataset_en/para_con/con_short_multi" \
-  --task composed --method parageo_composed --limit 40 --scale 1.0 \
+  --task composed --method parageo_composed --limit 40 --split heldout --scale FROZEN_COMPOSED_ALPHA \
   --output-dir results/parageo_outputs/parageo/output_en/para_con/con_short_multi
 ```
 
@@ -159,7 +170,7 @@ python scripts/run_speechparaling_pilot.py \
   --config configs/parageo_speechparaling_pilot.yaml \
   --prompt-jsonl "$SPEECHPARALING_ROOT/jsonl_prompt_en/dyn_var/dyn_var.jsonl" \
   --audio-dir "$SPEECHPARALING_ROOT/audio_dataset_en/dyn_var" \
-  --task dynamic --method parageo_dynamic --limit 60 --scale 1.0 \
+  --task dynamic --method parageo_dynamic --limit 60 --split heldout --scale FROZEN_DYNAMIC_ALPHA \
   --output-dir results/parageo_outputs/parageo/output_en/dyn_var
 ```
 
@@ -195,16 +206,26 @@ After obtaining held-out static/compositional and dynamic scores, run:
 
 ```bash
 python scripts/analyze_parageo_pilot.py \
-  --baseline-static BASELINE_STATIC_SCORE.json \
-  --ours-static OURS_STATIC_SCORE.json \
-  --baseline-dynamic BASELINE_DYNAMIC_SCORE.json \
-  --ours-dynamic OURS_DYNAMIC_SCORE.json \
-  --static-min-gain 5 \
-  --dynamic-min-gain 8 \
+  --baseline-static STATIC_PROMPT_SCORE.json \
+  --ours-static STATIC_PARAGEO_SCORE.json \
+  --random-static STATIC_RANDOM_SCORE.json \
+  --baseline-static-fidelity results/static_prompt_fidelity.json \
+  --ours-static-fidelity results/static_parageo_fidelity.json \
+  --baseline-composed COMPOSED_PROMPT_SCORE.json \
+  --ours-composed COMPOSED_PARAGEO_SCORE.json \
+  --random-composed COMPOSED_RANDOM_SCORE.json \
+  --baseline-composed-fidelity results/composed_prompt_fidelity.json \
+  --ours-composed-fidelity results/composed_parageo_fidelity.json \
+  --baseline-dynamic DYNAMIC_PROMPT_SCORE.json \
+  --ours-dynamic DYNAMIC_PARAGEO_SCORE.json \
+  --random-dynamic DYNAMIC_RANDOM_SCORE.json \
+  --baseline-dynamic-fidelity results/dynamic_prompt_fidelity.json \
+  --ours-dynamic-fidelity results/dynamic_parageo_fidelity.json \
+  --static-min-gain 5 --dynamic-min-gain 8 --max-wer-degradation 0.02 \
   --output results/parageo_pilot_decision.json
 ```
 
-Continue only if semantic fidelity passes and either static/compositional improves by >=5 points or Dynamic Variation improves by >=8 points. Random steering must not reproduce the gain.
+The analyzer only passes a task when the score threshold is met, mean text-channel WER degrades by <=0.02 absolute, and the matched random-direction control does not itself meet the same gain threshold. Continue if at least one held-out task passes.
 
 If the gate fails, stop this repo. Do not add RL, LoRA, new seeds, or post-hoc schedules.
 
