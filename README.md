@@ -115,7 +115,7 @@ Methods:
 - `parageo_dynamic`
 - `random`
 
-A deterministic 20% development slice (`index % 5 == 0`) is used only to choose `alpha` from `{0.25, 0.5, 1.0, 1.5}`. The remaining 80% is the held-out pilot.
+The runner first selects only items whose requested controls are fully covered by the frozen catalog. A deterministic 20% development slice (`catalog-covered index % 5 == 0`) is used only to choose `alpha` from `{0.25, 0.5, 1.0, 1.5}`; the runner exposes `--split dev` and `--split heldout`. Exact dev-score ties choose the smallest alpha. The remaining 80% is the held-out pilot.
 
 ## Frozen stop rule
 
@@ -124,7 +124,7 @@ Continue only if text-channel semantic fidelity is preserved and at least one he
 - static/compositional SpeechParaling score gain >= **+5.0 points** over prompt-only; or
 - Dynamic Variation score gain >= **+8.0 points** over prompt-only.
 
-Random steering must not reproduce the gain. If this gate fails, stop ParaGeo; do not rescue it with RL, LoRA, favorable seeds, or post-hoc schedules.
+Random steering must not reproduce the gain. `analyze_parageo_pilot.py` enforces the score, WER, and random-control gates jointly. If this gate fails, stop ParaGeo; do not rescue it with RL, LoRA, favorable seeds, or post-hoc schedules.
 
 ## Quick start
 
@@ -151,7 +151,8 @@ Then follow **[`PARAGEO_RUN.md`](PARAGEO_RUN.md)** exactly.
 
 - `src/speech_negotiation_kv/parageo.py` — centering, SVD basis, semantic orthogonalization, coordinates, composition, dynamic schedules.
 - `src/speech_negotiation_kv/parageo_steering.py` — scheduled fused-QKV intervention.
-- `src/speech_negotiation_kv/speechparaling.py` — SpeechParaling prompt parser, catalog matching, prompt/audio pairing, fidelity utilities.
+- `src/speech_negotiation_kv/parageo_eval.py` — dev-only scale selection and frozen score/WER/random stop gate.
+- `src/speech_negotiation_kv/speechparaling.py` — SpeechParaling prompt parser, catalog coverage, filename-index pairing, deterministic dev/held-out split, fidelity utilities.
 - `src/speech_negotiation_kv/glm_official_waveform.py` — official Whisper-VQ + Flow/HiFT waveform adapter.
 
 ### Calibration
@@ -164,6 +165,7 @@ Then follow **[`PARAGEO_RUN.md`](PARAGEO_RUN.md)** exactly.
 ### Benchmark
 
 - `scripts/run_speechparaling_pilot.py`
+- `scripts/select_parageo_scale.py`
 - `scripts/analyze_parageo_fidelity.py`
 - `scripts/analyze_parageo_pilot.py`
 - `configs/parageo_speechparaling_pilot.yaml`
