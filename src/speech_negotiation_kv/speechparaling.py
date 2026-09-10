@@ -185,6 +185,18 @@ def select_catalog_covered_items(items: Sequence[SpeechParalingItem], catalog: d
     return selected
 
 
+def split_pilot_items(items: Sequence[SpeechParalingItem], *, split: str = "all", modulus: int = 5,
+                      remainder: int = 0) -> list[SpeechParalingItem]:
+    if modulus < 2 or not 0 <= remainder < modulus:
+        raise ValueError("require modulus >= 2 and 0 <= remainder < modulus")
+    if split == "all":
+        return list(items)
+    if split not in {"dev", "heldout"}:
+        raise ValueError("split must be all, dev, or heldout")
+    dev_mask = [index % modulus == remainder for index in range(len(items))]
+    return [item for item, is_dev in zip(items, dev_mask) if is_dev == (split == "dev")]
+
+
 def word_error_rate(reference: str, hypothesis: str) -> float:
     def words(text: str) -> list[str]:
         return re.findall(r"[a-z0-9]+", str(text).lower())
