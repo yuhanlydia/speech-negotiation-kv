@@ -1,0 +1,47 @@
+model:
+  name: zai-org/glm-4-voice-9b
+  quantization: int4
+  device: cuda:0
+  max_new_tokens: 768
+  temperature: 0.8
+  top_p: 0.8
+  audio_vocab_size: 16384
+
+official_glm:
+  repo_root: ${GLM_VOICE_REPO}
+  speech_tokenizer_path: THUDM/glm-4-voice-tokenizer
+  decoder_path: ${GLM_VOICE_DECODER}
+
+parageo:
+  kv_layers: [16, 20, 24, 28, 32, 36]
+  dimensions: [Pitch, Timbre, Pace, Volume, Rhythm, Age]
+  basis_rank: 16
+  max_basis_rank: 32
+  basis_energy: 0.95
+  semantic_rank: 8
+  calibration_seed: 9242424242
+  calibration_sentences:
+    - "The morning train arrived exactly on time."
+    - "Please place the blue notebook beside the lamp."
+    - "We will review the final report after lunch."
+    - "A small bird landed quietly on the garden fence."
+    - "The museum opens at nine o'clock tomorrow."
+    - "I left the keys on the wooden table near the door."
+    - "The team finished the experiment before sunset."
+    - "She carried a warm cup of tea into the study."
+
+pilot:
+  steering_scale: 1.0
+  steering_scale_grid: [0.25, 0.5, 1.0, 1.5]
+  steering_steps: 192
+  transition_at: 0.5
+  generation_seed: 10242424242
+  random_seed: 11242424242
+  static_single_limit: 80
+  composed_limit: 40
+  dynamic_limit: 60
+  dev_modulus: 5
+  dev_remainder: 0
+  stop_static_or_composed_gain: 5.0
+  stop_dynamic_gain: 8.0
+  max_absolute_text_wer_degradation: 0.02
