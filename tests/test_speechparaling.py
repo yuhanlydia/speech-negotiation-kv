@@ -63,3 +63,13 @@ def test_catalog_covered_selection_rejects_partial_compositions():
     good = SpeechParalingItem("g", "Please read this sentence with a very high pitch and a fast pace: 'Look!'", ("Pitch", "Pace"), "composed")
     bad = SpeechParalingItem("b", "Please read this sentence with a very high pitch and a happy emotion: 'Look!'", ("Pitch", "Emotion"), "composed")
     assert select_catalog_covered_items([bad, good], catalog, task="composed", limit=1) == [good]
+
+
+def test_deterministic_dev_split_is_disjoint_and_complete():
+    from speech_negotiation_kv.speechparaling import SpeechParalingItem, split_pilot_items
+    items = [SpeechParalingItem(str(i), str(i), ("Pitch",), "static") for i in range(10)]
+    dev = split_pilot_items(items, split="dev", modulus=5, remainder=0)
+    held = split_pilot_items(items, split="heldout", modulus=5, remainder=0)
+    assert [item.item_id for item in dev] == ["0", "5"]
+    assert set(dev).isdisjoint(set(held))
+    assert len(dev) + len(held) == len(items)
