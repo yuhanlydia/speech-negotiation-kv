@@ -1,0 +1,90 @@
+{
+  "gate": "F2_immediate_search_replication",
+  "expected_states_per_method": 120,
+  "exact_coverage": {
+    "immediate_search": true,
+    "best_fixed": true
+  },
+  "common_paired_states": 120,
+  "methods": {
+    "immediate_search": {
+      "path": "results/gate_f2_immediate_search.jsonl",
+      "rows": 120,
+      "terminal_states": 120,
+      "utility": {
+        "n": 120,
+        "mean": 0.6787159584498438,
+        "median": 0.8444444444444444,
+        "p05": 0.0,
+        "p95": 0.9774436090225563
+      },
+      "rounds": {
+        "n": 120,
+        "mean": 3.3833333333333333,
+        "median": 2.0,
+        "p05": 1.0,
+        "p95": 12.0
+      },
+      "outcomes": {
+        "agreement": 105,
+        "no_deal": 15
+      },
+      "forced_no_deal": 15,
+      "selected_styles": {
+        "neutral": 79,
+        "empathetic and warm": 10,
+        "calm and confident": 15,
+        "firm and assertive": 11,
+        "hesitant and uncertain": 4,
+        "urgent but controlled": 1
+      }
+    },
+    "best_fixed": {
+      "path": "results/gate_f2_best_fixed.jsonl",
+      "rows": 120,
+      "terminal_states": 120,
+      "utility": {
+        "n": 120,
+        "mean": 0.6685120286797979,
+        "median": 0.8444444444444444,
+        "p05": 0.0,
+        "p95": 0.9774436090225563
+      },
+      "rounds": {
+        "n": 120,
+        "mean": 3.0,
+        "median": 2.0,
+        "p05": 1.0,
+        "p95": 12.0
+      },
+      "outcomes": {
+        "agreement": 109,
+        "no_deal": 11
+      },
+      "forced_no_deal": 11,
+      "selected_styles": {
+        "empathetic and warm": 120
+      }
+    }
+  },
+  "probe_quality": {
+    "states": 120,
+    "total_probes": 720,
+    "six_probes_per_state_rate": 1.0,
+    "eligible_probe_rate": 1.0,
+    "selected_probe_eligible_rate": 1.0,
+    "verified_replay_rate": 1.0,
+    "fallback_states": 0
+  },
+  "data_gate_passes": true,
+  "primary_comparison": "immediate_search - best_fixed",
+  "primary_delta": {
+    "n": 120,
+    "mean_delta": 0.010203929770045724,
+    "lower_95": -0.05696059937262355,
+    "upper_95": 0.07456451820967014,
+    "repeats": 10000
+  },
+  "pass_rule": "data gate passes and paired bootstrap 95% CI lower bound > 0",
+  "gate_f2_passes": false
+}

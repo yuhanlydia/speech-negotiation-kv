@@ -103,6 +103,23 @@ reparameterization rather than a valid geometry-necessity test. G4 K/V
 steering, OPSD, GRPO and fine-tuning remain blocked. Details are in
 `docs/results/gate_f_terminal_report.md`.
 
+### Gate F2 immediate-search replication
+
+The preregistered six-probe recovery experiment is complete on CRAD 80--99
+with new seeds 40--45. Both immediate-search and frozen best-fixed have 120/120
+terminal states; all 720 probes were eligible and all selected openings passed
+exact deterministic replay. Immediate-search reached mean terminal utility
+`0.6787` versus `0.6685` for best-fixed, a paired delta of `+0.0102` with 95%
+CI `[-0.0570, 0.0746]`. Therefore `gate_f2_passes=false`.
+
+The negative is not a runtime failure. Immediate utilities were tied for
+multiple styles in 102/120 states, including 50/120 states where all six styles
+tied; search had a strictly better immediate offer than best-fixed in only
+25/120 states. Search also had 15 forced NO-DEAL timeouts versus 11 for
+best-fixed. Per the frozen stop rule, do not run F3/F4 by repeatedly changing
+seeds or tie-breaking. Full details are in
+`docs/results/gate_f2_terminal_report.md`.
+
 ## Exact run instructions
 
 Use:

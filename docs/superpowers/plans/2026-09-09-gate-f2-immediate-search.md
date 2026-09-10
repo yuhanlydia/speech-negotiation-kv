@@ -86,12 +86,12 @@
 **Interfaces:**
 - Produces local raw files `results/gate_f2_immediate_search.jsonl` and `results/gate_f2_best_fixed.jsonl`.
 
-- [ ] **Step 1: Commit and push code/config/tests before GPU evaluation** so implementation and seeds are frozen independently of outcomes.
+- [x] **Step 1: Commit and push code/config/tests before GPU evaluation** so implementation and seeds are frozen independently of outcomes.
 
-- [ ] **Step 2: Run immediate-search on GPU** for scenarios 80--99 and seeds 40--45, resuming the same file after interruptions.
+- [x] **Step 2: Run immediate-search on GPU** for scenarios 80--99 and seeds 40--45, resuming the same file after interruptions.
 
-- [ ] **Step 3: Run best-fixed on the identical paired states**, then analyze with 10,000 bootstrap repeats.
+- [x] **Step 3: Run best-fixed on the identical paired states**, then analyze with 10,000 bootstrap repeats.
 
-- [ ] **Step 4: Diagnose and repair only implementation/data-validity failures**, rerunning affected records without changing the scientific rule. If valid coverage produces a negative result, report it as negative.
+- [x] **Step 4: Diagnose and repair only implementation/data-validity failures**, rerunning affected records without changing the scientific rule. If valid coverage produces a negative result, report it as negative.
 
-- [ ] **Step 5: Write the result report, rerun verification, commit lightweight summaries/docs, and push main.**
+- [x] **Step 5: Write the result report, rerun verification, commit lightweight summaries/docs, and push main.**
