@@ -1,3 +1,4 @@
+from pathlib import Path
 from speech_negotiation_kv.speechparaling import (
     extract_target_text,
     parse_static_control,
@@ -41,3 +42,24 @@ def test_word_error_rate_is_zero_for_identical_content():
     from speech_negotiation_kv.speechparaling import word_error_rate
     assert word_error_rate("Hello, world!", "hello world") == 0.0
     assert word_error_rate("one two", "one three") == 0.5
+
+
+def test_pair_with_audio_uses_filename_sample_indices(tmp_path):
+    from speech_negotiation_kv.speechparaling import SpeechParalingItem, pair_with_audio
+    items = [SpeechParalingItem(f"i{i}", f"p{i}", ("Pitch",), "static") for i in range(1, 4)]
+    for name in ("para_con_short_sin_en_001.wav", "para_con_short_sin_en_003.wav", "para_con_short_sin_en_002.wav"):
+        (tmp_path / name).write_bytes(b"")
+    paired = pair_with_audio(items, tmp_path)
+    by_name = {Path(item.audio_path).name: item.prompt for item in paired}
+    assert by_name["para_con_short_sin_en_003.wav"] == "p3"
+
+
+def test_catalog_covered_selection_rejects_partial_compositions():
+    from speech_negotiation_kv.speechparaling import SpeechParalingItem, select_catalog_covered_items
+    catalog = {
+        "Pitch::very high pitch": {"dimension": "Pitch", "control": "very high pitch"},
+        "Pace::fast pace": {"dimension": "Pace", "control": "fast pace"},
+    }
+    good = SpeechParalingItem("g", "Please read this sentence with a very high pitch and a fast pace: 'Look!'", ("Pitch", "Pace"), "composed")
+    bad = SpeechParalingItem("b", "Please read this sentence with a very high pitch and a happy emotion: 'Look!'", ("Pitch", "Emotion"), "composed")
+    assert select_catalog_covered_items([bad, good], catalog, task="composed", limit=1) == [good]
