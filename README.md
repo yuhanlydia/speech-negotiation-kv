@@ -1,181 +1,188 @@
-# Speech Negotiation KV
+# ParaGeo: Compositional Paralinguistic Geometry for Speech Language Models
 
-Research code for **speech-native adversarial negotiation**, internal vocal-strategy geometry, and short-horizon strategy distillation on CRAD.
+This repository now studies **content-invariant paralinguistic geometry for controllable speech generation**. The original CRAD speech-negotiation experiments are retained as the discovery path that motivated ParaGeo, but negotiation is no longer the main benchmark.
 
-## Current scientific result
+## Current scientific position
 
-The project no longer treats a single opponent-stable advantage K/V direction as the main hypothesis. The current evidence is:
+The project has four relevant findings:
 
-- **Gate A — vocal causal channel: PASS.** With the words held fixed, changing vocal delivery changes the frozen opponent's next offer and utility proxy.
-- **Gate B / B′ — fixed advantage subspace: NOT SUPPORTED.** Corrected action-side K/V did not recover a cross-scenario advantage-specific subspace above the shuffled-utility null.
-- **Gate D — shared strategy geometry: STRONG PASS.** Action-side vocal styles transfer across held-out CRAD scenarios: median six-way decoding accuracy `0.8500` versus chance `0.1667`, all `126/126` balanced scenario splits exceed their own shuffled p95, and `15/15` pairwise style directions pass BH-FDR.
-- **Gate E2 — short-horizon value sufficiency: STRONG CONFIRMATORY PASS.** On fresh CRAD scenarios 20--29, seeds 10--15, and six styles (`360` long-horizon branches), immediate first-response utility predicts terminal utility with mean within-state Spearman `0.6586`, bootstrap 95% CI `[0.5677, 0.7642]`, tie-aware best-style agreement `0.950`, and median regret `0.0000`.
+- **Vocal causal channel — PASS.** Holding words fixed while changing vocal delivery changes a frozen speech agent's behavior.
+- **Shared vocal-strategy geometry — STRONG PASS.** In GLM-4-Voice, matched vocal styles occupy transferable action-side K/V directions across held-out CRAD scenarios (median six-way decoding accuracy 0.8500 vs chance 0.1667; 126/126 scenario splits above their shuffled p95; 15/15 style-pair directions BH-FDR significant).
+- **Immediate-to-terminal alignment — STRONG CONFIRMATORY PASS.** On fresh CRAD scenarios 20--29, one-step opponent utility predicts terminal utility (mean within-state Spearman 0.6586, bootstrap 95% CI [0.5677, 0.7642], tie-aware best-style agreement 0.950, median regret 0).
+- **Negotiation method recovery — NEGATIVE.** Both the frozen pre-response selector (Gate F) and six-probe immediate search (Gate F2) failed their preregistered held-out terminal-utility gates. These negative results remain part of the record and are not overwritten.
 
-The current paper hypothesis is therefore:
-
-\[
-\boxed{\text{stable vocal-strategy geometry} + \text{short-horizon value sufficiency}}
-\]
-
-A one-step opponent reaction may provide cheap supervision for a strategy that would otherwise require an expensive long-horizon rollout to evaluate.
-
-## Current method phase: Gate F / Gate G
-
-The repo now implements the next method phase. **Follow `GATE_F_RUN.md` rather than the old Gate-A/B execution order.**
-
-### Gate F — short-horizon strategy distillation
-
-For state `s` and vocal strategy `z`, Gate F learns a small selector from **one-step utility only**. The geometry-aware scorer is
+The new hypothesis focuses only on the strongest successful branch:
 
 \[
-q_\theta(s,z)=\phi(s)^\top W c_z,
+\boxed{\text{paralinguistic behavior occupies a low-dimensional, content-invariant, compositional geometry that can be directly controlled during speech generation}}
 \]
 
-where `c_z` is the fixed Gate-D strategy coordinate and `phi(s)` contains deterministic CRAD opening-state features. GLM-4-Voice weights remain frozen.
+## Why SpeechParaling-Bench
 
-The training target is a tie-aware soft teacher from centered immediate utility. States with zero strategy spread are automatically down-weighted. The formal selector is compared against:
+[SpeechParaling-Bench](https://github.com/Northern-byte-bit/SpeechParaling-Bench) provides exactly the tasks that should benefit from this geometry:
 
-- global per-style lookup / best fixed style;
-- a matched state × one-hot-style ridge head with no Gate-D geometry;
-- neutral and deterministic-random opening policies;
-- the geometry-aware selector.
+- **Paralanguage Control** — 691 English + 691 Chinese examples;
+- **Dynamic Variation** — 120 English + 120 Chinese examples;
+- **Situational Adaptation** — 190 English + 190 Chinese examples;
+- 100+ paralinguistic features and 1001 prompts per language;
+- public baseline outputs and pairwise LALM judge / score-calculation code.
 
-### Gate G1 — geometry necessity
+The first ParaGeo gate uses only English Paralanguage Control and Dynamic Variation. Full-benchmark expansion is blocked until the pilot passes.
 
-Compare the geometry-aware selector against the matched one-hot style head on the same train labels, state features, ridge grid, and held-out robustness scenarios. Parameter counts are reported explicitly.
+## ParaGeo method
 
-### Gate G2 — unseen-strategy generalization
+### 1. Content-invariant geometry
 
-Leave one vocal strategy out of all value-training rows. The geometry model still receives its pre-existing Gate-D coordinate at test time, while the one-hot head has no learned held-out class parameter and uses the pre-registered state-mean fallback. Report held-out-style correlation, pairwise sign accuracy, all-six Top-1, and regret.
-
-## Fixed data split
-
-Do not change these ranges after seeing results:
-
-| Purpose | CRAD scenarios |
-|---|---:|
-| Gate D / earlier mechanism pilots | 0--19 |
-| Gate E2 fresh confirmation | 20--29 |
-| Gate F one-step train | 30--59 |
-| Gate F validation / ridge selection | 60--69 |
-| Gate G robustness | 70--79 |
-| **Final held-out terminal benchmark** | **80--99** |
-
-Default Gate-F one-step teacher seeds are `20--25`. Final held-out terminal seeds are `30--35`.
-
-## Formal Gate-F pass rule
-
-The final benchmark runs one selected opening style on CRAD 80--99; every later turn uses the same frozen neutral continuation policy and the Gate-E2 terminal protocol (`H=8`, then at most `H=12`).
-
-Primary metric: terminal CRAD utility, paired by `(scenario, seed)`.
-
-Gate F passes only if
+For matched lexical content `x` rendered with attribute `a`:
 
 \[
-\operatorname{LCB}_{95\%}\left[
-U_{\text{geometry}}-U_{\text{best-fixed}}
-\right] > 0.
+\tilde h(x,a)=h(x,a)-\frac{1}{|A|}\sum_{a'}h(x,a').
 \]
 
-Secondary outputs include agreement/no-deal rate, rounds, forced-timeout provenance, selected-style distribution, regret, and paired deltas versus neutral/random/one-hot when available.
+Fit:
 
-Until this final held-out terminal gate passes, **do not start K/V causal steering (G4), OPSD, GRPO, LoRA/SFT, cross-model transfer, or cross-domain transfer.**
+\[
+\tilde h(x,a)\approx Bc_a.
+\]
 
-### Formal Gate F result and debug audit
+The first catalog uses reusable controls from Pitch, Timbre, Pace, Volume, Rhythm, and Age.
 
-The first run exposed two implementation defects: the one-step parser could
-mistake a referenced target for the proposed offer, and the fitter used linear
-utility logits instead of the specified soft teacher. Both were fixed, the
-saved teacher transcripts were conservatively reparsed, and the affected
-selector and terminal arms were rerun from fresh files.
+### 2. Semantic-orthogonal control
 
-In the corrected run, all five methods have 120/120 terminal states on CRAD
-80--99. Geometry has mean terminal utility `0.6385`, versus `0.6321` for
-best-fixed, `0.6395` for neutral, and `0.6058` for random. The fixed
-geometry-minus-best-fixed paired delta is `+0.0064`, with bootstrap 95% CI
-`[-0.0368, 0.0508]`. Therefore `gate_f_passes=false` remains the honest
-conclusion.
+Estimate a semantic/content subspace `S` from content means and project it out:
 
-Gate G1 also found identical Top-1 accuracy for geometry and one-hot (`0.7895`
-each). With six styles, the centered rank-5 Gate-D coordinates span the same
-five-dimensional contrast space as centered one-hot, so the current G1 is a
-reparameterization rather than a valid geometry-necessity test. G4 K/V
-steering, OPSD, GRPO and fine-tuning remain blocked. Details are in
-`docs/results/gate_f_terminal_report.md`.
+\[
+B_{\rm para}=\operatorname{qr}((I-SS^\top)B).
+\]
 
-### Gate F2 immediate-search replication
+All steering uses `B_para` to reduce lexical drift.
 
-The preregistered six-probe recovery experiment is complete on CRAD 80--99
-with new seeds 40--45. Both immediate-search and frozen best-fixed have 120/120
-terminal states; all 720 probes were eligible and all selected openings passed
-exact deterministic replay. Immediate-search reached mean terminal utility
-`0.6787` versus `0.6685` for best-fixed, a paired delta of `+0.0102` with 95%
-CI `[-0.0570, 0.0746]`. Therefore `gate_f2_passes=false`.
+### 3. Static control
 
-The negative is not a runtime failure. Immediate utilities were tied for
-multiple styles in 102/120 states, including 50/120 states where all six styles
-tied; search had a strictly better immediate offer than best-fixed in only
-25/120 states. Search also had 15 forced NO-DEAL timeouts versus 11 for
-best-fixed. Per the frozen stop rule, do not run F3/F4 by repeatedly changing
-seeds or tie-breaking. Full details are in
-`docs/results/gate_f2_terminal_report.md`.
+\[
+\Delta h=\alpha B_{\rm para}c_a.
+\]
 
-## Exact run instructions
+### 4. Compositional control
 
-Use:
+Single-attribute coordinates are added without fitting the combination:
+
+\[
+c_{a_1+\cdots+a_m}=\sum_i c_{a_i}.
+\]
+
+The public `short_multi` subset tests whether this gives unseen combination control.
+
+### 5. Dynamic control
+
+For an instruction that transitions from attribute `a` to `b`:
+
+\[
+c_t=(1-\lambda_t)c_a+\lambda_t c_b.
+\]
+
+Gradual prompts use a linear path; prompts containing `suddenly` use a step trajectory. `ScheduledFusedQKVSteerer` applies the corresponding K/V direction once per generation forward.
+
+### 6. Random-direction control
+
+Norm-matched random directions are mandatory. A gain that random steering reproduces is not a ParaGeo result.
+
+## Official GLM-4-Voice waveform path
+
+The old negotiation pilot used direct discrete audio-token loopback for 16 GB efficiency. **The SpeechParaling benchmark path no longer does this for output evaluation.** It uses the official GLM-4-Voice components:
+
+1. `GLM-4-Voice-Tokenizer` / Whisper-VQ for benchmark input waveform tokenization;
+2. `GLM-4-Voice-9B` for interleaved text/audio generation;
+3. `GLM-4-Voice-Decoder` (Flow + HiFT) for 22.05-kHz output WAV decoding.
+
+The adapter follows the public official implementation in [zai-org/GLM-4-Voice](https://github.com/zai-org/GLM-4-Voice). Primary pilot generation uses temperature 0.8 and top-p 0.8.
+
+## Current pilot
+
+English only:
+
+| Subset | Role | Samples |
+|---|---|---:|
+| `para_con/short_sin` | static single-attribute control | 80 |
+| `para_con/short_multi` | compositional control | 40 |
+| `dyn_var` | intra-utterance dynamic control | 60 |
+
+Methods:
+
+- `prompt_only`
+- `parageo_static`
+- `parageo_composed`
+- `parageo_dynamic`
+- `random`
+
+A deterministic 20% development slice (`index % 5 == 0`) is used only to choose `alpha` from `{0.25, 0.5, 1.0, 1.5}`. The remaining 80% is the held-out pilot.
+
+## Frozen stop rule
+
+Continue only if text-channel semantic fidelity is preserved and at least one held-out result satisfies:
+
+- static/compositional SpeechParaling score gain >= **+5.0 points** over prompt-only; or
+- Dynamic Variation score gain >= **+8.0 points** over prompt-only.
+
+Random steering must not reproduce the gain. If this gate fails, stop ParaGeo; do not rescue it with RL, LoRA, favorable seeds, or post-hoc schedules.
+
+## Quick start
 
 ```bash
 git pull origin main
 source .venv/bin/activate
-pip install -e '.[dev,glm]'
+pip install -e '.[dev,glm,parageo]'
 pytest -q
 ```
 
-Then follow the complete command sequence in:
-
-- `GATE_F_RUN.md`
-- `configs/crad_gate_f_16gb.yaml`
-- `docs/superpowers/specs/2026-09-09-short-horizon-strategy-distillation-design.md`
-- `docs/superpowers/plans/2026-09-09-gate-f-g-strategy-distillation.md`
-
-The run contract covers:
-
-1. one-step teacher collection on scenarios 30--59 (`1080` branches);
-2. validation teacher collection on 60--69 (`360` branches);
-3. CPU fitting of geometry / one-hot / style-lookup selectors;
-4. robustness teacher collection on 70--79 (`360` branches) and Gate G1/G2;
-5. final terminal evaluation on 80--99 (`120` states per method);
-6. paired-bootstrap Gate-F analysis.
-
-Raw JSONL / K/V NPZ / audio artifacts remain local and gitignored. Commit lightweight summaries and reports only.
-
-## Model and resource mode
-
-Primary experiments use:
-
-- `zai-org/glm-4-voice-9b`;
-- NF4/int4;
-- one model copy;
-- generation microbatch `1`;
-- direct discrete audio-token loopback;
-- no waveform decoder / tokenizer roundtrip in the primary 16 GB path.
-
-The method fitting and Gate-G analyses are NumPy/CPU-only after one-step teacher data and Gate-D coordinates exist.
-
-## Key result records
-
-- Original Gate A/B report: `results/GATE_REPORT.md`
-- Corrected Gate B′: `results/debug_gate_b_prime_report.md`
-- Gate D strategy geometry: `results/gate_d_strategy_geometry_report.md`
-- Formal Gate E v7 (inconclusive coverage): `docs/results/gate_e_formal_v7_report.md`
-- Formal Gate E2 confirmation: `docs/results/gate_e2_formal_v3_report.md`
-- Gate E2 summary: `results/gate_e2_formal_v3_summary.json`
-- Earlier exploratory contextual Gate F: `docs/results/gate_f_exploratory_report.md` (historical only; not the current formal method)
-
-## Tests
+External assets:
 
 ```bash
-pytest -q
+export GLM_VOICE_REPO=/absolute/path/to/GLM-4-Voice
+export GLM_VOICE_DECODER=/absolute/path/to/glm-4-voice-decoder
+export SPEECHPARALING_ROOT=/absolute/path/to/SpeechParaling-Bench
 ```
 
-The repo tests cover CRAD scoring/parsing, long-horizon terminal protocol, matched speech semantics, K/V extraction and subspace controls, Gate-D geometry, Gate-E2 metrics, and the new short-horizon selector primitives including tie-aware teachers, geometry/one-hot scoring, regret, bootstrap deltas, and unseen-strategy valuation.
+Then follow **[`PARAGEO_RUN.md`](PARAGEO_RUN.md)** exactly.
+
+## Main files
+
+### ParaGeo core
+
+- `src/speech_negotiation_kv/parageo.py` — centering, SVD basis, semantic orthogonalization, coordinates, composition, dynamic schedules.
+- `src/speech_negotiation_kv/parageo_steering.py` — scheduled fused-QKV intervention.
+- `src/speech_negotiation_kv/speechparaling.py` — SpeechParaling prompt parser, catalog matching, prompt/audio pairing, fidelity utilities.
+- `src/speech_negotiation_kv/glm_official_waveform.py` — official Whisper-VQ + Flow/HiFT waveform adapter.
+
+### Calibration
+
+- `scripts/build_parageo_catalog.py`
+- `scripts/collect_parageo_calibration.py`
+- `scripts/extract_parageo_kv.py`
+- `scripts/fit_parageo_basis.py`
+
+### Benchmark
+
+- `scripts/run_speechparaling_pilot.py`
+- `scripts/analyze_parageo_fidelity.py`
+- `scripts/analyze_parageo_pilot.py`
+- `configs/parageo_speechparaling_pilot.yaml`
+
+### Design / run contract
+
+- `PARAGEO_RUN.md`
+- `docs/superpowers/specs/2026-09-10-parageo-speechparaling-design.md`
+- `docs/superpowers/plans/2026-09-10-parageo-speechparaling.md`
+
+## Expansion after a pilot pass only
+
+1. Full 1001-item English SpeechParaling-Bench.
+2. Full 1001-item Chinese benchmark.
+3. Situational Adaptation via context -> ParaGeo coordinate routing.
+4. Qwen-Omni replication.
+5. Cross-model geometry rank / composition analysis.
+6. External S2S-Arena or WildSpeech-Bench generalization.
+
+## Historical negotiation results
+
+The older CRAD scripts/results remain in the repository for reproducibility. They document the causal discovery, Gate-D geometry, Gate-E2 alignment, and the negative Gate-F/Gate-F2 method attempts. They are no longer the execution path for new experiments.
