@@ -98,17 +98,27 @@ def load_prompt_jsonl(path: str | Path, *, task: str) -> list[SpeechParalingItem
     return rows
 
 
+def _filename_sample_index(path: Path) -> int | None:
+    match = re.search(r"_(\d+)$", path.stem)
+    return int(match.group(1)) if match else None
+
+
 def pair_with_audio(items: Sequence[SpeechParalingItem], audio_dir: str | Path) -> list[SpeechParalingItem]:
     audio_paths = sorted(Path(audio_dir).glob("*.wav"))
     if len(audio_paths) != len(items):
         raise ValueError(f"prompt/audio count mismatch: {len(items)} prompts vs {len(audio_paths)} wav files")
+    indices = [_filename_sample_index(path) for path in audio_paths]
+    if all(index is not None and 1 <= index <= len(items) for index in indices) and len(set(indices)) == len(indices):
+        pairs = [(items[index - 1], path) for index, path in zip(indices, audio_paths)]
+    else:
+        pairs = list(zip(items, audio_paths))
     return [SpeechParalingItem(
         item_id=item.item_id,
         prompt=item.prompt,
         dimensions=item.dimensions,
         task=item.task,
         audio_path=str(audio_path),
-    ) for item, audio_path in zip(items, audio_paths)]
+    ) for item, audio_path in pairs]
 
 
 def select_pilot(items: Iterable[SpeechParalingItem], *, dimensions: Sequence[str], limit: int) -> list[SpeechParalingItem]:
@@ -142,6 +152,36 @@ def match_catalog_controls(prompt: str, catalog: dict[str, dict]) -> list[str]:
             continue
         selected.append(key)
         used_phrases.append(phrase)
+    return selected
+
+
+def select_catalog_covered_items(items: Sequence[SpeechParalingItem], catalog: dict[str, dict], *,
+                                 task: str, limit: int | None = None) -> list[SpeechParalingItem]:
+    supported_dimensions = {str(meta.get("dimension")) for meta in catalog.values()}
+    selected: list[SpeechParalingItem] = []
+    for item in items:
+        if not set(item.dimensions).issubset(supported_dimensions):
+            continue
+        if task in {"static", "composed"}:
+            matched = match_catalog_controls(item.prompt, catalog)
+            required = 1 if task == "static" else max(2, len(item.dimensions))
+            if len(matched) < required:
+                continue
+        elif task == "dynamic":
+            if len(item.dimensions) != 1:
+                continue
+            try:
+                start, end, _ = parse_dynamic_control(item.prompt)
+            except ValueError:
+                continue
+            dimension = item.dimensions[0]
+            if attribute_key(dimension, start) not in catalog or attribute_key(dimension, end) not in catalog:
+                continue
+        else:
+            raise ValueError(f"unknown task: {task}")
+        selected.append(item)
+        if limit is not None and len(selected) >= int(limit):
+            break
     return selected
 
 
