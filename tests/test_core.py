@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import pandas as pd
+import pytest
 import torch
 from torch import nn
 
@@ -22,9 +23,11 @@ from speech_negotiation_kv.kv_hooks import (
 )
 from speech_negotiation_kv.long_horizon import (
     is_strategically_valid_move,
+    MockLongHorizonBackend,
     negotiation_turn_prompt,
     paired_turn_seed,
     parse_negotiation_move,
+    probe_opening_styles,
     run_long_horizon_branch,
     score_terminal_outcome,
 )
@@ -174,6 +177,75 @@ def test_long_horizon_branch_restores_neutral_policy_and_terminates():
     assert result["turns"][0]["policy_style"] == "firm and assertive"
     assert backend.calls[1][0] == "debtor_opening"
     assert all(call[1] == "neutral" for call in backend.calls[2:])
+
+
+def test_opening_probe_selects_best_eligible_style_and_breaks_ties_in_fixed_order():
+    scenario = {
+        "Creditor Name": "A", "Debtor Name": "B",
+        "Creditor Target Days": 30, "Debtor Target Days": 120,
+    }
+    backend = MockLongHorizonBackend(["neutral", "assertive", "hesitant"])
+    selected, probes, fallback = probe_opening_styles(
+        scenario, scenario_id=0, styles=["neutral", "assertive", "hesitant"],
+        branch_seed=40, backend=backend, base_seed=200,
+    )
+    assert selected == "hesitant"
+    assert fallback is False
+    assert len(probes) == 3
+    assert all(probe["eligible"] for probe in probes)
+
+    class TiedBackend(MockLongHorizonBackend):
+        def respond_audio(self, audio_ids, scenario, *, seed):
+            return VoiceGeneration("PROPOSE: 60 days.", [60], [60])
+
+    selected, _, fallback = probe_opening_styles(
+        scenario, scenario_id=0, styles=["neutral", "assertive", "hesitant"],
+        branch_seed=40, backend=TiedBackend(["neutral", "assertive", "hesitant"]), base_seed=200,
+    )
+    assert selected == "neutral"
+    assert fallback is False
+
+
+def test_opening_probe_falls_back_to_neutral_when_every_candidate_is_invalid():
+    class EmptyBackend(MockLongHorizonBackend):
+        def render_exact(self, text, style, *, seed):
+            return VoiceGeneration(text, [], [])
+
+        def respond_audio(self, audio_ids, scenario, *, seed):
+            return VoiceGeneration("No numeric proposal.", [], [])
+
+    scenario = {
+        "Creditor Name": "A", "Debtor Name": "B",
+        "Creditor Target Days": 30, "Debtor Target Days": 120,
+    }
+    selected, probes, fallback = probe_opening_styles(
+        scenario, scenario_id=0, styles=["neutral", "assertive"],
+        branch_seed=40, backend=EmptyBackend(["neutral", "assertive"]), base_seed=200,
+    )
+    assert selected == "neutral"
+    assert fallback is True
+    assert not any(probe["eligible"] for probe in probes)
+
+
+def test_long_horizon_branch_rejects_probe_replay_mismatch():
+    scenario = {
+        "Creditor Name": "A", "Debtor Name": "B",
+        "Creditor Target Days": 30, "Debtor Target Days": 120,
+    }
+    styles = ["neutral", "assertive"]
+    backend = MockLongHorizonBackend(styles)
+    selected, probes, _ = probe_opening_styles(
+        scenario, scenario_id=0, styles=styles, branch_seed=40,
+        backend=backend, base_seed=200,
+    )
+    expected = next(probe for probe in probes if probe["style"] == selected)
+    expected = dict(expected, response_transcript="PROPOSE: 999 days.")
+    with pytest.raises(ValueError, match="opening probe replay mismatch"):
+        run_long_horizon_branch(
+            scenario, scenario_id=0, style=selected, branch_seed=40,
+            backend=backend, horizon=4, max_horizon=4, base_seed=200,
+            expected_opening_probe=expected,
+        )
 
 
 def test_long_horizon_branch_keeps_unresolved_outcome_censored():

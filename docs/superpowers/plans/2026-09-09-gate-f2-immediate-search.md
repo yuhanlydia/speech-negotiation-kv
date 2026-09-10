@@ -31,13 +31,13 @@
 - Produces: `probe_opening_styles(scenario, scenario_id, styles, branch_seed, backend, base_seed) -> (selected_style, probes, fallback_used)`.
 - Extends: `run_long_horizon_branch(..., expected_opening_probe=None)` with exact replay verification.
 
-- [ ] **Step 1: Write failing tests** proving that the mock backend selects the highest immediate-utility eligible style, preserves fixed-order tie-breaking, falls back to neutral when all candidates are invalid, and rejects a replay mismatch.
+- [x] **Step 1: Write failing tests** proving that the mock backend selects the highest immediate-utility eligible style, preserves fixed-order tie-breaking, falls back to neutral when all candidates are invalid, and rejects a replay mismatch.
 
-- [ ] **Step 2: Run the focused tests** with `pytest tests/test_core.py -k 'probe or replay' -q` and verify failure because the new interface does not exist.
+- [x] **Step 2: Run the focused tests** with `pytest tests/test_core.py -k 'probe or replay' -q` and verify failure because the new interface does not exist.
 
-- [ ] **Step 3: Implement the minimal probe record, eligibility logic, deterministic selector, and optional replay assertion** in `long_horizon.py`.
+- [x] **Step 3: Implement the minimal probe record, eligibility logic, deterministic selector, and optional replay assertion** in `long_horizon.py`.
 
-- [ ] **Step 4: Run focused and full tests** with `pytest tests/test_core.py -k 'probe or replay' -q` and `pytest -q`.
+- [x] **Step 4: Run focused and full tests** with `pytest tests/test_core.py -k 'probe or replay' -q` and `pytest -q`.
 
 ### Task 2: Gate-F2 terminal runner and frozen configuration
 
@@ -50,13 +50,13 @@
 - Adds terminal method `immediate_search`.
 - Writes per-state probe summaries, selected style, fallback provenance, and `opening_probe_replay_verified`.
 
-- [ ] **Step 1: Write a failing CLI dry-run test** for two states that requires `immediate_search`, six probe records per state, no fallback, and verified replay.
+- [x] **Step 1: Write a failing CLI dry-run test** for two states that requires `immediate_search`, six probe records per state, no fallback, and verified replay.
 
-- [ ] **Step 2: Run `pytest tests/test_gate_f2.py -q`** and verify that the unsupported method fails.
+- [x] **Step 2: Run `pytest tests/test_gate_f2.py -q`** and verify that the unsupported method fails.
 
-- [ ] **Step 3: Extend the runner** to probe six styles, select one, replay it exactly, and persist auditable probe metadata. Add the frozen seeds 40--45 config with a distinct evaluation base seed.
+- [x] **Step 3: Extend the runner** to probe six styles, select one, replay it exactly, and persist auditable probe metadata. Add the frozen seeds 40--45 config with a distinct evaluation base seed.
 
-- [ ] **Step 4: Run the focused test and a CLI dry-run** for scenarios 80--81 and seeds 40--41, then run the full test suite.
+- [x] **Step 4: Run the focused test and a CLI dry-run** for scenarios 80--81 and seeds 40--41, then run the full test suite.
 
 ### Task 3: Independent Gate-F2 analyzer
 
@@ -68,13 +68,13 @@
 - Consumes: `immediate_search=PATH` and `best_fixed=PATH` terminal JSONL files.
 - Produces: coverage, method summaries, probe quality, paired bootstrap delta, and `gate_f2_passes`.
 
-- [ ] **Step 1: Write failing analyzer tests** for a complete positive fixture, incomplete coverage, and replay-invalid records.
+- [x] **Step 1: Write failing analyzer tests** for a complete positive fixture, incomplete coverage, and replay-invalid records.
 
-- [ ] **Step 2: Run the focused tests** and verify failure because the analyzer does not exist.
+- [x] **Step 2: Run the focused tests** and verify failure because the analyzer does not exist.
 
-- [ ] **Step 3: Implement the analyzer** with the exact 120-state coverage and lower-CI-greater-than-zero rule from the spec.
+- [x] **Step 3: Implement the analyzer** with the exact 120-state coverage and lower-CI-greater-than-zero rule from the spec.
 
-- [ ] **Step 4: Run focused and full tests**, compile changed Python files, and run `git diff --check`.
+- [x] **Step 4: Run focused and full tests**, compile changed Python files, and run `git diff --check`.
 
 ### Task 4: Freeze implementation and run Gate F2
 

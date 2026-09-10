@@ -13,6 +13,7 @@ import yaml
 from speech_negotiation_kv.crad import load_crad
 from speech_negotiation_kv.glm_voice import GLMVoiceBackend
 from speech_negotiation_kv.long_horizon import MockLongHorizonBackend, run_long_horizon_branch
+from speech_negotiation_kv.long_horizon import probe_opening_styles
 from speech_negotiation_kv.short_horizon_selector import (
     opening_state_features, score_geometry_selector, score_onehot_selector,
 )
@@ -79,8 +80,14 @@ def main() -> None:
     parser.add_argument("--config", default="configs/crad_gate_f_16gb.yaml")
     parser.add_argument("--data", default="data/credit_recovery_scenarios.csv")
     parser.add_argument("--selector", default="results/gate_f_selector.npz")
-    parser.add_argument("--method", choices=["geometry", "onehot", "neutral", "random", "best_fixed"], required=True)
+    parser.add_argument(
+        "--method",
+        choices=["geometry", "onehot", "neutral", "random", "best_fixed", "immediate_search"],
+        required=True,
+    )
     parser.add_argument("--output", required=True)
+    parser.add_argument("--scenario-start", type=int, default=None)
+    parser.add_argument("--scenario-end", type=int, default=None)
     parser.add_argument("--seeds", type=int, nargs="*", default=None)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--fresh", action="store_true")
@@ -90,7 +97,8 @@ def main() -> None:
     exp = cfg["experiment"]
     artifact = load_artifact(args.selector)
     frame = load_crad(args.data)
-    start, end = int(exp["final_start"]), int(exp["final_end"])
+    start = int(args.scenario_start if args.scenario_start is not None else exp["final_start"])
+    end = int(args.scenario_end if args.scenario_end is not None else exp["final_end"])
     if not (80 <= start < end <= 100):
         parser.error("final Gate-F evaluation must stay inside CRAD test scenarios 80--99")
     part = frame.iloc[start:end]
@@ -124,17 +132,38 @@ def main() -> None:
                 key = (int(scenario_id), int(seed))
                 if key in completed:
                     continue
-                style, scores = choose_style(
-                    args.method, artifact, scenario,
-                    scenario_id=int(scenario_id), seed=int(seed), base_seed=base_seed,
-                )
+                probes = None
+                fallback_used = None
+                expected_probe = None
+                if args.method == "immediate_search":
+                    style, probes, fallback_used = probe_opening_styles(
+                        scenario,
+                        scenario_id=int(scenario_id),
+                        styles=artifact["styles"],
+                        branch_seed=int(seed),
+                        backend=backend,
+                        base_seed=base_seed,
+                    )
+                    scores = [probe["immediate_utility"] for probe in probes]
+                    expected_probe = next(
+                        probe for probe in probes if str(probe["style"]) == style
+                    )
+                else:
+                    style, scores = choose_style(
+                        args.method, artifact, scenario,
+                        scenario_id=int(scenario_id), seed=int(seed), base_seed=base_seed,
+                    )
                 result = run_long_horizon_branch(
                     scenario, scenario_id=int(scenario_id), style=style, branch_seed=int(seed),
                     backend=backend, horizon=horizon, max_horizon=max_horizon, base_seed=base_seed,
+                    expected_opening_probe=expected_probe,
                 )
                 result["method"] = args.method
                 result["selected_style"] = style
                 result["selection_scores"] = scores
+                if probes is not None:
+                    result["opening_probes"] = probes
+                    result["opening_probe_fallback_used"] = bool(fallback_used)
                 handle.write(json.dumps(result, ensure_ascii=False) + "\n")
                 handle.flush()
                 os.fsync(handle.fileno())

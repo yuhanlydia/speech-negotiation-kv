@@ -160,6 +160,81 @@ def opening_utterance(scenario: dict) -> str:
     return f"We need the repayment completed within {int(scenario['Creditor Target Days'])} days."
 
 
+def probe_opening_styles(
+    scenario: dict,
+    *,
+    scenario_id: int,
+    styles: list[str],
+    branch_seed: int,
+    backend: LongHorizonBackend,
+    base_seed: int,
+) -> tuple[str, list[dict], bool]:
+    """Select the best valid style from six matched one-step opening probes."""
+    if not styles:
+        raise ValueError("styles must be non-empty")
+    if "neutral" not in styles:
+        raise ValueError("styles must include neutral for the registered fallback")
+    creditor_target = int(scenario["Creditor Target Days"])
+    debtor_target = int(scenario["Debtor Target Days"])
+    semantic = opening_utterance(scenario)
+    renderer_seed = paired_turn_seed(
+        base_seed, branch_seed=branch_seed, transition=0, actor="renderer"
+    )
+    debtor_seed = paired_turn_seed(
+        base_seed, branch_seed=branch_seed, transition=1, actor="debtor"
+    )
+    probes: list[dict] = []
+    for style in styles:
+        rendered = backend.render_exact(semantic, style, seed=renderer_seed)
+        matched = normalize_transcript(rendered.transcript) == normalize_transcript(semantic)
+        response = backend.respond_audio(rendered.audio_token_ids, scenario, seed=debtor_seed)
+        move = parse_negotiation_move(response.transcript, latest_offer=creditor_target)
+        strategically_valid = is_strategically_valid_move(
+            move,
+            role="debtor",
+            latest_offer=creditor_target,
+            creditor_target=creditor_target,
+            debtor_target=debtor_target,
+            transition=1,
+        )
+        eligible = bool(
+            matched
+            and rendered.audio_token_ids
+            and response.audio_token_ids
+            and move.kind != "invalid"
+            and strategically_valid
+        )
+        utility = normalized_creditor_utility(
+            creditor_target, debtor_target, move.days
+        ) if eligible else None
+        probes.append({
+            "scenario_id": int(scenario_id),
+            "seed": int(branch_seed),
+            "style": str(style),
+            "renderer_seed": int(renderer_seed),
+            "debtor_seed": int(debtor_seed),
+            "rendered_transcript": rendered.transcript,
+            "rendered_audio_token_ids": list(rendered.audio_token_ids),
+            "response_transcript": response.transcript,
+            "response_audio_token_ids": list(response.audio_token_ids),
+            "response_move_kind": move.kind,
+            "response_move_days": move.days,
+            "immediate_utility": utility,
+            "matched_semantics": bool(matched),
+            "strategically_valid": bool(strategically_valid),
+            "eligible": eligible,
+        })
+
+    eligible_probes = [probe for probe in probes if probe["eligible"]]
+    if not eligible_probes:
+        return "neutral", probes, True
+    best = eligible_probes[0]
+    for probe in eligible_probes[1:]:
+        if float(probe["immediate_utility"]) > float(best["immediate_utility"]):
+            best = probe
+    return str(best["style"]), probes, False
+
+
 def negotiation_turn_prompt(*, role: str, opponent_audio_ids: list[int], scenario: dict,
                             history: list[dict], transition: int, policy_style: str,
                             force_terminal: bool = False) -> str:
@@ -239,7 +314,8 @@ def negotiation_turn_prompt(*, role: str, opponent_audio_ids: list[int], scenari
 
 def run_long_horizon_branch(scenario: dict, *, scenario_id: int, style: str, branch_seed: int,
                             backend: LongHorizonBackend, horizon: int = 4, max_horizon: int = 4,
-                            base_seed: int = 4242424242) -> dict:
+                            base_seed: int = 4242424242,
+                            expected_opening_probe: dict | None = None) -> dict:
     if horizon < 1 or max_horizon < horizon:
         raise ValueError("require 1 <= horizon <= max_horizon")
     creditor_target = int(scenario["Creditor Target Days"])
@@ -253,6 +329,15 @@ def run_long_horizon_branch(scenario: dict, *, scenario_id: int, style: str, bra
         style,
         seed=paired_turn_seed(base_seed, branch_seed=branch_seed, transition=0, actor="renderer"),
     )
+    if expected_opening_probe is not None:
+        renderer_matches = bool(
+            str(expected_opening_probe.get("style")) == str(style)
+            and expected_opening_probe.get("rendered_transcript") == rendered.transcript
+            and list(expected_opening_probe.get("rendered_audio_token_ids", []))
+            == list(rendered.audio_token_ids)
+        )
+        if not renderer_matches:
+            raise ValueError("opening probe replay mismatch: rendered opening changed")
     matched = normalize_transcript(rendered.transcript) == normalize_transcript(semantic)
     turns = [TurnRecord(
         transition=0,
@@ -349,6 +434,17 @@ def run_long_horizon_branch(scenario: dict, *, scenario_id: int, style: str, bra
 
             if transition == 1:
                 debtor_move, opponent_audio = take_opening_debtor_turn(opponent_audio)
+                if expected_opening_probe is not None:
+                    replayed = turns[-1]
+                    response_matches = bool(
+                        expected_opening_probe.get("response_transcript") == replayed["transcript"]
+                        and list(expected_opening_probe.get("response_audio_token_ids", []))
+                        == list(replayed["audio_token_ids"])
+                        and expected_opening_probe.get("response_move_kind") == debtor_move.kind
+                        and expected_opening_probe.get("response_move_days") == debtor_move.days
+                    )
+                    if not response_matches:
+                        raise ValueError("opening probe replay mismatch: debtor response changed")
             else:
                 debtor_move, opponent_audio = take_turn(
                     "debtor", transition, opponent_audio,
@@ -408,6 +504,9 @@ def run_long_horizon_branch(scenario: dict, *, scenario_id: int, style: str, bra
         "success": bool(outcome == "agreement"),
         "agreement_days": agreement_days,
         "terminal_forced_no_deal": terminal_forced_no_deal,
+        "opening_probe_replay_verified": (
+            True if expected_opening_probe is not None else None
+        ),
         "utility": score_terminal_outcome(outcome, agreement_days, creditor_target, debtor_target),
         "latest_offer_days": latest_offer,
         "latest_offer_proxy_utility": normalized_creditor_utility(

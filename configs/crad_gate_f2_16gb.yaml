@@ -1,0 +1,28 @@
+model:
+  name: zai-org/glm-4-voice-9b
+  quantization: int4
+  device: cuda:0
+  max_new_tokens: 96
+  temperature: 0.2
+  top_p: 0.8
+  audio_vocab_size: 16384
+
+experiment:
+  styles:
+    - neutral
+    - calm and confident
+    - firm and assertive
+    - empathetic and warm
+    - urgent but controlled
+    - hesitant and uncertain
+  final_start: 80
+  final_end: 100
+  final_seeds: [40, 41, 42, 43, 44, 45]
+  terminal_horizon: 8
+  terminal_max_horizon: 12
+  evaluation_base_seed: 8242424242
+
+resources:
+  generation_batch_size: 1
+  waveform_roundtrip: false
+  context_cap_tokens: 2048
