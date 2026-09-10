@@ -6,7 +6,7 @@ import numpy as np, yaml
 from speech_negotiation_kv.glm_official_waveform import GLMOfficialWaveformBackend, OfficialVoiceAssets
 from speech_negotiation_kv.parageo import compose_coordinates,direction_from_coordinate,dynamic_coordinate_schedule
 from speech_negotiation_kv.parageo_steering import ScheduledFusedQKVSteerer
-from speech_negotiation_kv.speechparaling import load_prompt_jsonl,pair_with_audio,select_pilot,match_catalog_controls,parse_dynamic_control,attribute_key,extract_target_text
+from speech_negotiation_kv.speechparaling import load_prompt_jsonl,pair_with_audio,select_catalog_covered_items,match_catalog_controls,parse_dynamic_control,attribute_key,extract_target_text
 
 def load_geometry(path):
     data=np.load(path); names=[str(x) for x in data['attribute_names']]; coords={n:data['coordinates'][i].astype(np.float64) for i,n in enumerate(names)}
@@ -22,12 +22,14 @@ def steerer_for(backend,basis,layers,coordinate_schedule,scale):
 def main():
     ap=argparse.ArgumentParser(description='Generate SpeechParaling-Bench pilot outputs with ParaGeo')
     ap.add_argument('--config',default='configs/parageo_speechparaling_pilot.yaml'); ap.add_argument('--prompt-jsonl',required=True); ap.add_argument('--audio-dir',required=True); ap.add_argument('--task',required=True,choices=['static','composed','dynamic']); ap.add_argument('--method',required=True,choices=['prompt_only','parageo_static','parageo_composed','parageo_dynamic','random']); ap.add_argument('--basis',default='results/parageo_basis.npz'); ap.add_argument('--catalog',default='results/parageo_attribute_catalog.json'); ap.add_argument('--output-dir',required=True); ap.add_argument('--limit',type=int,default=None); ap.add_argument('--scale',type=float,default=None); args=ap.parse_args()
-    cfg=yaml.safe_load(Path(args.config).read_text()); m=cfg['model']; p=cfg['parageo']; official=cfg['official_glm']; pilot=cfg['pilot']; scale=float(args.scale if args.scale is not None else pilot['steering_scale'])
+    cfg=yaml.safe_load(Path(args.config).read_text()); m=cfg['model']; official=cfg['official_glm']; pilot=cfg['pilot']; scale=float(args.scale if args.scale is not None else pilot['steering_scale'])
     assets=OfficialVoiceAssets(repo_root=str(Path(__import__('os').path.expandvars(official['repo_root'])).expanduser()),speech_tokenizer_path=__import__('os').path.expandvars(official['speech_tokenizer_path']),decoder_path=str(Path(__import__('os').path.expandvars(official['decoder_path'])).expanduser()))
     backend=GLMOfficialWaveformBackend(assets=assets,model_name=m['name'],quantization=m.get('quantization','int4'),device=m.get('device','cuda:0'),max_new_tokens=m.get('max_new_tokens',768),temperature=m.get('temperature',0.8),top_p=m.get('top_p',0.8),audio_vocab_size=m.get('audio_vocab_size',16384))
     basis,coords,layers=load_geometry(args.basis); catalog=json.loads(Path(args.catalog).read_text())
-    items=pair_with_audio(load_prompt_jsonl(args.prompt_jsonl,task=args.task),args.audio_dir)
-    if args.limit is not None: items=items[:args.limit]
+    all_items=pair_with_audio(load_prompt_jsonl(args.prompt_jsonl,task=args.task),args.audio_dir)
+    items=select_catalog_covered_items(all_items,catalog,task=args.task,limit=args.limit)
+    if args.limit is not None and len(items) < args.limit:
+        raise ValueError(f'only {len(items)} catalog-covered items available, requested {args.limit}')
     outdir=Path(args.output_dir); outdir.mkdir(parents=True,exist_ok=True); records=[]; rng=np.random.default_rng(int(pilot['random_seed']))
     for index,item in enumerate(items):
         steering=None; selected=[]; schedule_meta=None
