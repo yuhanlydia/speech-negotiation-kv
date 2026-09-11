@@ -1,4 +1,7 @@
+import json
 from pathlib import Path
+import subprocess
+import sys
 from speech_negotiation_kv.speechparaling import (
     extract_target_text,
     parse_static_control,
@@ -73,3 +76,51 @@ def test_deterministic_dev_split_is_disjoint_and_complete():
     assert [item.item_id for item in dev] == ["0", "5"]
     assert set(dev).isdisjoint(set(held))
     assert len(dev) + len(held) == len(items)
+
+
+def test_catalog_builder_defaults_to_all_official_control_dimensions(tmp_path):
+    prompt_dir = tmp_path / "jsonl_prompt_en" / "para_con"
+    prompt_dir.mkdir(parents=True)
+    rows = [
+        {
+            "prompt": "Please read this sentence with a happy emotion: 'We did it!'",
+            "dimensions": ["Emotion"],
+        },
+        {
+            "prompt": "Please read this sentence with a high pitch: 'Listen!'",
+            "dimensions": ["Pitch"],
+        },
+    ]
+    (prompt_dir / "short_sin.jsonl").write_text(
+        "\n".join(json.dumps(row) for row in rows) + "\n"
+    )
+    output = tmp_path / "catalog.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "scripts/build_parageo_catalog.py",
+            "--benchmark-root",
+            str(tmp_path),
+            "--language",
+            "en",
+            "--output",
+            str(output),
+        ],
+        cwd=Path(__file__).resolve().parents[1],
+        text=True,
+        capture_output=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    catalog = json.loads(output.read_text())
+    assert set(catalog) == {"Emotion::happy emotion", "Pitch::high pitch"}
+
+
+def test_manifest_writer_preserves_unicode_under_ascii_locale(tmp_path, monkeypatch):
+    from speech_negotiation_kv.speechparaling import write_manifest
+
+    monkeypatch.setenv("LC_ALL", "C")
+    output = tmp_path / "manifest.jsonl"
+    write_manifest(output, [{"prompt": "say café — softly"}])
+    assert json.loads(output.read_text(encoding="utf-8")) == {
+        "prompt": "say café — softly"
+    }

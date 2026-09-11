@@ -6,7 +6,7 @@ import numpy as np, yaml
 from speech_negotiation_kv.glm_official_waveform import GLMOfficialWaveformBackend, OfficialVoiceAssets
 from speech_negotiation_kv.parageo import compose_coordinates,direction_from_coordinate,dynamic_coordinate_schedule
 from speech_negotiation_kv.parageo_steering import ScheduledFusedQKVSteerer
-from speech_negotiation_kv.speechparaling import load_prompt_jsonl,pair_with_audio,select_catalog_covered_items,split_pilot_items,match_catalog_controls,parse_dynamic_control,attribute_key,extract_target_text
+from speech_negotiation_kv.speechparaling import load_prompt_jsonl,pair_with_audio,select_catalog_covered_items,split_pilot_items,match_catalog_controls,parse_dynamic_control,attribute_key,extract_target_text,write_manifest
 
 def load_geometry(path):
     data=np.load(path); names=[str(x) for x in data['attribute_names']]; coords={n:data['coordinates'][i].astype(np.float64) for i,n in enumerate(names)}
@@ -55,6 +55,6 @@ def main():
         generation=backend.generate_from_audio_instruction(item.audio_path,output,seed=int(pilot['generation_seed'])+index,steering=steering)
         records.append({'item_id':item.item_id,'task':args.task,'method':args.method,'dimensions':list(item.dimensions),'prompt':item.prompt,'target_text':extract_target_text(item.prompt),'input_audio':item.audio_path,'output_audio':generation.wav_path,'selected_attributes':selected,'dynamic_schedule':schedule_meta,'scale':scale,'transcript':generation.generation.transcript,'audio_token_count':len(generation.generation.audio_token_ids)})
         if (index+1)%10==0: print(f'{index+1}/{len(items)}')
-    (outdir/'parageo_manifest.jsonl').write_text('\n'.join(json.dumps(r,ensure_ascii=False) for r in records)+'\n')
+    write_manifest(outdir/'parageo_manifest.jsonl', records)
     print(json.dumps({'method':args.method,'task':args.task,'split':args.split,'samples':len(records),'output_dir':str(outdir)},indent=2))
 if __name__=='__main__': main()

@@ -215,3 +215,8 @@ def word_error_rate(reference: str, hypothesis: str) -> float:
             ))
         previous = current
     return float(previous[-1] / len(ref))
+
+
+def write_manifest(path: str | Path, records: Iterable[dict]) -> None:
+    payload = "\n".join(json.dumps(record, ensure_ascii=False) for record in records)
+    Path(path).write_text(payload + ("\n" if payload else ""), encoding="utf-8")

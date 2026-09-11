@@ -14,7 +14,7 @@ official_glm:
 
 parageo:
   kv_layers: [16, 20, 24, 28, 32, 36]
-  dimensions: [Pitch, Timbre, Pace, Volume, Rhythm, Age]
+  dimensions: [Age, Attitude, Cognitive State, Emotion, Non-Linguistic Vocalizations, Pace, Pause, Pitch, Rhythm, Stress, Timbre, Volume]
   basis_rank: 16
   max_basis_rank: 32
   basis_energy: 0.95

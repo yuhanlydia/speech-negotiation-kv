@@ -47,11 +47,12 @@ The official output path is now mandatory: benchmark input WAV -> Whisper-VQ tok
 python scripts/build_parageo_catalog.py \
   --benchmark-root "$SPEECHPARALING_ROOT" \
   --language en \
-  --dimensions Pitch Timbre Pace Volume Rhythm Age \
   --output results/parageo_attribute_catalog.json
 ```
 
-The catalog is derived from public `para_con/short_sin.jsonl`; no benchmark labels are invented.
+The catalog is derived from every single-control dimension in public
+`para_con/short_sin.jsonl`; no benchmark labels are invented. This full catalog is required
+to provide at least 40 fully covered `short_multi` items without partial-control steering.
 
 ## 3. Collect matched-content calibration actions
 

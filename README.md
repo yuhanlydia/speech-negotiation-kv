@@ -45,7 +45,10 @@ Fit:
 \tilde h(x,a)\approx Bc_a.
 \]
 
-The first catalog uses reusable controls from Pitch, Timbre, Pace, Volume, Rhythm, and Age.
+The first catalog uses all reusable single-control dimensions published in
+SpeechParaling's `short_sin.jsonl`. The current English catalog contains 80 controls
+across 12 dimensions, which leaves enough fully covered official items for the frozen
+40-item compositional pilot.
 
 ### 2. Semantic-orthogonal control
 
