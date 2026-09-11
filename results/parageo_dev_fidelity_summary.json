@@ -1,0 +1,117 @@
+{
+  "protocol": "deterministic dev split (eligible index % 5 == 0)",
+  "metric": "text-channel WER from GLM generation transcript",
+  "tasks": {
+    "composed": {
+      "alpha_0p25": {
+        "samples": 8,
+        "mean_text_channel_wer": 0.07083333333333333,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 0.31833333333333325,
+        "absolute_degradation_vs_prompt_only": 0.0
+      },
+      "alpha_0p5": {
+        "samples": 8,
+        "mean_text_channel_wer": 0.07083333333333333,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 0.31833333333333325,
+        "absolute_degradation_vs_prompt_only": 0.0
+      },
+      "alpha_1p0": {
+        "samples": 8,
+        "mean_text_channel_wer": 0.07083333333333333,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 0.31833333333333325,
+        "absolute_degradation_vs_prompt_only": 0.0
+      },
+      "alpha_1p5": {
+        "samples": 8,
+        "mean_text_channel_wer": 0.07083333333333333,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 0.31833333333333325,
+        "absolute_degradation_vs_prompt_only": 0.0
+      },
+      "prompt_only": {
+        "samples": 8,
+        "mean_text_channel_wer": 0.07083333333333333,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 0.31833333333333325,
+        "absolute_degradation_vs_prompt_only": 0.0
+      }
+    },
+    "dynamic": {
+      "alpha_0p25": {
+        "samples": 12,
+        "mean_text_channel_wer": 0.4876656206528771,
+        "median_text_channel_wer": 0.4147727272727273,
+        "p95_text_channel_wer": 1.1928571428571426,
+        "absolute_degradation_vs_prompt_only": 0.01555829228243022
+      },
+      "alpha_0p5": {
+        "samples": 12,
+        "mean_text_channel_wer": 0.5646100650973215,
+        "median_text_channel_wer": 0.5397727272727273,
+        "p95_text_channel_wer": 1.3248571428571427,
+        "absolute_degradation_vs_prompt_only": 0.09250273672687459
+      },
+      "alpha_1p0": {
+        "samples": 12,
+        "mean_text_channel_wer": 0.4837767317639882,
+        "median_text_channel_wer": 0.4147727272727273,
+        "p95_text_channel_wer": 1.3248571428571427,
+        "absolute_degradation_vs_prompt_only": 0.011669403393541333
+      },
+      "alpha_1p5": {
+        "samples": 12,
+        "mean_text_channel_wer": 0.4889785951180254,
+        "median_text_channel_wer": 0.4147727272727273,
+        "p95_text_channel_wer": 1.3891428571428568,
+        "absolute_degradation_vs_prompt_only": 0.016871266747578495
+      },
+      "prompt_only": {
+        "samples": 12,
+        "mean_text_channel_wer": 0.4721073283704469,
+        "median_text_channel_wer": 0.4147727272727273,
+        "p95_text_channel_wer": 1.2814285714285714,
+        "absolute_degradation_vs_prompt_only": 0.0
+      }
+    },
+    "static": {
+      "alpha_0p25": {
+        "samples": 16,
+        "mean_text_channel_wer": 0.2509469696969697,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 1.375,
+        "absolute_degradation_vs_prompt_only": 0.08750000000000002
+      },
+      "alpha_0p5": {
+        "samples": 16,
+        "mean_text_channel_wer": 0.19816919191919194,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 1.025,
+        "absolute_degradation_vs_prompt_only": 0.03472222222222224
+      },
+      "alpha_1p0": {
+        "samples": 16,
+        "mean_text_channel_wer": 0.18566919191919193,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 0.925,
+        "absolute_degradation_vs_prompt_only": 0.022222222222222227
+      },
+      "alpha_1p5": {
+        "samples": 16,
+        "mean_text_channel_wer": 0.17998737373737372,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 0.925,
+        "absolute_degradation_vs_prompt_only": 0.016540404040404022
+      },
+      "prompt_only": {
+        "samples": 16,
+        "mean_text_channel_wer": 0.1634469696969697,
+        "median_text_channel_wer": 0.0,
+        "p95_text_channel_wer": 1.025,
+        "absolute_degradation_vs_prompt_only": 0.0
+      }
+    }
+  }
+}
