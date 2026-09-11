@@ -1,0 +1,402 @@
+{
+  "Age::child's voice": {
+    "dimension": "Age",
+    "control": "child's voice",
+    "example_prompt": "Please read this sentence with a child's voice: 'Mom, can I have another cookie?'"
+  },
+  "Age::youthful voice": {
+    "dimension": "Age",
+    "control": "youthful voice",
+    "example_prompt": "Please read this sentence with a youthful voice: 'Let's go play basketball this weekend!'"
+  },
+  "Age::adult voice": {
+    "dimension": "Age",
+    "control": "adult voice",
+    "example_prompt": "Please read this sentence with an adult voice: 'The project is progressing smoothly, we're on schedule.'"
+  },
+  "Age::elderly voice": {
+    "dimension": "Age",
+    "control": "elderly voice",
+    "example_prompt": "Please read this sentence with an elderly voice: 'Grandchild, put on more clothes, don't catch a cold.'"
+  },
+  "Pitch::very high pitch": {
+    "dimension": "Pitch",
+    "control": "very high pitch",
+    "example_prompt": "Please read this sentence with a very high pitch: 'Ah! There's a mouse over there!'"
+  },
+  "Pitch::high pitch": {
+    "dimension": "Pitch",
+    "control": "high pitch",
+    "example_prompt": "Please read this sentence with a high pitch: 'Good morning! The weather is really nice today, I feel great.'"
+  },
+  "Pitch::medium pitch": {
+    "dimension": "Pitch",
+    "control": "medium pitch",
+    "example_prompt": "Please read this sentence with a medium pitch: 'Please be quiet everyone, the meeting is about to begin.'"
+  },
+  "Pitch::low pitch": {
+    "dimension": "Pitch",
+    "control": "low pitch",
+    "example_prompt": "Please read this sentence with a low pitch: 'This matter requires our serious consideration.'"
+  },
+  "Pitch::very low pitch": {
+    "dimension": "Pitch",
+    "control": "very low pitch",
+    "example_prompt": "Please read this sentence with a very low pitch: 'I warn you, don't make any more mistakes.'"
+  },
+  "Timbre::bright timbre": {
+    "dimension": "Timbre",
+    "control": "bright timbre",
+    "example_prompt": "Please read this sentence with a bright timbre: 'I wish you a pleasant mood today!'"
+  },
+  "Timbre::hoarse timbre": {
+    "dimension": "Timbre",
+    "control": "hoarse timbre",
+    "example_prompt": "Please read this sentence with a hoarse timbre: 'Good morning, my throat feels a bit uncomfortable.'"
+  },
+  "Timbre::smooth timbre": {
+    "dimension": "Timbre",
+    "control": "smooth timbre",
+    "example_prompt": "Please read this sentence with a smooth timbre: 'Hello, please have a seat here, I've prepared refreshments for you.'"
+  },
+  "Timbre::rich timbre": {
+    "dimension": "Timbre",
+    "control": "rich timbre",
+    "example_prompt": "Please read this sentence with a rich timbre: 'Dear colleagues, please listen carefully to the report.'"
+  },
+  "Timbre::gentle timbre": {
+    "dimension": "Timbre",
+    "control": "gentle timbre",
+    "example_prompt": "Please read this sentence with a gentle timbre: 'Baby, sleep tight, Mommy is here.'"
+  },
+  "Timbre::sweet timbre": {
+    "dimension": "Timbre",
+    "control": "sweet timbre",
+    "example_prompt": "Please read this sentence with a sweet timbre: 'Thank you, this is truly delightful!'"
+  },
+  "Pace::very fast pace": {
+    "dimension": "Pace",
+    "control": "very fast pace",
+    "example_prompt": "Please read this sentence with a very fast pace: 'It's too late, hurry up! The meeting is starting soon!'"
+  },
+  "Pace::fast pace": {
+    "dimension": "Pace",
+    "control": "fast pace",
+    "example_prompt": "Please read this sentence with a fast pace: 'Not much time left, we need to speed up to finish the task.'"
+  },
+  "Pace::medium pace": {
+    "dimension": "Pace",
+    "control": "medium pace",
+    "example_prompt": "Please read this sentence with a medium pace: 'The weather is really nice today, suitable for a walk.'"
+  },
+  "Pace::slow pace": {
+    "dimension": "Pace",
+    "control": "slow pace",
+    "example_prompt": "Please read this sentence with a slow pace: 'Please listen carefully, this step is very important.'"
+  },
+  "Pace::very slow pace": {
+    "dimension": "Pace",
+    "control": "very slow pace",
+    "example_prompt": "Please read this sentence with a very slow pace: 'I'm too tired to move.'"
+  },
+  "Volume::shouting manner": {
+    "dimension": "Volume",
+    "control": "shouting manner",
+    "example_prompt": "Please read this sentence with a shouting manner: 'Help! Someone is injured here!'"
+  },
+  "Volume::loudly volume": {
+    "dimension": "Volume",
+    "control": "loudly volume",
+    "example_prompt": "Please read this sentence with a loudly volume: 'Attention everyone, the meeting is about to start!'"
+  },
+  "Volume::normal volume": {
+    "dimension": "Volume",
+    "control": "normal volume",
+    "example_prompt": "Please read this sentence with a normal volume: 'Let's go out for dinner tonight.'"
+  },
+  "Volume::quietly volume": {
+    "dimension": "Volume",
+    "control": "quietly volume",
+    "example_prompt": "Please read this sentence with a quietly volume: 'Shhh, the baby is asleep, let's be quiet.'"
+  },
+  "Volume::whisper": {
+    "dimension": "Volume",
+    "control": "whisper",
+    "example_prompt": "Please read this sentence with a whisper: 'I'll quietly tell you, he is the boss.'"
+  },
+  "Pause::clear pause after the word 'listen'": {
+    "dimension": "Pause",
+    "control": "clear pause after the word 'listen'",
+    "example_prompt": "Please read this sentence with a clear pause after the word 'listen': 'Please listen carefully, I'll say it again.'"
+  },
+  "Pause::clear pause after the word 'but'": {
+    "dimension": "Pause",
+    "control": "clear pause after the word 'but'",
+    "example_prompt": "Please read this sentence with a clear pause after the word 'but': 'I understand your feelings, but, we must follow the rules.'"
+  },
+  "Pause::clear pause after the word 'good'": {
+    "dimension": "Pause",
+    "control": "clear pause after the word 'good'",
+    "example_prompt": "Please read this sentence with a clear pause after the word 'good': 'This proposal, good, we have approved it.'"
+  },
+  "Rhythm::steady rhythm": {
+    "dimension": "Rhythm",
+    "control": "steady rhythm",
+    "example_prompt": "Please read this sentence with a steady rhythm: 'Every morning I wake up on time and start a new day.'"
+  },
+  "Rhythm::lighthearted rhythm": {
+    "dimension": "Rhythm",
+    "control": "lighthearted rhythm",
+    "example_prompt": "Please read this sentence with a lighthearted rhythm: 'Let's go for a picnic this weekend, the weather is perfect!'"
+  },
+  "Rhythm::soothing rhythm": {
+    "dimension": "Rhythm",
+    "control": "soothing rhythm",
+    "example_prompt": "Please read this sentence with a soothing rhythm: 'Listening to light music before bed helps me relax.'"
+  },
+  "Rhythm::rushed rhythm": {
+    "dimension": "Rhythm",
+    "control": "rushed rhythm",
+    "example_prompt": "Please read this sentence with a rushed rhythm: 'Time is running out, we must make a decision quickly.'"
+  },
+  "Rhythm::emphatic rhythm": {
+    "dimension": "Rhythm",
+    "control": "emphatic rhythm",
+    "example_prompt": "Please read this sentence with an emphatic rhythm: 'Our team, overcoming numerous difficulties, ultimately achieved success!'"
+  },
+  "Rhythm::dragging rhythm": {
+    "dimension": "Rhythm",
+    "control": "dragging rhythm",
+    "example_prompt": "Please read this sentence with a dragging rhythm: 'I…don't want…to get up…I want to sleep a bit more.'"
+  },
+  "Rhythm::halting rhythm": {
+    "dimension": "Rhythm",
+    "control": "halting rhythm",
+    "example_prompt": "Please read this sentence with a halting rhythm: 'Hmm…goo…good morning…a bit sleepy.'"
+  },
+  "Stress::emphasis on 'must'": {
+    "dimension": "Stress",
+    "control": "emphasis on 'must'",
+    "example_prompt": "Please read this sentence with emphasis on 'must': 'You must finish your homework before playing games.'"
+  },
+  "Stress::emphasis on 'is'": {
+    "dimension": "Stress",
+    "control": "emphasis on 'is'",
+    "example_prompt": "Please read this sentence with emphasis on 'is': 'I just feel this plan is the best.'"
+  },
+  "Stress::emphasis on 'here'": {
+    "dimension": "Stress",
+    "control": "emphasis on 'here'",
+    "example_prompt": "Please read this sentence with emphasis on 'here': 'The document should be placed here, not over there.'"
+  },
+  "Stress::stress on 'must'": {
+    "dimension": "Stress",
+    "control": "stress on 'must'",
+    "example_prompt": "Please read this sentence with stress on 'must': 'When traveling, you must try the local delicacies!'"
+  },
+  "Stress::stress on 'every day'": {
+    "dimension": "Stress",
+    "control": "stress on 'every day'",
+    "example_prompt": "Please read this sentence with stress on 'every day': 'For skin care, you must persist every day for it to be effective.'"
+  },
+  "Stress::stress on 'key'": {
+    "dimension": "Stress",
+    "control": "stress on 'key'",
+    "example_prompt": "Please read this sentence with stress on 'key': 'The key lies in communication, we must remain open.'"
+  },
+  "Stress::heavy stress on 'not allowed'": {
+    "dimension": "Stress",
+    "control": "heavy stress on 'not allowed'",
+    "example_prompt": "Please read this sentence with heavy stress on 'not allowed': 'You are not allowed to be picky, finish all your vegetables!'"
+  },
+  "Stress::heavy stress on 'very'": {
+    "dimension": "Stress",
+    "control": "heavy stress on 'very'",
+    "example_prompt": "Please read this sentence with heavy stress on 'very': 'This formula is very important, please be sure to remember it.'"
+  },
+  "Stress::heavy stress on 'must'": {
+    "dimension": "Stress",
+    "control": "heavy stress on 'must'",
+    "example_prompt": "Please read this sentence with heavy stress on 'must': 'This time, we must succeed, there's no turning back!'"
+  },
+  "Stress::forceful tone on 'now'": {
+    "dimension": "Stress",
+    "control": "forceful tone on 'now'",
+    "example_prompt": "Please read this sentence with a forceful tone on 'now': 'Please submit the report now!'"
+  },
+  "Stress::forceful tone on 'careful'": {
+    "dimension": "Stress",
+    "control": "forceful tone on 'careful'",
+    "example_prompt": "Please read this sentence with a forceful tone on 'careful': 'Careful! There's a trap ahead, don't go there.'"
+  },
+  "Stress::forceful tone on 'remember'": {
+    "dimension": "Stress",
+    "control": "forceful tone on 'remember'",
+    "example_prompt": "Please read this sentence with a forceful tone on 'remember': 'Remember, don't talk to strangers casually.'"
+  },
+  "Emotion::neutral emotion": {
+    "dimension": "Emotion",
+    "control": "neutral emotion",
+    "example_prompt": "Please read this sentence with a neutral emotion: 'The meeting time has been adjusted, please check the email notification.'"
+  },
+  "Emotion::happy emotion": {
+    "dimension": "Emotion",
+    "control": "happy emotion",
+    "example_prompt": "Please read this sentence with a happy emotion: 'Great! We haven't seen each other for ages, let's have fun tonight!'"
+  },
+  "Emotion::sad emotion": {
+    "dimension": "Emotion",
+    "control": "sad emotion",
+    "example_prompt": "Please read this sentence with a sad emotion: 'My puppy is missing, I'm so sad.'"
+  },
+  "Emotion::angry emotion": {
+    "dimension": "Emotion",
+    "control": "angry emotion",
+    "example_prompt": "Please read this sentence with an angry emotion: 'Why did you make your room such a mess again?!'"
+  },
+  "Emotion::surprised emotion": {
+    "dimension": "Emotion",
+    "control": "surprised emotion",
+    "example_prompt": "Please read this sentence with a surprised emotion: 'Wow! Is this for me? What a surprise!'"
+  },
+  "Emotion::disgusted emotion": {
+    "dimension": "Emotion",
+    "control": "disgusted emotion",
+    "example_prompt": "Please read this sentence with a disgusted emotion: 'This smell is too awful, I can't stand it.'"
+  },
+  "Emotion::fearful emotion": {
+    "dimension": "Emotion",
+    "control": "fearful emotion",
+    "example_prompt": "Please read this sentence with a fearful emotion: 'No, don't come closer! I'm so scared!'"
+  },
+  "Cognitive State::confident tone": {
+    "dimension": "Cognitive State",
+    "control": "confident tone",
+    "example_prompt": "Please read this sentence with a confident tone: 'I'm well-prepared for this project, it will definitely succeed.'"
+  },
+  "Cognitive State::hesitant tone": {
+    "dimension": "Cognitive State",
+    "control": "hesitant tone",
+    "example_prompt": "Please read this sentence with a hesitant tone: 'This weekend, should we go to the movies or the park?'"
+  },
+  "Cognitive State::confused tone": {
+    "dimension": "Cognitive State",
+    "control": "confused tone",
+    "example_prompt": "Please read this sentence with a confused tone: 'I can't figure out how to solve this problem, no matter how I try.'"
+  },
+  "Cognitive State::doubting tone": {
+    "dimension": "Cognitive State",
+    "control": "doubting tone",
+    "example_prompt": "Please read this sentence with a doubting tone: 'He said he could finish it in three days, do you believe him?'"
+  },
+  "Cognitive State::tired tone": {
+    "dimension": "Cognitive State",
+    "control": "tired tone",
+    "example_prompt": "Please read this sentence with a tired tone: 'The workload today was huge, I'm really so tired.'"
+  },
+  "Cognitive State::curious tone": {
+    "dimension": "Cognitive State",
+    "control": "curious tone",
+    "example_prompt": "Please read this sentence with a curious tone: 'What exactly is inside that box?'"
+  },
+  "Cognitive State::anxious tone": {
+    "dimension": "Cognitive State",
+    "control": "anxious tone",
+    "example_prompt": "Please read this sentence with an anxious tone: 'The exam results are about to be announced, I'm a bit nervous.'"
+  },
+  "Cognitive State::helpless tone": {
+    "dimension": "Cognitive State",
+    "control": "helpless tone",
+    "example_prompt": "Please read this sentence with a helpless tone: 'Sigh, what else can be done? It can only be like this.'"
+  },
+  "Cognitive State::nervous tone": {
+    "dimension": "Cognitive State",
+    "control": "nervous tone",
+    "example_prompt": "Please read this sentence with a nervous tone: 'I'm about to give a speech on stage, my heart is racing.'"
+  },
+  "Non-Linguistic Vocalizations::laughter": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "laughter",
+    "example_prompt": "Please read this sentence with laughter: 'Hahaha, that joke you told was so funny!'"
+  },
+  "Non-Linguistic Vocalizations::crying": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "crying",
+    "example_prompt": "Please read this sentence with crying: 'Waaah, I can't find my toy.'"
+  },
+  "Non-Linguistic Vocalizations::sigh": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "sigh",
+    "example_prompt": "Please read this sentence with a sigh: 'Sigh, another boring weekend.'"
+  },
+  "Non-Linguistic Vocalizations::coughing": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "coughing",
+    "example_prompt": "Please read this sentence with coughing: 'Cough, cough, I think I'm catching a cold.'"
+  },
+  "Non-Linguistic Vocalizations::scream": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "scream",
+    "example_prompt": "Please read this sentence with a scream: 'Ah! There's a mouse there!'"
+  },
+  "Non-Linguistic Vocalizations::hiccups": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "hiccups",
+    "example_prompt": "Please read this sentence with hiccups: 'Ugh, I think I, ugh, have the hiccups.'"
+  },
+  "Non-Linguistic Vocalizations::yawn": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "yawn",
+    "example_prompt": "Please read this sentence with a yawn: 'Ah~ I'm so sleepy, I want to sleep.'"
+  },
+  "Non-Linguistic Vocalizations::smack of the lips": {
+    "dimension": "Non-Linguistic Vocalizations",
+    "control": "smack of the lips",
+    "example_prompt": "Please read this sentence with a smack of the lips: 'Mm, this dish tastes really good!'"
+  },
+  "Attitude::polite tone": {
+    "dimension": "Attitude",
+    "control": "polite tone",
+    "example_prompt": "Please read this sentence with a polite tone: 'Excuse me, could you please help me with that document?'"
+  },
+  "Attitude::sincere tone": {
+    "dimension": "Attitude",
+    "control": "sincere tone",
+    "example_prompt": "Please read this sentence with a sincere tone: 'I am truly sorry for my mistake.'"
+  },
+  "Attitude::enthusiastic tone": {
+    "dimension": "Attitude",
+    "control": "enthusiastic tone",
+    "example_prompt": "Please read this sentence with an enthusiastic tone: 'Welcome everyone! Come in and sit down, make yourselves at home!'"
+  },
+  "Attitude::cold tone": {
+    "dimension": "Attitude",
+    "control": "cold tone",
+    "example_prompt": "Please read this sentence with a cold tone: 'I don't wish to discuss this matter anymore.'"
+  },
+  "Attitude::sarcastic tone": {
+    "dimension": "Attitude",
+    "control": "sarcastic tone",
+    "example_prompt": "Please read this sentence with a sarcastic tone: 'Oh, you're such a genius, messing things up again.'"
+  },
+  "Attitude::contemptuous tone": {
+    "dimension": "Attitude",
+    "control": "contemptuous tone",
+    "example_prompt": "Please read this sentence with a contemptuous tone: 'With his meager abilities, he wants to compete with me?'"
+  },
+  "Attitude::rude tone": {
+    "dimension": "Attitude",
+    "control": "rude tone",
+    "example_prompt": "Please read this sentence with a rude tone: 'Hey! Bring that thing over here!'"
+  },
+  "Attitude::perfunctory tone": {
+    "dimension": "Attitude",
+    "control": "perfunctory tone",
+    "example_prompt": "Please read this sentence with a perfunctory tone: 'Mhm, mhm, I know, we'll talk about it later.'"
+  },
+  "Attitude::teasing tone": {
+    "dimension": "Attitude",
+    "control": "teasing tone",
+    "example_prompt": "Please read this sentence with a teasing tone: 'Oh, isn't it the busy bee? Finally decided to show your face.'"
+  }
+}

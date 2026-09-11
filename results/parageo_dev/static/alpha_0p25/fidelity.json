@@ -1,0 +1,6 @@
+{
+  "samples": 16,
+  "mean_text_channel_wer": 0.2509469696969697,
+  "median_text_channel_wer": 0.0,
+  "p95_text_channel_wer": 1.375
+}
