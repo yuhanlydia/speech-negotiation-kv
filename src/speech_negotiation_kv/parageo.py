@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from itertools import combinations
 from typing import Iterable, Mapping, Sequence
 
 import numpy as np
@@ -22,6 +23,19 @@ def _as_2d(features: np.ndarray) -> np.ndarray:
     if not np.all(np.isfinite(array)):
         raise ValueError("features must be finite")
     return array
+
+
+def _distribution(values: Sequence[float]) -> dict:
+    array = np.asarray(values, dtype=np.float64)
+    if not len(array):
+        return {"n": 0, "mean": None, "median": None, "p05": None, "p95": None}
+    return {
+        "n": int(len(array)),
+        "mean": float(array.mean()),
+        "median": float(np.median(array)),
+        "p05": float(np.quantile(array, 0.05)),
+        "p95": float(np.quantile(array, 0.95)),
+    }
 
 
 def center_within_content(features: np.ndarray, content_ids: Sequence[str]) -> np.ndarray:
@@ -198,3 +212,59 @@ def cross_content_centroid_accuracy(features: np.ndarray, content_ids: Sequence[
         correct += int(prediction == str(truth))
         total += 1
     return float(correct / total)
+
+
+def leave_one_content_out_centroid_accuracy(features: np.ndarray, content_ids: Sequence[str],
+                                             attributes: Sequence[str]) -> float:
+    ids = np.asarray(content_ids, dtype=object)
+    values = sorted(str(value) for value in np.unique(ids))
+    if len(values) < 2:
+        raise ValueError("leave-one-content-out evaluation requires at least two contents")
+    correct = 0
+    total = 0
+    X = center_within_content(features, content_ids)
+    attrs = np.asarray(attributes, dtype=object)
+    classes = sorted(str(value) for value in np.unique(attrs))
+    for held_out in values:
+        train_mask = np.asarray([str(value) != held_out for value in ids])
+        test_mask = ~train_mask
+        centroids = {}
+        for attr in classes:
+            mask = train_mask & (attrs == attr)
+            if not mask.any():
+                raise ValueError(f"attribute {attr!r} missing outside held-out content {held_out!r}")
+            vec = X[mask].mean(axis=0)
+            centroids[attr] = vec / max(np.linalg.norm(vec), 1e-12)
+        for row, truth in zip(X[test_mask], attrs[test_mask]):
+            normalized = row / max(np.linalg.norm(row), 1e-12)
+            prediction = max(classes, key=lambda attr: float(normalized @ centroids[attr]))
+            correct += int(prediction == str(truth))
+            total += 1
+    return float(correct / total)
+
+
+def same_attribute_cross_content_cosine(features: np.ndarray, content_ids: Sequence[str],
+                                        attributes: Sequence[str]) -> dict:
+    X = center_within_content(features, content_ids)
+    ids = np.asarray(content_ids, dtype=object)
+    attrs = np.asarray(attributes, dtype=object)
+    values: list[float] = []
+    valid_attributes = 0
+    for attr in sorted(str(value) for value in np.unique(attrs)):
+        content_centroids = []
+        for content in sorted(str(value) for value in np.unique(ids)):
+            mask = (attrs == attr) & (ids == content)
+            if not mask.any():
+                continue
+            vector = X[mask].mean(axis=0)
+            norm = np.linalg.norm(vector)
+            if norm > 1e-12:
+                content_centroids.append(vector / norm)
+        if len(content_centroids) < 2:
+            continue
+        valid_attributes += 1
+        for first, second in combinations(content_centroids, 2):
+            values.append(float(first @ second))
+    result = _distribution(values)
+    result["attributes"] = int(valid_attributes)
+    return result
