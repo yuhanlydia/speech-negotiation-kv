@@ -1,0 +1,134 @@
+% ICASSP 2027 ParaGeo draft.
+% Built for the official spconf template supplied with ICASSP 2027.
+% The fifth page is references only; keep all experiments/ablations within four content pages.
+\documentclass{article}
+\usepackage{spconf,amsmath,graphicx,hyperref}
+\usepackage{booktabs}
+
+% -----------------------------------------------------------------------------
+% TITLE OPTIONS (recommended: Option 1)
+% 1. ParaGeo: Content-Invariant Paralinguistic Geometry for Compositional and Dynamic Speech Control
+% 2. Steering How Speech Is Said: A Shared Geometry for Compositional Paralinguistic Control
+% 3. ParaGeo: Training-Free Composition and Dynamic Modulation of Paralinguistic Attributes
+% 4. Beyond Emotion Vectors: Compositional Paralinguistic Steering in Speech Language Models
+% 5. A Shared Latent Geometry for Fine-Grained Paralinguistic Speech Generation
+% 6. From Static Style to Dynamic Prosody: Paralinguistic Geometry in Speech Language Models
+% 7. Content-Invariant Activation Geometry for Fine-Grained Speech Generation
+% 8. Composing and Scheduling Paralinguistic Directions in Speech Language Models
+% -----------------------------------------------------------------------------
+\title{PARAGEO: CONTENT-INVARIANT PARALINGUISTIC GEOMETRY FOR COMPOSITIONAL AND DYNAMIC SPEECH CONTROL}
+
+% Replace with the final author list and affiliations. ICASSP is not blind.
+\name{Author Name(s)}
+\address{Author Affiliation(s)}
+
+% Automatically filled after experiments. The fallbacks keep the draft compilable.
+\IfFileExists{generated/result_macros.tex}{\input{generated/result_macros.tex}}{
+  \newcommand{\StaticPref}{TBD}
+  \newcommand{\StaticGain}{TBD}
+  \newcommand{\CompPref}{TBD}
+  \newcommand{\CompGain}{TBD}
+  \newcommand{\DynPref}{TBD}
+  \newcommand{\DynGain}{TBD}
+  \newcommand{\GeometryLOCO}{TBD}
+  \newcommand{\GeometryChance}{TBD}
+  \newcommand{\GeometryCosine}{TBD}
+  \newcommand{\ParaGeoDecision}{TBD}
+}
+
+% Select one abstract and one introduction. Recommended: A/A.
+\def\ABSTRACTOPTION{1}
+\def\INTROOPTION{1}
+
+% ABSTRACT A -- geometry-first (recommended)
+\long\def\AbstractA{%
+Controllable speech generation requires manipulating how an utterance is spoken without changing what it says. Existing activation-steering approaches mainly construct separate directions for a small set of emotions, leaving open whether broader paralinguistic behaviors share reusable structure. We present \textbf{ParaGeo}, a training-free method that estimates a content-invariant paralinguistic geometry from matched lexical utterances. ParaGeo removes content-dependent components, represents individual controls as low-dimensional coordinates, composes unseen multi-attribute controls by coordinate addition, and realizes intra-utterance variation through time-varying trajectories. We evaluate ParaGeo with GLM-4-Voice on SpeechParaling-Bench using the official waveform pipeline and pairwise speech judge. Our experiments test static control, unseen attribute composition, and dynamic variation, together with semantic-fidelity, random-direction, rank, layer, and trajectory ablations. ParaGeo provides a unified view of paralinguistic control beyond emotion-specific steering.}
+
+% ABSTRACT B -- benchmark-first
+\long\def\AbstractB{%
+Modern speech language models can follow instructions about emotion, pitch, pace, timbre, and other vocal properties, yet fine-grained control remains difficult when attributes must be combined or changed within an utterance. SpeechParaling-Bench makes this limitation measurable through multi-attribute control and dynamic-variation tasks. We introduce \textbf{ParaGeo}, a training-free inference method that derives a shared paralinguistic subspace from matched-content speech representations. Rather than learning a controller for every requested combination, ParaGeo adds single-attribute coordinates for unseen compositions and schedules coordinates over generation time for gradual or abrupt transitions. A semantic-orthogonal projection reduces lexical drift. On GLM-4-Voice, we evaluate the method with the benchmark's official pairwise judge, text-channel fidelity, norm-matched random controls, and controlled ablations. The resulting framework turns a collection of isolated vocal controls into a reusable geometry for compositional and dynamic speech generation.}
+
+% ABSTRACT C -- training-free control / efficiency first
+\long\def\AbstractC{%
+Fine-grained paralinguistic adaptation is often implemented with additional training, labeled expressive speech, or separate control modules. We ask whether a pretrained speech language model already contains enough internal structure to support such control at inference time. We propose \textbf{ParaGeo}, which calibrates a low-rank activation basis using the same lexical sentences rendered under many paralinguistic instructions. Content centering and semantic orthogonalization isolate reusable vocal directions, requiring no parameter updates to the speech model. The same basis supports three operations: single-attribute steering, zero-shot composition by vector addition, and dynamic modulation by traversing a coordinate path during generation. We test these operations on the static, multi-attribute, and dynamic tracks of SpeechParaling-Bench with GLM-4-Voice's official tokenizer and decoder. Evaluation includes official pairwise judging, lexical-fidelity checks, random steering, and geometry/trajectory ablations.}
+
+% INTRO A -- phenomenon -> gap -> method (recommended)
+\long\def\IntroA{%
+Speech generation is no longer judged only by intelligibility and naturalness. Spoken assistants are increasingly expected to control \emph{how} an utterance is delivered---for example its pitch, pace, volume, timbre, rhythm, attitude, or emotion---while preserving the intended linguistic content. End-to-end speech language models such as GLM-4-Voice already exhibit broad instruction-following capabilities over these factors~\cite{zeng2024glm4voice}, and SpeechParaling-Bench has recently provided a systematic evaluation of static, multi-dimensional, and dynamically varying paralinguistic control~\cite{liu2026speechparaling}. The difficult cases are precisely those in which several attributes must be realized together or a vocal property must evolve within one utterance.
+
+A growing line of work uses activation steering for expressive speech generation. EmoSteer-TTS performs training-free fine-grained emotion control~\cite{xie2025emosteer}; EmoShift learns lightweight emotion-specific steering offsets~\cite{zhou2026emoshift}; CoCoEmo demonstrates composable mixed-emotion steering~\cite{wang2026cocoemo}; and task-vector formulations combine expressive factors such as emotion and dialect~\cite{feng2025taskvector}. These results establish that internal speech representations are steerable, but most methods remain organized around a small set of task- or emotion-specific vectors. It is less clear whether a speech language model contains a \emph{shared geometry} spanning a much broader range of paralinguistic controls, whether directions estimated on fixed lexical content transfer across utterances, and whether that geometry supports both unseen composition and temporally varying control.
+
+We study this question through \textbf{ParaGeo}. Given matched lexical content rendered under multiple controls, we subtract the content-wise mean and fit a low-rank basis to the residual representations. We further remove a semantic content subspace before intervention. Each control is represented only by its coordinate in this shared basis. This makes two operations immediate: unseen multi-attribute instructions are implemented by adding coordinates, and dynamic instructions are implemented by traversing a coordinate trajectory during autoregressive speech generation. No model weights are updated.
+
+Our contribution is therefore not activation steering itself, but a unified formulation of broad paralinguistic behavior as content-invariant geometry. We evaluate this formulation on SpeechParaling-Bench using the official GLM-4-Voice waveform path. The experiments are designed to answer three questions: whether the calibrated geometry transfers across lexical content, whether single-control coordinates compose for unseen multi-attribute prompts, and whether time-varying latent trajectories improve intra-utterance variation without sacrificing lexical fidelity.}
+
+% INTRO B -- benchmark failure -> prior limitations -> solution
+\long\def\IntroB{%
+Controllable speech synthesis is entering a regime where a single utterance may carry several simultaneous requirements: sound youthful but anxious, speak quietly while emphasizing one word, or begin with one pitch and gradually transition to another. SpeechParaling-Bench formalizes these requirements across more than one hundred paralinguistic features and separates static control, multi-attribute composition, and dynamic variation~\cite{liu2026speechparaling}. Such tasks expose a limitation of prompt-only generation: the model must repeatedly infer a high-dimensional vocal configuration from language instructions, including combinations and trajectories that may be rare in training.
+
+Recent activation-steering methods provide an attractive alternative because they alter internal generation states directly. Prior studies demonstrate continuous emotional control~\cite{xie2025emosteer}, lightweight emotion-aware offsets~\cite{zhou2026emoshift}, mixed-emotion composition~\cite{wang2026cocoemo}, and combinations of expressive task vectors~\cite{feng2025taskvector}. However, these approaches mostly treat control dimensions as isolated tasks or restrict composition to emotion-related factors. A benchmark containing pitch, volume, pace, timbre, rhythm, age, stress, attitude, cognitive state, and non-linguistic vocalizations raises a more general question: can these behaviors be organized in one reusable latent coordinate system?
+
+We propose \textbf{ParaGeo}, a training-free geometry for paralinguistic speech control. We calibrate many vocal attributes on identical lexical sentences, center representations within each sentence to suppress content, and remove a separately estimated semantic subspace. The remaining low-rank basis represents attributes as coordinates rather than independent full-dimensional vectors. Coordinate addition yields zero-shot multi-attribute control, while a scheduled path between two coordinates implements gradual or abrupt intra-utterance changes.
+
+We test ParaGeo with GLM-4-Voice~\cite{zeng2024glm4voice} under the official waveform tokenizer/decoder and the official SpeechParaling pairwise evaluation. Beyond benchmark preference, we explicitly measure content fidelity and compare against norm-matched random steering. Rank, layer, semantic-orthogonalization, composition, and dynamic-trajectory ablations are included to determine whether gains arise from the proposed geometry rather than generic perturbation.}
+
+% INTRO C -- representation-science first
+\long\def\IntroC{%
+A useful controllable representation should separate \emph{what} is said from \emph{how} it is said. This distinction is particularly important for modern speech language models, whose hidden states jointly encode lexical content and rich acoustic behavior. GLM-4-Voice, for example, can vary emotion, intonation, speech rate, and dialect from instructions~\cite{zeng2024glm4voice}. Yet such controllability does not imply that paralinguistic behavior is represented independently of content, nor that the representations learned for one vocal instruction can be reused compositionally.
+
+Activation steering offers a direct probe of this structure. Emotion-focused work has shown that hidden directions can modify speech affect without retraining~\cite{xie2025emosteer,zhou2026emoshift}, and recent methods further combine emotional or expressive vectors~\cite{wang2026cocoemo,feng2025taskvector}. We take a representation-level view: instead of asking whether a particular emotion vector exists, we ask whether many heterogeneous paralinguistic controls occupy a common low-dimensional geometry that remains stable when the spoken words change.
+
+Our method, \textbf{ParaGeo}, estimates this geometry from a matched-content calibration set. For each lexical sentence, we center hidden representations across paralinguistic controls, fit a shared low-rank basis, and project out a semantic content subspace. Attribute prototypes are then represented by coordinates in the resulting basis. This construction enables two tests that are difficult to explain with isolated steering vectors: an unseen multi-attribute command can be synthesized by adding its constituent coordinates, and a dynamic command can be synthesized by interpolating or switching between coordinates during generation.
+
+We evaluate these hypotheses on SpeechParaling-Bench~\cite{liu2026speechparaling}, whose static, multi-dimensional, and dynamic tasks are well matched to the representation questions above. Using the official GLM-4-Voice waveform pipeline, we combine the benchmark's pairwise speech judge with lexical-fidelity checks, norm-matched random controls, and mechanism ablations. This design lets us test both whether the geometry exists and whether it is useful for controllable generation.}
+
+\begin{document}
+%\ninept
+\maketitle
+
+\begin{abstract}
+\ifnum\ABSTRACTOPTION=1 \AbstractA\fi
+\ifnum\ABSTRACTOPTION=2 \AbstractB\fi
+\ifnum\ABSTRACTOPTION=3 \AbstractC\fi
+\end{abstract}
+
+\begin{keywords}
+controllable speech generation, paralinguistic control, activation steering, speech language models, expressive speech synthesis
+\end{keywords}
+
+\section{Introduction}
+\label{sec:intro}
+\ifnum\INTROOPTION=1 \IntroA\fi
+\ifnum\INTROOPTION=2 \IntroB\fi
+\ifnum\INTROOPTION=3 \IntroC\fi
+
+% Insert the compact ParaGeo Method section here in the final four-page paper.
+% Suggested subsections: Content-Invariant Geometry; Composition; Dynamic Trajectories.
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+\textbf{Backbone and waveform path.}
+We use the open GLM-4-Voice-9B speech language model~\cite{zeng2024glm4voice} with NF4/int4 quantization. All benchmark examples follow the model's official speech path: the input waveform is tokenized by the Whisper-VQ speech tokenizer, the 9B model generates interleaved text/audio tokens, and the Flow/HiFT decoder reconstructs a 22.05-kHz waveform. We use a generation temperature of 0.8 and top-$p$ of 0.8. Model weights remain frozen in all ParaGeo experiments.
+
+\textbf{Calibration and geometry.}
+The attribute catalog is built from reusable single-control instructions in the English \texttt{short\_sin} subset of SpeechParaling-Bench~\cite{liu2026speechparaling}. Each attribute is rendered on the same eight fixed lexical calibration sentences. We extract action-side key/value activations from GLM layers $\{16,20,24,28,32,36\}$. Within each sentence, activations are centered over attributes before SVD. The default ParaGeo rank is 16, and a rank-8 semantic subspace estimated from sentence means is projected out before steering. Geometry quality is measured without benchmark labels using leave-one-content-out attribute decoding, explained variance, and same-attribute cross-content cosine similarity.
+
+\textbf{Benchmark tasks.}
+We evaluate all catalog-covered English examples from three SpeechParaling-Bench tracks: \emph{static} single-attribute control (\texttt{para\_con/short\_sin}), \emph{composition} of multiple attributes (\texttt{para\_con/short\_multi}), and \emph{dynamic variation} within one utterance (\texttt{dyn\_var}). After coverage filtering, examples are deterministically partitioned into a 20\% development split and an 80\% held-out split by benchmark index. Development data select the steering scale $\alpha\in\{0.25,0.5,1.0,1.5\}$ separately for each task; held-out results are never used for hyperparameter selection.
+
+\textbf{Methods and controls.}
+The primary baseline is prompt-only GLM-4-Voice with identical prompts and generation seeds. ParaGeo uses a semantic-orthogonal rank-16 basis and all six calibrated layers. Static control injects the requested coordinate, composition sums single-attribute coordinates without fitting multi-attribute examples, and dynamic control follows a linear trajectory for gradual instructions or a midpoint step for instructions containing ``suddenly.'' We additionally evaluate norm-matched random directions. Fixed-subset ablations use the first 24 held-out eligible examples and test removal of semantic orthogonalization; ranks $\{4,8,16,32\}$; early, middle, late, and all layers; sum/mean/normalized composition; and scheduled versus static start/end/midpoint dynamic control.
+
+\textbf{Evaluation and statistics.}
+We use the official SpeechParaling pairwise LALM-judge protocol, comparing each ParaGeo waveform directly with the matched prompt-only waveform. Candidate win, tie, and loss are scored as $1$, $0.5$, and $0$, respectively, and averaged into a 0--100 preference score; 50 therefore denotes parity. We report sample-level 10,000-repeat bootstrap 95\% confidence intervals. To detect content corruption, we also compute word error rate from GLM's generated text channel and report the paired degradation relative to prompt-only. A main result is considered valid only when mean WER degradation is at most 0.02 and a norm-matched random direction does not reproduce the preference gain.
+
+% After the experiment matrix finishes, uncomment compact tables as space permits:
+% \input{generated/geometry_table.tex}
+% \input{generated/main_results.tex}
+% \input{generated/ablation_table.tex}
+
+% The fifth ICASSP page may contain references only.
+\bibliographystyle{IEEEbib}
+\bibliography{icassp2027_parageo_refs}
+\end{document}
