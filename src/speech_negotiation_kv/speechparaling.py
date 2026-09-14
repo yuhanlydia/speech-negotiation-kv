@@ -197,6 +197,18 @@ def split_pilot_items(items: Sequence[SpeechParalingItem], *, split: str = "all"
     return [item for item, is_dev in zip(items, dev_mask) if is_dev == (split == "dev")]
 
 
+def select_icassp_split(items: Sequence[SpeechParalingItem], *, split: str,
+                        modulus: int = 5, remainder: int = 0,
+                        ablation_limit: int = 24) -> list[SpeechParalingItem]:
+    if split in {"dev", "heldout"}:
+        return split_pilot_items(items, split=split, modulus=modulus, remainder=remainder)
+    if split != "ablation":
+        raise ValueError("split must be dev, heldout, or ablation")
+    heldout = split_pilot_items(items, split="heldout", modulus=modulus, remainder=remainder)
+    ordered = sorted(heldout, key=lambda item: int(str(item.item_id).rsplit(":", 1)[-1]))
+    return ordered[: int(ablation_limit)]
+
+
 def word_error_rate(reference: str, hypothesis: str) -> float:
     def words(text: str) -> list[str]:
         return re.findall(r"[a-z0-9]+", str(text).lower())
