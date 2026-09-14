@@ -1,144 +1,142 @@
-# ParaGeo: Compositional Paralinguistic Geometry for Speech Language Models
+# ParaGeo — ICASSP 2027
 
-This repository now studies **content-invariant paralinguistic geometry for controllable speech generation**. The original CRAD speech-negotiation experiments are retained as the discovery path that motivated ParaGeo, but negotiation is no longer the main benchmark.
+**ParaGeo: Content-Invariant Paralinguistic Geometry for Compositional and Dynamic Speech Control**
 
-## Current scientific position
+This repository is now frozen around the **ICASSP 2027 four-page submission path**. The current paper studies whether a pretrained speech language model contains a shared low-dimensional geometry for broad paralinguistic behavior, and whether that geometry supports training-free **unseen attribute composition** and **intra-utterance dynamic control**.
 
-The project has four relevant findings:
+The older CRAD speech-negotiation experiments remain in the repository as the discovery history. Their Gate F and Gate F2 method attempts were negative and should not be rerun for favorable seeds.
 
-- **Vocal causal channel — PASS.** Holding words fixed while changing vocal delivery changes a frozen speech agent's behavior.
-- **Shared vocal-strategy geometry — STRONG PASS.** In GLM-4-Voice, matched vocal styles occupy transferable action-side K/V directions across held-out CRAD scenarios (median six-way decoding accuracy 0.8500 vs chance 0.1667; 126/126 scenario splits above their shuffled p95; 15/15 style-pair directions BH-FDR significant).
-- **Immediate-to-terminal alignment — STRONG CONFIRMATORY PASS.** On fresh CRAD scenarios 20--29, one-step opponent utility predicts terminal utility (mean within-state Spearman 0.6586, bootstrap 95% CI [0.5677, 0.7642], tie-aware best-style agreement 0.950, median regret 0).
-- **Negotiation method recovery — NEGATIVE.** Both the frozen pre-response selector (Gate F) and six-probe immediate search (Gate F2) failed their preregistered held-out terminal-utility gates. These negative results remain part of the record and are not overwritten.
+## Paper claim
 
-The new hypothesis focuses only on the strongest successful branch:
+For matched lexical content `x` and paralinguistic control `a`, ParaGeo centers the internal speech representation within content:
 
 \[
-\boxed{\text{paralinguistic behavior occupies a low-dimensional, content-invariant, compositional geometry that can be directly controlled during speech generation}}
+\tilde h(x,a)=h(x,a)-\mathbb E_{a'}[h(x,a')],
 \]
 
-## Why SpeechParaling-Bench
+fits a low-rank shared basis, and removes a semantic content subspace. Each vocal behavior is represented only by a coordinate `c_a` in the resulting basis.
 
-[SpeechParaling-Bench](https://github.com/Northern-byte-bit/SpeechParaling-Bench) provides exactly the tasks that should benefit from this geometry:
+The ICASSP paper tests three operations:
 
-- **Paralanguage Control** — 691 English + 691 Chinese examples;
-- **Dynamic Variation** — 120 English + 120 Chinese examples;
-- **Situational Adaptation** — 190 English + 190 Chinese examples;
-- 100+ paralinguistic features and 1001 prompts per language;
-- public baseline outputs and pairwise LALM judge / score-calculation code.
+1. **Static control**
+   \[
+   \Delta h=\alpha B_{\rm para}c_a.
+   \]
+2. **Unseen composition**
+   \[
+   c_{a_1+\cdots+a_m}=\sum_i c_{a_i}.
+   \]
+3. **Dynamic control**
+   \[
+   c_t=(1-\lambda_t)c_a+\lambda_t c_b.
+   \]
 
-The first ParaGeo gate uses only English Paralanguage Control and Dynamic Variation. Full-benchmark expansion is blocked until the pilot passes.
+Activation steering itself is not claimed as novel. The contribution is the **content-invariant shared geometry across broad paralinguistic attributes**, plus its compositional and time-varying use.
 
-## ParaGeo method
+## Current empirical status
 
-### 1. Content-invariant geometry
+### Historical discovery evidence
 
-For matched lexical content `x` rendered with attribute `a`:
+- Vocal causal channel: **PASS**.
+- Shared action-side vocal-strategy K/V geometry: **STRONG PASS** (held-out six-way decoding median `0.8500`, chance `0.1667`; `126/126` scenario splits above shuffled p95; `15/15` pairwise style directions BH-FDR significant).
+- Immediate-to-terminal alignment in CRAD: **STRONG PASS**.
+- Negotiation selector/search methods Gate F and F2: **NEGATIVE**.
 
-\[
-\tilde h(x,a)=h(x,a)-\frac{1}{|A|}\sum_{a'}h(x,a').
-\]
+### ParaGeo development fidelity
 
-Fit:
+Real GLM-4-Voice waveform experiments have already established a safe steering regime. Most notably, the development composition subset has **zero additional text-channel WER for every tested alpha**. Dynamic control has safe settings at alpha `0.25`, `1.0`, and `1.5`; static control is safest at alpha `1.5`. These are fidelity results only; the ICASSP code now selects alpha using the official SpeechParaling pairwise judge subject to the frozen WER gate.
 
-\[
-\tilde h(x,a)\approx Bc_a.
-\]
+## Backbone and benchmark
 
-The first catalog uses all reusable single-control dimensions published in
-SpeechParaling's `short_sin.jsonl`. The current English catalog contains 80 controls
-across 12 dimensions, which leaves enough fully covered official items for the frozen
-40-item compositional pilot.
+- Backbone: `zai-org/glm-4-voice-9b`, NF4/int4.
+- Official waveform path: benchmark WAV -> Whisper-VQ -> GLM-4-Voice-9B -> Flow/HiFT -> 22.05-kHz WAV.
+- Benchmark: SpeechParaling-Bench English.
+- Main tasks:
+  - `para_con/short_sin`: static single-attribute control;
+  - `para_con/short_multi`: unseen multi-attribute composition;
+  - `dyn_var`: dynamic variation.
 
-### 2. Semantic-orthogonal control
+The current attribute catalog contains 80 reusable controls across 12 dimensions.
 
-Estimate a semantic/content subspace `S` from content means and project it out:
+## Frozen ICASSP protocol
 
-\[
-B_{\rm para}=\operatorname{qr}((I-SS^\top)B).
-\]
+### Development / held-out
 
-All steering uses `B_para` to reduce lexical drift.
+After catalog-coverage filtering:
 
-### 3. Static control
+```text
+dev:     eligible index % 5 == 0
+heldout: all other eligible examples
+```
 
-\[
-\Delta h=\alpha B_{\rm para}c_a.
-\]
+Development selects alpha independently for each task from:
 
-### 4. Compositional control
+```text
+0.25, 0.5, 1.0, 1.5
+```
 
-Single-attribute coordinates are added without fitting the combination:
+using the official SpeechParaling pairwise judge, subject to mean text-channel WER degradation `<= 0.02`. Held-out data never change hyperparameters.
 
-\[
-c_{a_1+\cdots+a_m}=\sum_i c_{a_i}.
-\]
-
-The public `short_multi` subset tests whether this gives unseen combination control.
-
-### 5. Dynamic control
-
-For an instruction that transitions from attribute `a` to `b`:
-
-\[
-c_t=(1-\lambda_t)c_a+\lambda_t c_b.
-\]
-
-Gradual prompts use a linear path; prompts containing `suddenly` use a step trajectory. `ScheduledFusedQKVSteerer` applies the corresponding K/V direction once per generation forward.
-
-### 6. Random-direction control
-
-Norm-matched random directions are mandatory. A gain that random steering reproduces is not a ParaGeo result.
-
-## Official GLM-4-Voice waveform path
-
-The old negotiation pilot used direct discrete audio-token loopback for 16 GB efficiency. **The SpeechParaling benchmark path no longer does this for output evaluation.** It uses the official GLM-4-Voice components:
-
-1. `GLM-4-Voice-Tokenizer` / Whisper-VQ for benchmark input waveform tokenization;
-2. `GLM-4-Voice-9B` for interleaved text/audio generation;
-3. `GLM-4-Voice-Decoder` (Flow + HiFT) for 22.05-kHz output WAV decoding.
-
-The adapter follows the public official implementation in [zai-org/GLM-4-Voice](https://github.com/zai-org/GLM-4-Voice). Primary pilot generation uses temperature 0.8 and top-p 0.8.
-
-## Current pilot
-
-English only:
-
-| Subset | Role | Samples |
-|---|---|---:|
-| `para_con/short_sin` | static single-attribute control | 80 |
-| `para_con/short_multi` | compositional control | 40 |
-| `dyn_var` | intra-utterance dynamic control | 60 |
-
-Methods:
+### Main methods
 
 - `prompt_only`
-- `parageo_static`
-- `parageo_composed`
-- `parageo_dynamic`
-- `random`
+- `main` ParaGeo: semantic-orthogonal rank-16 basis, all six layers
+- `random`: norm-matched random direction
 
-The runner first selects only items whose requested controls are fully covered by the frozen catalog. A deterministic 20% development slice (`catalog-covered index % 5 == 0`) is used only to choose `alpha` from `{0.25, 0.5, 1.0, 1.5}`; the runner exposes `--split dev` and `--split heldout`. Exact dev-score ties choose the smallest alpha. The remaining 80% is the held-out pilot.
+### Fixed ablations
 
-## Frozen stop rule
+Ablations use the first 24 benchmark-index-sorted held-out eligible examples per task.
 
-Continue only if text-channel semantic fidelity is preserved and at least one held-out result satisfies:
+Common:
 
-- static/compositional SpeechParaling score gain >= **+5.0 points** over prompt-only; or
-- Dynamic Variation score gain >= **+8.0 points** over prompt-only.
+- no semantic orthogonalization (`raw_basis`)
+- rank `4/8/16/32`
+- early `[16,20]`, middle `[24,28]`, late `[32,36]`, all six layers
 
-Random steering must not reproduce the gain. `analyze_parageo_pilot.py` enforces the score, WER, and random-control gates jointly. If this gate fails, stop ParaGeo; do not rescue it with RL, LoRA, favorable seeds, or post-hoc schedules.
+Composition:
 
-## Quick start
+- coordinate sum (main)
+- mean
+- unit-normalized sum
+
+Dynamic:
+
+- scheduled trajectory (main)
+- static start
+- static endpoint
+- static midpoint
+
+Scale sensitivity is the frozen development alpha grid.
+
+## Evaluation
+
+The wrapper calls the **official SpeechParaling English pairwise judge scripts** and changes only runtime file paths. It does not rewrite the upstream evaluation prompt.
+
+Candidate win/tie/loss is mapped to `1 / 0.5 / 0`, giving a 0--100 preference score where 50 denotes parity. The pipeline reports sample-level 10,000-repeat bootstrap 95% CIs, per-dimension preference, and paired text-channel WER degradation.
+
+A core task passes the paper gate only if:
+
+- static/composition preference gain is at least `+5` points, or dynamic gain is at least `+8` points;
+- mean WER degradation is `<= 0.02`;
+- norm-matched random steering stays below the same threshold and below ParaGeo.
+
+If no held-out task passes, archive the project rather than rescuing it post hoc.
+
+## One-command run
+
+Read **[`ICASSP2027_RUN.md`](ICASSP2027_RUN.md)** first.
+
+Setup:
 
 ```bash
 git pull origin main
 source .venv/bin/activate
 pip install -e '.[dev,glm,parageo]'
 pytest -q
+python -m compileall -q src scripts
 ```
 
-External assets:
+Required paths:
 
 ```bash
 export GLM_VOICE_REPO=/absolute/path/to/GLM-4-Voice
@@ -146,48 +144,66 @@ export GLM_VOICE_DECODER=/absolute/path/to/glm-4-voice-decoder
 export SPEECHPARALING_ROOT=/absolute/path/to/SpeechParaling-Bench
 ```
 
-Then follow **[`PARAGEO_RUN.md`](PARAGEO_RUN.md)** exactly.
+Inspect the entire command graph without GPU/API calls:
 
-## Main files
+```bash
+python scripts/run_icassp2027_all.py --stage all --dry-run
+```
 
-### ParaGeo core
+Run the complete experiment matrix:
 
-- `src/speech_negotiation_kv/parageo.py` — centering, SVD basis, semantic orthogonalization, coordinates, composition, dynamic schedules.
-- `src/speech_negotiation_kv/parageo_steering.py` — scheduled fused-QKV intervention.
-- `src/speech_negotiation_kv/parageo_eval.py` — dev-only scale selection and frozen score/WER/random stop gate.
-- `src/speech_negotiation_kv/speechparaling.py` — SpeechParaling prompt parser, catalog coverage, filename-index pairing, deterministic dev/held-out split, fidelity utilities.
-- `src/speech_negotiation_kv/glm_official_waveform.py` — official Whisper-VQ + Flow/HiFT waveform adapter.
+```bash
+python scripts/run_icassp2027_all.py --stage all
+```
 
-### Calibration
+Stages can also be resumed independently:
 
-- `scripts/build_parageo_catalog.py`
-- `scripts/collect_parageo_calibration.py`
-- `scripts/extract_parageo_kv.py`
-- `scripts/fit_parageo_basis.py`
+```bash
+python scripts/run_icassp2027_all.py --stage geometry
+python scripts/run_icassp2027_all.py --stage dev
+python scripts/run_icassp2027_all.py --stage main
+python scripts/run_icassp2027_all.py --stage ablations
+python scripts/run_icassp2027_all.py --stage judge
+python scripts/run_icassp2027_all.py --stage summarize
+```
 
-### Benchmark
+## Paper outputs
 
-- `scripts/run_speechparaling_pilot.py`
-- `scripts/select_parageo_scale.py`
-- `scripts/analyze_parageo_fidelity.py`
-- `scripts/analyze_parageo_pilot.py`
-- `configs/parageo_speechparaling_pilot.yaml`
+After `summarize`:
 
-### Design / run contract
+```text
+results/icassp2027/summary.json
+paper/generated/main_results.tex
+paper/generated/geometry_table.tex
+paper/generated/ablation_table.tex
+paper/generated/result_macros.tex
+```
 
-- `PARAGEO_RUN.md`
-- `docs/superpowers/specs/2026-09-10-parageo-speechparaling-design.md`
-- `docs/superpowers/plans/2026-09-10-parageo-speechparaling.md`
+Draft paper files:
 
-## Expansion after a pilot pass only
+```text
+paper/ICASSP2027_ParaGeo_draft.tex
+paper/icassp2027_parageo_refs.bib
+```
 
-1. Full 1001-item English SpeechParaling-Bench.
-2. Full 1001-item Chinese benchmark.
-3. Situational Adaptation via context -> ParaGeo coordinate routing.
-4. Qwen-Omni replication.
-5. Cross-model geometry rank / composition analysis.
-6. External S2S-Arena or WildSpeech-Bench generalization.
+The draft contains multiple title, abstract, and introduction options plus the recommended Experimental Setup. Generated result macros/tables can be included without manually copying numbers.
 
-## Historical negotiation results
+## Important ICASSP page rule
 
-The older CRAD scripts/results remain in the repository for reproducibility. They document the causal discovery, Gate-D geometry, Gate-E2 alignment, and the negative Gate-F/Gate-F2 method attempts. They are no longer the execution path for new experiments.
+The supplied ICASSP 2027 template permits **four content pages plus a fifth page containing references only**. Therefore ablations/mechanism analysis must fit inside the four content pages; do not place experimental appendix material on the fifth page.
+
+## Main implementation files
+
+- `configs/icassp2027_parageo.yaml` — frozen ICASSP matrix.
+- `src/speech_negotiation_kv/parageo.py` — geometry and mechanism diagnostics.
+- `src/speech_negotiation_kv/icassp_variants.py` — rank/raw/layer/composition/dynamic variants.
+- `src/speech_negotiation_kv/icassp_eval.py` — official-judge aggregation, bootstrap, WER, LaTeX rendering.
+- `scripts/run_icassp_generation.py` — official-waveform main/ablation generation.
+- `scripts/run_official_speechparaling_judge.py` — path-only wrapper around the upstream judge.
+- `scripts/select_icassp_alpha.py` — development-only alpha selection.
+- `scripts/summarize_icassp2027.py` — final decision + paper tables.
+- `scripts/run_icassp2027_all.py` — one-command orchestrator.
+
+## Historical reproducibility
+
+Older CRAD and exploratory ParaGeo reports remain under `results/` and `docs/results/`. They are preserved for provenance but are not the current execution path.
