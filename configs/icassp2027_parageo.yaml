@@ -1,0 +1,64 @@
+model:
+  name: zai-org/glm-4-voice-9b
+  quantization: int4
+  device: cuda:0
+  max_new_tokens: 768
+  temperature: 0.8
+  top_p: 0.8
+  audio_vocab_size: 16384
+
+official_glm:
+  repo_root: ${GLM_VOICE_REPO}
+  speech_tokenizer_path: THUDM/glm-4-voice-tokenizer
+  decoder_path: ${GLM_VOICE_DECODER}
+
+benchmark:
+  root: ${SPEECHPARALING_ROOT}
+  tasks:
+    static:
+      prompt_jsonl: jsonl_prompt_en/para_con/short_sin.jsonl
+      audio_dir: audio_dataset_en/para_con/con_short_sin
+    composed:
+      prompt_jsonl: jsonl_prompt_en/para_con/short_multi.jsonl
+      audio_dir: audio_dataset_en/para_con/con_short_multi
+    dynamic:
+      prompt_jsonl: jsonl_prompt_en/dyn_var/dyn_var.jsonl
+      audio_dir: audio_dataset_en/dyn_var
+
+parageo:
+  calibration_config: configs/parageo_speechparaling_pilot.yaml
+  catalog: results/parageo_attribute_catalog.json
+  calibration_records: results/parageo_calibration.jsonl
+  calibration_kv: results/parageo_calibration_kv.npz
+  basis: results/parageo_basis.npz
+  basis_summary: results/parageo_basis_summary.json
+  main_rank: 16
+  rank_grid: [4, 8, 16, 32]
+  semantic_rank: 8
+  all_layers: [16, 20, 24, 28, 32, 36]
+  layer_sets:
+    early: [16, 20]
+    middle: [24, 28]
+    late: [32, 36]
+    all: [16, 20, 24, 28, 32, 36]
+  composition_modes: [sum, mean, normalized]
+  dynamic_variants: [scheduled, start_static, end_static, midpoint_static]
+
+experiment:
+  dev_modulus: 5
+  dev_remainder: 0
+  ablation_limit: 24
+  alpha_grid: [0.25, 0.5, 1.0, 1.5]
+  steering_steps: 192
+  transition_at: 0.5
+  generation_seed: 12242424242
+  random_seed: 13242424242
+  bootstrap_seed: 14242424242
+  bootstrap_repeats: 10000
+  max_absolute_text_wer_degradation: 0.02
+  stop_static_or_composed_gain: 5.0
+  stop_dynamic_gain: 8.0
+
+outputs:
+  root: results/icassp2027
+  paper_generated: paper/generated
