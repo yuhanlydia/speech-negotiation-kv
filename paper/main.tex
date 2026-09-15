@@ -1,0 +1,310 @@
+% ICASSP 2027 ParaGeo -- near-final four-page body draft.
+% This file is intentionally self-contained: bibliography is embedded at the end.
+% Replace author information and compile with the official ICASSP spconf.sty.
+\documentclass{article}
+\usepackage{spconf,amsmath,amssymb,graphicx,booktabs,multirow,hyperref,xcolor}
+\usepackage{array}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+
+\title{PARAGEO: COMPOSITIONAL PARALINGUISTIC GEOMETRY FOR CONTROLLABLE SPEECH GENERATION}
+\name{Author Name(s)}
+\address{Affiliation(s)}
+
+% ============================================================================
+% RESULT MACROS. These are automatically overwritten after experiments.
+% ============================================================================
+\IfFileExists{generated/result_macros.tex}{\input{generated/result_macros.tex}}{
+\newcommand{\GeometryLOCO}{TBD}
+\newcommand{\GeometryChance}{TBD}
+\newcommand{\GeometryCosine}{TBD}
+\newcommand{\GeometryEV}{TBD}
+\newcommand{\GeometryRank}{TBD}
+\newcommand{\StaticPref}{TBD}
+\newcommand{\StaticGain}{TBD}
+\newcommand{\CompPref}{TBD}
+\newcommand{\CompGain}{TBD}
+\newcommand{\DynPref}{TBD}
+\newcommand{\DynGain}{TBD}
+\newcommand{\RandomStatic}{TBD}
+\newcommand{\RandomComp}{TBD}
+\newcommand{\RandomDyn}{TBD}
+\newcommand{\StaticWER}{TBD}
+\newcommand{\CompWER}{TBD}
+\newcommand{\DynWER}{TBD}
+\newcommand{\BestRank}{TBD}
+\newcommand{\BestLayer}{TBD}
+\newcommand{\NoOrthGain}{TBD}
+\newcommand{\DynStaticGain}{TBD}
+}
+
+% ============================================================================
+% FIGURE PROMPTS -- keep these comments when moving to Overleaf.
+% ============================================================================
+% FIGURE 1 PROMPT (phenomenon + method, recommended as the only large figure):
+% "Design a publication-quality academic figure for an ICASSP speech paper titled
+% 'From a surprising phenomenon to ParaGeo'. Use a clean white background and vector
+% graphics. LEFT: show the exact same lexical sentence rendered with 4 different vocal
+% deliveries (e.g., high-pitch excited, low-pitch calm, fast urgent, warm slow). Each
+% utterance should have a small waveform and identical text underneath. Draw arrows
+% into a frozen speech language model. In the model's latent-space inset, show that
+% examples with the same vocal attribute but different lexical sentences align along
+% shared directions, while lexical-content variation occupies another subspace. Add a
+% tiny empirical callout 'style decodable across content' to emphasize the motivating
+% phenomenon. CENTER: matched-content calibration: same sentences x many attributes,
+% content centering, low-rank SVD, semantic-subspace removal. Show equations
+% h_tilde(x,a)=h(x,a)-mean_a h(x,a) and B_para=(I-SS^T)B. RIGHT: three ParaGeo uses:
+% static point steering, zero-shot composition by vector addition, and a dynamic latent
+% trajectory changing over generation time. Minimalist scientific visual style, muted
+% blue/orange/green palette, no 3D effects, no decorative icons, readable at two-column
+% paper width."
+%
+% FIGURE 2 PROMPT (small result figure, only if space allows):
+% "Create a compact two-panel ICASSP results figure. Panel A: bar chart for SpeechParaling
+% preference score (50 = parity) for Static, Composition, Dynamic; show Prompt-only at 50,
+% ParaGeo bars with bootstrap 95% CI, and norm-matched Random bars. Panel B: line or dot plot
+% of geometry diagnostics over rank 4/8/16/32 showing LOCO attribute decoding accuracy and
+% same-attribute cross-content cosine. Use clear black axis labels, light grid, confidence
+% intervals, no legend overlap, white background, conference-quality typography."
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Controllable speech generation requires changing how an utterance is spoken without changing what it says. Existing activation-steering approaches largely construct isolated directions for a small set of expressive factors, leaving open whether broader paralinguistic behaviors share reusable structure. We begin from an empirical observation: when lexical content is held fixed and only vocal delivery changes, hidden speech activations vary in a highly structured, cross-content manner. Motivated by this phenomenon, we introduce \textbf{ParaGeo}, a training-free method that models paralinguistic behavior as a shared low-dimensional geometry. ParaGeo centers matched-content activations, removes a semantic content subspace, and represents each vocal attribute with coordinates in a common basis. The same geometry supports static control, zero-shot composition of unseen attribute combinations, and intra-utterance dynamic control through time-varying trajectories. We evaluate ParaGeo on SpeechParaling-Bench using GLM-4-Voice and the official waveform pipeline, with official pairwise speech judging, lexical-fidelity checks, random controls, and mechanism ablations. Our study tests whether paralinguistic control is better understood as navigation in a shared geometry than as a collection of unrelated steering vectors.
+\end{abstract}
+
+\begin{keywords}
+controllable speech generation, paralinguistic control, activation steering, speech language models, expressive speech synthesis
+\end{keywords}
+
+\section{Introduction}
+Modern speech language models (SLMs) are expected to control not only \emph{what} is said, but also \emph{how} it is said: pitch, pace, volume, timbre, rhythm, attitude, emotion, stress, and other paralinguistic attributes. GLM-4-Voice~\cite{zeng2024glm4voice}, for example, supports end-to-end spoken generation with instruction-dependent emotion, intonation, speech rate, and dialect. Yet fine-grained control remains difficult when multiple attributes must be expressed together or a vocal property must change during one utterance. SpeechParaling-Bench~\cite{liu2026speechparaling} makes these cases explicit through fine-grained control, intra-utterance variation, and context-aware adaptation across more than one hundred paralinguistic features.
+
+A natural response is to steer model activations directly. Recent work has demonstrated training-free emotion steering~\cite{xie2025emosteer}, lightweight learned activation offsets~\cite{zhou2026emoshift}, composable mixed-emotion steering~\cite{wang2026cocoemo}, and task-vector combinations for expressive speech~\cite{feng2025taskvector}. These studies establish that internal speech representations are manipulable. However, most formulations still assign one vector or module to one task or emotion. This leaves a more basic representation question unresolved: \emph{do heterogeneous paralinguistic behaviors form a shared internal geometry that is stable across lexical content?}
+
+Our work starts from a phenomenon rather than from a new controller. In preliminary matched-content experiments, changing only the vocal delivery of the same utterance produced internal representations that remained strongly classifiable across held-out lexical contexts. This is surprising because lexical and acoustic information are entangled in the same autoregressive model. If such cross-content structure is real and general, it suggests a stronger hypothesis than ``steering vectors exist'': paralinguistic behaviors may occupy a reusable low-dimensional coordinate system. A valid coordinate system should support operations that isolated vectors do not explain naturally: \emph{composition} of independently calibrated attributes and \emph{trajectories} that vary within an utterance.
+
+We therefore introduce \textbf{ParaGeo}, a training-free framework for compositional paralinguistic control. ParaGeo calibrates many attributes on identical lexical sentences, subtracts content-wise means, fits a low-rank shared basis, and projects out a semantic content subspace. Each control is represented by a coordinate in this basis. Static control injects one coordinate, unseen multi-attribute control adds coordinates, and dynamic control moves along a coordinate path during generation. No SLM parameters are updated.
+
+Our contributions are threefold. First, we formulate and measure \textbf{content-invariant paralinguistic geometry} using cross-content diagnostics rather than only downstream generation scores. Second, we use the geometry for \textbf{zero-shot compositional control}, synthesizing multi-attribute prompts from independently calibrated single attributes. Third, we extend static steering to \textbf{time-varying latent trajectories} for intra-utterance dynamic modulation. We evaluate all three claims with the official SpeechParaling pairwise judge, lexical-fidelity checks, norm-matched random directions, and controlled ablations.
+
+\begin{figure*}[t]
+\centering
+\fbox{\parbox[c][1.38in][c]{0.94\textwidth}{\centering
+\textbf{FIGURE 1 PLACEHOLDER --- Phenomenon $\rightarrow$ Geometry $\rightarrow$ ParaGeo.}\\[2pt]
+Left: same lexical content, different vocal deliveries, and cross-content latent alignment.\\
+Center: matched-content centering, low-rank basis, semantic-subspace removal.\\
+Right: static steering, zero-shot coordinate composition, and dynamic latent trajectory.\\[2pt]
+\emph{Use the full Figure 1 prompt stored in the source comments.}}}
+\caption{Conceptual overview. ParaGeo is motivated by a cross-content representation phenomenon: varying vocal delivery while holding lexical content fixed exposes reusable paralinguistic directions. We convert this structure into a shared geometry for static, compositional, and dynamic control.}
+\label{fig:overview}
+\end{figure*}
+
+\section{Related Work}
+\textbf{Paralinguistic-aware speech generation.} Expressive and controllable TTS has traditionally relied on style labels, reference encoders, learned emotion embeddings, or prompt conditioning. Recent SLMs broaden the control space substantially, but benchmarks show that fine-grained and time-varying paralinguistic control remains challenging~\cite{liu2026speechparaling}. Our work focuses on inference-time control of a frozen SLM and uses SpeechParaling-Bench as the main evaluation because it explicitly separates single-attribute, multi-attribute, and dynamic requirements.
+
+\textbf{Activation and vector steering.} EmoSteer-TTS~\cite{xie2025emosteer} demonstrates training-free emotion conversion, interpolation, and erasure through activation steering. EmoShift~\cite{zhou2026emoshift} learns emotion-specific activation offsets, while CoCoEmo~\cite{wang2026cocoemo} studies composable emotional TTS. Task-vector approaches similarly combine expressive capabilities such as emotion and dialect~\cite{feng2025taskvector}. ParaGeo differs in scope and representation: we seek one shared geometry across heterogeneous paralinguistic factors, explicitly test cross-content invariance, and use the geometry for both unseen composition and within-utterance trajectories.
+
+\section{ParaGeo}
+\subsection{Matched-content geometry}
+Let $x$ denote lexical content and $a\in\mathcal{A}$ a paralinguistic control. We extract an activation summary $h(x,a)\in\mathbb{R}^{d}$ from selected K/V projections of the frozen SLM. To suppress lexical content, we center all controls within each sentence:
+\begin{equation}
+\tilde h(x,a)=h(x,a)-\frac{1}{|\mathcal{A}|}\sum_{a'\in\mathcal{A}}h(x,a').
+\label{eq:center}
+\end{equation}
+Stacking $\tilde h$ across matched sentences yields matrix $H$. We fit a rank-$r$ basis using truncated SVD,
+\begin{equation}
+H\approx U_r\Sigma_r V_r^\top,\qquad B=V_r^\top,
+\end{equation}
+and represent each attribute by the mean coordinate of its centered examples, $c_a=B^\top\bar h_a$.
+
+\subsection{Separating content from delivery}
+Content centering removes sentence-wise offsets but does not guarantee semantic orthogonality. We therefore estimate a semantic basis $S$ from per-sentence mean activations and remove its projection:
+\begin{equation}
+B_{\mathrm{para}}=\operatorname{qr}\big((I-SS^\top)B\big).
+\label{eq:orth}
+\end{equation}
+The ablation without Eq.~\eqref{eq:orth} tests whether explicit separation is necessary rather than merely cosmetically motivated.
+
+\subsection{Three control operations}
+For static control, the activation is modified by
+\begin{equation}
+h' = h+\alpha B_{\mathrm{para}}c_a.
+\end{equation}
+For an unseen combination $\mathcal{C}=\{a_1,\ldots,a_m\}$, ParaGeo uses coordinate arithmetic rather than fitting any multi-attribute example:
+\begin{equation}
+c_{\mathcal{C}}=\sum_{i=1}^{m}c_{a_i},\qquad h'=h+\alpha B_{\mathrm{para}}c_{\mathcal{C}}.
+\label{eq:compose}
+\end{equation}
+For dynamic instructions, the coordinate becomes time dependent. A gradual transition from $a$ to $b$ uses
+\begin{equation}
+c_t=(1-\lambda_t)c_a+\lambda_t c_b,\quad \lambda_t\in[0,1],
+\label{eq:dynamic}
+\end{equation}
+whereas sudden transitions use a step schedule. The K/V intervention is updated once per generation forward pass. This converts dynamic paralinguistic control from prompt interpretation into explicit movement in latent space.
+
+\section{Experimental Setup}
+\textbf{Backbone and waveform path.} We use GLM-4-Voice-9B~\cite{zeng2024glm4voice} with NF4/int4 quantization and frozen weights. Benchmark inputs and outputs follow the official speech path: Whisper-VQ speech tokenization, autoregressive interleaved text/audio generation, and Flow/HiFT decoding to 22.05-kHz waveform. We use temperature $0.8$ and top-$p=0.8$ for all methods.
+
+\textbf{Calibration.} The attribute catalog is built only from reusable English single-control prompts in SpeechParaling-Bench. Each attribute is rendered on the same eight fixed lexical sentences. We extract action-side K/V activations from layers $\{16,20,24,28,32,36\}$. Unless ablated, ParaGeo uses rank $16$ and semantic rank $8$. Geometry quality is measured without benchmark test labels using explained variance, leave-one-content-out (LOCO) attribute decoding, and same-attribute cross-content cosine similarity.
+
+\textbf{Benchmark and split.} We evaluate all catalog-covered English examples from three tracks: static single-attribute control (\texttt{short\_sin}), multi-attribute composition (\texttt{short\_multi}), and dynamic variation (\texttt{dyn\_var}). Eligible examples are deterministically split into 20\% development and 80\% held-out subsets by benchmark index. Development data select $\alpha\in\{0.25,0.5,1.0,1.5\}$ separately for each task; held-out judge scores never affect hyperparameter selection.
+
+\textbf{Baselines, controls, and ablations.} Prompt-only GLM-4-Voice is the primary baseline with identical prompt, seed, and decoding parameters. A norm-matched random direction controls for generic perturbation. On a fixed held-out ablation subset, we test: no semantic orthogonalization; ranks $\{4,8,16,32\}$; early/middle/late/all layers; sum/mean/normalized composition; and trajectory/start-only/end-only/midpoint-only dynamic steering.
+
+\textbf{Evaluation.} We use the official SpeechParaling pairwise LALM-judge protocol. ParaGeo and prompt-only waveforms are compared blindly; candidate win/tie/loss receives $1/0.5/0$, reported as a 0--100 preference score where $50$ indicates parity. We report 10,000-repeat sample-level bootstrap 95\% confidence intervals. Lexical fidelity is measured using word error rate (WER) from the model text channel. Following the preregistered decision rule, a positive control result must improve preference while increasing mean WER by at most $0.02$, and a norm-matched random direction must not reproduce the gain.
+
+\section{Results and Analysis}
+\subsection{Does a shared geometry exist?}
+Table~\ref{tab:geometry} is the first gate. A useful paralinguistic geometry should satisfy three conditions: compactness, cross-content decodability, and same-attribute alignment across lexical content. We therefore report explained variance at the default rank, the rank required for 95\% explained variance, LOCO decoding accuracy, and cross-content cosine. A LOCO result substantially above the $1/|\mathcal{A}|$ chance rate is especially important because it rules out a representation that merely memorizes each calibration sentence.
+
+\begin{table}[t]
+\centering
+\caption{Geometry diagnostics on matched-content calibration data. Values are filled automatically after the run.}
+\label{tab:geometry}
+\setlength{\tabcolsep}{4.0pt}
+\begin{tabular}{lcc}
+\toprule
+Metric & ParaGeo & Reference \\
+\midrule
+EV at rank 16 & \GeometryEV & -- \\
+Rank for 95\% EV & \GeometryRank & -- \\
+LOCO attr. accuracy & \GeometryLOCO & \GeometryChance \\
+Cross-content cosine & \GeometryCosine & $0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Main controllability results}
+Table~\ref{tab:main} reports the core ICASSP result. We expect the largest gains on composition and dynamic variation because prompt-only generation already handles many simple single-attribute cases. Composition is the strictest test of the algebraic claim in Eq.~\eqref{eq:compose}: ParaGeo never fits the multi-attribute benchmark examples. Dynamic variation tests whether Eq.~\eqref{eq:dynamic} adds value beyond a static perturbation. Random steering is included in every task to distinguish structured control from generic activation disturbance.
+
+\begin{table}[t]
+\centering
+\caption{Held-out SpeechParaling-Bench preference score (50 = parity with prompt-only). $\Delta$WER is mean degradation vs. prompt-only.}
+\label{tab:main}
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{lccc}
+\toprule
+Method & Static & Composition & Dynamic \\
+\midrule
+Prompt-only & 50.0 & 50.0 & 50.0 \\
+ParaGeo & \StaticPref & \CompPref & \DynPref \\
+Gain & \StaticGain & \CompGain & \DynGain \\
+Random & \RandomStatic & \RandomComp & \RandomDyn \\
+\midrule
+$\Delta$WER & \StaticWER & \CompWER & \DynWER \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{What part of ParaGeo matters?}
+Table~\ref{tab:ablation} isolates the representation and intervention choices. Removing semantic orthogonalization tests whether content separation is functionally useful. Rank and layer sweeps test whether gains rely on a narrow accidental configuration. The composition-rule ablation distinguishes true coordinate addition from simple magnitude scaling. For dynamic prompts, a scheduled trajectory must outperform static start/end/midpoint controls to support the claim that \emph{time variation itself} matters.
+
+\begin{table}[t]
+\centering
+\caption{Key ablations on a fixed held-out subset. Report preference gain over matched prompt-only.}
+\label{tab:ablation}
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{lccc}
+\toprule
+Variant & Static & Comp. & Dyn. \\
+\midrule
+Full ParaGeo & TBD & TBD & TBD \\
+w/o semantic orth. & \NoOrthGain & TBD & TBD \\
+Random direction & TBD & TBD & TBD \\
+Best rank $\{4,8,16,32\}$ & \BestRank & \BestRank & \BestRank \\
+Best layer group & \BestLayer & \BestLayer & \BestLayer \\
+Mean/normalized compose & -- & TBD & -- \\
+Static dyn. control & -- & -- & \DynStaticGain \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox[c][1.05in][c]{0.92\columnwidth}{\centering
+\textbf{FIGURE 2 PLACEHOLDER --- Result visualization.}\\[2pt]
+Panel A: ParaGeo vs. random preference on Static / Composition / Dynamic.\\
+Panel B: LOCO accuracy + cross-content cosine vs. rank.\\[2pt]
+\emph{Use Figure 2 prompt in source comments if space permits.}}}
+\caption{Suggested compact visualization for the final paper. If Table~\ref{tab:main} is already dense, this figure can be moved to supplementary material or omitted.}
+\label{fig:results}
+\end{figure}
+
+\subsection{Fine-grained attribute analysis}
+A single aggregate preference score can hide which paralinguistic families benefit from a shared geometry. We therefore group the static and compositional examples into four interpretable families and report the ParaGeo gain in Table~\ref{tab:groups}. The analysis is diagnostic rather than a second optimization target: all group scores reuse the same held-out generations and the same task-level $\alpha$. If improvements concentrate only on one family (for example, pitch/pace) while disappearing on affective or timbral controls, the paper should weaken its claim from ``broad paralinguistic geometry'' to the subset actually supported by the evidence.
+
+\begin{table}[t]
+\centering
+\caption{Per-family held-out preference gain. No family-specific tuning is allowed.}
+\label{tab:groups}
+\setlength{\tabcolsep}{3.4pt}
+\begin{tabular}{lcc}
+\toprule
+Attribute family & Static $\Delta$ & Composition $\Delta$ \\
+\midrule
+Pitch / pace / volume & TBD & TBD \\
+Rhythm / stress / pause & TBD & TBD \\
+Emotion / attitude / cognitive & TBD & TBD \\
+Timbre / age / vocalization & TBD & TBD \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Qualitative transition analysis}
+Dynamic variation is difficult to summarize with a single utterance-level win. We therefore manually inspect a small fixed sample of gradual and sudden prompts after the automatic evaluation. For gradual prompts we compare whether the requested attribute moves monotonically in the intended direction; for sudden prompts we inspect whether the transition occurs near the requested semantic boundary rather than being spread across the entire utterance. This analysis is descriptive only and is not used to select schedules. A final version of Fig.~\ref{fig:results} can include two representative pitch/energy trajectories aligned to generation time, together with one failure case where the latent schedule does not produce the intended acoustic transition.
+
+\subsection{Failure modes and limitations}
+ParaGeo assumes that requested controls are represented sufficiently linearly for coordinate arithmetic to be meaningful. The approach may therefore be weaker for attributes that are intrinsically local (e.g., stress on one word), speaker-identity-dependent, or coupled nonlinearly with linguistic content. Dynamic steering also operates on generation steps rather than exact acoustic timestamps, so transition timing is approximate. Our primary study uses one open SLM and English SpeechParaling prompts, and the official pairwise judge is still a model-based evaluator. Cross-model, multilingual, and human-listening validation are intentionally left as follow-up experiments unless the frozen core benchmark first shows a clear positive effect.
+
+\section{Conclusion}
+We presented ParaGeo, a training-free view of paralinguistic control as navigation in a shared content-invariant geometry. The framework is motivated by a cross-content representation phenomenon and yields three control operations from the same basis: static steering, zero-shot composition, and dynamic latent trajectories. The ICASSP study is deliberately falsifiable: geometry diagnostics, official pairwise judging, lexical-fidelity constraints, norm-matched random directions, and targeted ablations jointly determine whether the shared-geometry hypothesis is useful in practice. If the geometry fails to generalize across content or if random directions match its downstream gain, the central claim is rejected rather than rescued with post-hoc training.
+
+% MUST RUN BEFORE SUBMISSION:
+% E1. Full geometry calibration + EV/rank/LOCO/cross-content cosine.
+% E2. Dev alpha sweep for static/composition/dynamic with WER gate.
+% E3. Held-out main result: prompt-only vs ParaGeo vs random, official judge.
+% E4. No semantic orthogonalization ablation.
+% E5. Rank 4/8/16/32 ablation.
+% E6. Layer groups: early / middle / late / all.
+% E7. Composition rule: sum / mean / normalized.
+% E8. Dynamic rule: scheduled trajectory / start-only / end-only / midpoint-only.
+% E9. Bootstrap confidence intervals and automatic LaTeX table generation.
+% OPTIONAL ONLY IF CORE RESULTS ARE CLEARLY POSITIVE:
+% O1. Qwen-Omni replication. O2. Chinese pilot. O3. Situational adaptation. O4. Human listening study.
+
+\clearpage
+\begin{thebibliography}{9}
+\bibitem{zeng2024glm4voice}
+A. Zeng, Z. Du, M. Liu, K. Wang, S. Jiang, L. Zhao, Y. Dong, and J. Tang,
+``GLM-4-Voice: Towards intelligent and human-like end-to-end spoken chatbot,''
+arXiv:2412.02612, 2024.
+
+\bibitem{liu2026speechparaling}
+R. Liu, S. Yin, T. Wang, D. Zhang, W. Zhuang, S. Ren, R. He, C. Shan, and C. Fu,
+``SpeechParaling-Bench: A comprehensive benchmark for paralinguistic-aware speech generation,''
+arXiv:2604.20842, 2026.
+
+\bibitem{xie2025emosteer}
+T. Xie, S. Yang, C. Li, D. Yu, and L. Liu,
+``EmoSteer-TTS: Fine-grained and training-free emotion-controllable text-to-speech via activation steering,''
+arXiv:2508.03543, 2025.
+
+\bibitem{zhou2026emoshift}
+L. Zhou, H. Jiang, J. Li, T. Wang, and H. Li,
+``EmoShift: Lightweight activation steering for enhanced emotion-aware speech synthesis,''
+arXiv:2601.22873, 2026.
+
+\bibitem{wang2026cocoemo}
+S. Wang, S. Tan, S. Liu, H. Jia, G. Huang, J. Bailey, and T. Dang,
+``CoCoEmo: Composable and controllable human-like emotional TTS via activation steering,''
+arXiv:2602.03420, 2026.
+
+\bibitem{feng2025taskvector}
+P. Feng, Y. Xiao, Z. Ma, Z. Niu, S. Fan, Y. Li, S. Wang, and X. Chen,
+``Task Vector in TTS: Toward emotionally expressive dialectal speech synthesis,''
+in \emph{Proc. ICASSP}, 2026.
+\end{thebibliography}
+
+\end{document}
