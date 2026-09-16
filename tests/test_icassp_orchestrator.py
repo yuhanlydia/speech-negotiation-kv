@@ -42,3 +42,18 @@ def test_dry_matrix_uses_placeholders_before_alpha_selection():
     module = load_module(); commands = module.command_matrix(config(), config_path="configs/icassp.yaml", stage="main")
     text = "\n".join(module.shell_join(command) for command in commands)
     assert "<SELECTED_ALPHA:static>" in text and "--variant random" in text
+
+
+def test_full_space_is_generated_and_judged_only_for_composition():
+    module = load_module()
+    main_commands = module.command_matrix(
+        config(), config_path="configs/icassp.yaml", stage="main",
+        selected_alphas={"static": 1.0, "composed": .5, "dynamic": .25},
+    )
+    main_text = "\n".join(module.shell_join(command) for command in main_commands)
+    judge_text = "\n".join(module.shell_join(command) for command in module.command_matrix(
+        config(), config_path="configs/icassp.yaml", stage="judge"
+    ))
+    assert main_text.count("--variant full_space") == 1
+    assert "--task composed --split heldout --variant full_space" in main_text
+    assert judge_text.count("--candidate-name full_space") == 1
