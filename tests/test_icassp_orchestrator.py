@@ -57,3 +57,12 @@ def test_full_space_is_generated_and_judged_only_for_composition():
     assert main_text.count("--variant full_space") == 1
     assert "--task composed --split heldout --variant full_space" in main_text
     assert judge_text.count("--candidate-name full_space") == 1
+
+
+def test_composition_judge_contains_direct_parageo_vs_full_space_head_to_head():
+    module = load_module()
+    judge_text = "\n".join(module.shell_join(command) for command in module.command_matrix(
+        config(), config_path="configs/icassp.yaml", stage="judge"
+    ))
+    assert "--candidate-name main --baseline-name full_space" in judge_text
+    assert "main_vs_full_space" in judge_text
