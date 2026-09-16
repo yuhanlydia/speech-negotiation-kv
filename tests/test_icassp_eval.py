@@ -38,19 +38,26 @@ def test_paired_wer_and_alpha_selection(tmp_path):
     assert selected["alpha"] == .25
 
 
-def test_latex_renderers_emit_expected_tables_and_macros():
+def test_latex_renderers_emit_reviewer_controls_and_macros():
     assert latex_escape("Pitch_rate&x") == r"Pitch\_rate\&x"
     summary = {"decision": "continue_to_paper",
         "geometry": {"attributes": 80, "leave_one_content_out_centroid_accuracy": .75, "chance": .0125,
-                     "explained_variance_at_main_rank": .92, "same_attribute_cross_content_cosine": {"mean": .64}},
+                     "explained_variance_at_main_rank": .92, "same_attribute_cross_content_cosine": {"mean": .64},
+                     "shuffled_geometry_null": {
+                         "real": {"loco_accuracy": .73, "cross_content_cosine": .61},
+                         "null": {"loco_accuracy": {"mean": .013}, "cross_content_cosine": {"mean": .002}},
+                         "p_value": {"loco_accuracy": .002, "cross_content_cosine": .004}}},
         "tasks": {
             "static": {"main": {"preference_score": 56, "gain_vs_tie": 6, "lower_95": 52, "upper_95": 60}, "random": {"preference_score": 49}, "fidelity": {"mean_degradation": .01}},
-            "composed": {"main": {"preference_score": 60, "gain_vs_tie": 10, "lower_95": 55, "upper_95": 65}, "random": {"preference_score": 50}, "fidelity": {"mean_degradation": 0}},
+            "composed": {"main": {"preference_score": 60, "gain_vs_tie": 10, "lower_95": 55, "upper_95": 65}, "random": {"preference_score": 50}, "full_space": {"preference_score": 54}, "fidelity": {"mean_degradation": 0}},
             "dynamic": {"main": {"preference_score": 59, "gain_vs_tie": 9, "lower_95": 53, "upper_95": 64}, "random": {"preference_score": 48}, "fidelity": {"mean_degradation": .015}}},
         "ablations": {"composed": {"comp_mean": {"preference_score": 54}}}}
-    assert "Composition" in render_main_results_table(summary)
-    assert "LOCO acc." in render_geometry_table(summary)
+    main_table = render_main_results_table(summary)
+    assert "Composition" in main_table and "Full-space" in main_table and "54.0" in main_table
+    geometry_table = render_geometry_table(summary)
+    assert "Shuffled null" in geometry_table and "0.002" in geometry_table and "0.004" in geometry_table
     assert "composition: mean" in render_ablation_table(summary)
     macros = render_result_macros(summary)
     assert r"\newcommand{\CompGain}{10.0}" in macros
-    assert r"\newcommand{\GeometryCosine}{0.640}" in macros
+    assert r"\newcommand{\FullSpaceComp}{54.0}" in macros
+    assert r"\newcommand{\GeometryNullLOCOP}{0.002}" in macros
