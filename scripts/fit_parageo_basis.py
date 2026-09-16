@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
+from speech_negotiation_kv.icassp_reviewer_controls import shuffled_geometry_null
 from speech_negotiation_kv.parageo import (
     attribute_prototypes,
     choose_rank,
@@ -36,6 +37,7 @@ def main() -> None:
 
     cfg = yaml.safe_load(Path(args.config).read_text())
     pcfg = cfg["parageo"]
+    ecfg = cfg.get("experiment", {})
     rows = {
         str(row["branch_id"]): row
         for row in read_jsonl(args.records)
@@ -76,6 +78,14 @@ def main() -> None:
 
     loco = leave_one_content_out_centroid_accuracy(features, content, attrs)
     consistency = same_attribute_cross_content_cosine(features, content, attrs)
+    projected_geometry = full_fit.centered_features @ basis_main
+    geometry_null = shuffled_geometry_null(
+        projected_geometry,
+        content,
+        attrs,
+        repeats=int(ecfg.get("geometry_null_repeats", 1000)),
+        seed=int(ecfg.get("geometry_null_seed", 15242424242)),
+    )
     rank95 = choose_rank(
         full_fit.singular_values,
         max_rank=max_rank,
@@ -115,6 +125,7 @@ def main() -> None:
         "leave_one_content_out_centroid_accuracy": float(loco),
         "chance": 1.0 / len(names),
         "same_attribute_cross_content_cosine": consistency,
+        "shuffled_geometry_null": geometry_null,
         "output": str(out),
     }
     Path(args.summary).write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
