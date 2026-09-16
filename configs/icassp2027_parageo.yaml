@@ -45,6 +45,7 @@ parageo:
   dynamic_variants: [scheduled, start_static, end_static, midpoint_static]
 
 experiment:
+  version: icassp2027-r2-reviewer-controls
   dev_modulus: 5
   dev_remainder: 0
   ablation_limit: 24
@@ -55,6 +56,8 @@ experiment:
   random_seed: 13242424242
   bootstrap_seed: 14242424242
   bootstrap_repeats: 10000
+  geometry_null_seed: 15242424242
+  geometry_null_repeats: 1000
   max_absolute_text_wer_degradation: 0.02
   stop_static_or_composed_gain: 5.0
   stop_dynamic_gain: 8.0
