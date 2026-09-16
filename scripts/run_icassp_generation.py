@@ -10,6 +10,7 @@ import numpy as np
 import yaml
 
 from speech_negotiation_kv.glm_official_waveform import GLMOfficialWaveformBackend, OfficialVoiceAssets
+from speech_negotiation_kv.icassp_reviewer_controls import full_space_composition_direction
 from speech_negotiation_kv.icassp_variants import (
     compose_variant_coordinate,
     dynamic_variant_schedule,
@@ -136,7 +137,15 @@ def main() -> None:
                     geometry.coordinates, selected_attributes,
                     mode=("sum" if args.task == "static" else spec.composition_mode),
                 )
-                full_directions = direction_from_coordinate(geometry.basis, coordinate)
+                reference_direction = direction_from_coordinate(geometry.basis, coordinate)
+                if spec.full_space:
+                    full_directions = full_space_composition_direction(
+                        geometry.prototypes,
+                        selected_attributes,
+                        reference_direction=reference_direction,
+                    )
+                else:
+                    full_directions = reference_direction
             else:
                 start, end, instruction_mode = parse_dynamic_control(item.prompt)
                 dimension = item.dimensions[0]
@@ -175,6 +184,7 @@ def main() -> None:
             "item_id": item.item_id, "task": args.task, "split": args.split,
             "variant": args.variant, "alpha": 0.0 if spec.prompt_only else float(args.alpha),
             "basis_kind": spec.basis_kind if not spec.prompt_only else None,
+            "direction_space": "full" if spec.full_space else ("geometry" if not spec.prompt_only else None),
             "rank": spec.rank if not spec.prompt_only else None,
             "layers": list(selected_layers) if not spec.prompt_only else [],
             "composition_mode": spec.composition_mode if args.task == "composed" else None,
