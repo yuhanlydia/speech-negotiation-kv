@@ -78,6 +78,17 @@ def command_matrix(config: dict, *, config_path: str, stage: str,
             baseline = root / "heldout" / task / "prompt_only"
             for variant in MAIN_VARIANTS[task][1:]:
                 commands.append([py, "scripts/run_official_speechparaling_judge.py", "--benchmark-root", benchmark_root, "--task", task, "--candidate-dir", str(root / "heldout" / task / variant), "--baseline-dir", str(baseline), "--candidate-name", variant, "--baseline-name", "prompt_only", "--output-dir", str(root / "judge" / "heldout" / task / variant)])
+            if task == "composed":
+                commands.append([
+                    py, "scripts/run_official_speechparaling_judge.py",
+                    "--benchmark-root", benchmark_root,
+                    "--task", task,
+                    "--candidate-dir", str(root / "heldout" / task / "main"),
+                    "--baseline-dir", str(root / "heldout" / task / "full_space"),
+                    "--candidate-name", "main",
+                    "--baseline-name", "full_space",
+                    "--output-dir", str(root / "judge" / "heldout" / task / "main_vs_full_space"),
+                ])
             ablation_baseline = root / "ablation" / task / "prompt_only"
             for variant in TASK_ABLATIONS[task]:
                 commands.append([py, "scripts/run_official_speechparaling_judge.py", "--benchmark-root", benchmark_root, "--task", task, "--candidate-dir", str(root / "ablation" / task / variant), "--baseline-dir", str(ablation_baseline), "--candidate-name", variant, "--baseline-name", "prompt_only", "--output-dir", str(root / "judge" / "ablation" / task / variant)])
