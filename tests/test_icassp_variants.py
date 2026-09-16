@@ -1,5 +1,6 @@
 from pathlib import Path
 import numpy as np
+import pytest
 
 from speech_negotiation_kv.icassp_variants import (
     compose_variant_coordinate, dynamic_variant_schedule, load_geometry_variant,
@@ -22,6 +23,8 @@ def test_variant_loader_reconstructs_rank_raw_and_orthogonal(tmp_path):
     orth = load_geometry_variant(artifact, basis_kind="orthogonal", rank=2)
     assert raw.basis.shape == (12, 2) and orth.basis.shape[0] == 12
     assert set(raw.coordinates) == {"a", "b", "c"}
+    assert set(raw.prototypes) == {"a", "b", "c"}
+    assert raw.prototypes["a"].shape == (12,)
     assert np.linalg.norm(np.load(artifact)["semantic_basis"].T @ orth.basis) < 1e-8
 
 
@@ -48,6 +51,9 @@ def test_variant_resolution_and_random_norms():
     assert resolve_variant("layers_late", task="static").layer_set == "late"
     assert resolve_variant("comp_mean", task="composed").composition_mode == "mean"
     assert resolve_variant("dyn_midpoint", task="dynamic").dynamic_variant == "midpoint_static"
+    assert resolve_variant("full_space", task="composed").full_space is True
+    with pytest.raises(ValueError):
+        resolve_variant("full_space", task="static")
     target = np.array([[3.0, 4.0, 0.0], [0.0, 0.0, 2.0]])
     random = norm_matched_random_directions(target, np.random.default_rng(4))
     assert np.allclose(np.linalg.norm(random, axis=1), [5.0, 2.0])
