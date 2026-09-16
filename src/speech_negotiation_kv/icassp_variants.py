@@ -17,6 +17,7 @@ from .parageo import (
 class GeometryVariant:
     basis: np.ndarray
     coordinates: dict[str, np.ndarray]
+    prototypes: dict[str, np.ndarray]
     all_layers: tuple[int, ...]
     selected_layers: tuple[int, ...]
     basis_kind: str
@@ -28,6 +29,7 @@ class VariantSpec:
     name: str
     prompt_only: bool
     random_control: bool
+    full_space: bool
     basis_kind: str
     rank: int
     layer_set: str
@@ -68,6 +70,7 @@ def load_geometry_variant(path: str, *, basis_kind: str = "orthogonal", rank: in
     return GeometryVariant(
         basis=basis,
         coordinates=coordinates,
+        prototypes=proto_map,
         all_layers=all_layers,
         selected_layers=selected,
         basis_kind=basis_kind,
@@ -138,6 +141,7 @@ def resolve_variant(name: str, *, task: str, main_rank: int = 16) -> VariantSpec
         name=name,
         prompt_only=name == "prompt_only",
         random_control=name == "random",
+        full_space=name == "full_space",
         basis_kind="raw" if name == "raw_basis" else "orthogonal",
         rank=int(name[4:]) if name.startswith("rank") else int(main_rank),
         layer_set=name.removeprefix("layers_") if name.startswith("layers_") else "all",
@@ -155,10 +159,12 @@ def resolve_variant(name: str, *, task: str, main_rank: int = 16) -> VariantSpec
     )
     if name.startswith("comp_") and task != "composed":
         raise ValueError("composition ablations are only valid for composed task")
+    if name == "full_space" and task != "composed":
+        raise ValueError("full-space composition baseline is only valid for composed task")
     if name.startswith("dyn_") and task != "dynamic":
         raise ValueError("dynamic ablations are only valid for dynamic task")
     allowed = {
-        "prompt_only", "main", "random", "raw_basis",
+        "prompt_only", "main", "random", "full_space", "raw_basis",
         "rank4", "rank8", "rank16", "rank32",
         "layers_early", "layers_middle", "layers_late", "layers_all",
         "comp_mean", "comp_normalized",
