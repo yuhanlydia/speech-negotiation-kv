@@ -72,7 +72,7 @@ def main() -> None:
         )
         full_space = None
         full_space_fidelity = None
-        geometry_advantage = None
+        main_vs_full_space = None
         if task == "composed":
             full_space = _judge_summary(
                 _judge(root, "heldout", task, "full_space"),
@@ -82,8 +82,10 @@ def main() -> None:
                 _manifest(root, "heldout", task, "full_space"),
                 _manifest(root, "heldout", task, "prompt_only"),
             )
-            if main.get("preference_score") is not None and full_space.get("preference_score") is not None:
-                geometry_advantage = float(main["preference_score"]) - float(full_space["preference_score"])
+            main_vs_full_space = _judge_summary(
+                _judge(root, "heldout", task, "main_vs_full_space"),
+                repeats=int(exp["bootstrap_repeats"]), seed=int(exp["bootstrap_seed"]) + 3,
+            )
         threshold = float(exp["stop_dynamic_gain"] if task == "dynamic" else exp["stop_static_or_composed_gain"])
         score_ok = bool(main.get("gain_vs_tie") is not None and float(main["gain_vs_tie"]) >= threshold)
         fidelity_ok = bool(
@@ -104,7 +106,7 @@ def main() -> None:
             "main": main,
             "random": random,
             "full_space": full_space,
-            "geometry_advantage_vs_full_space": geometry_advantage,
+            "main_vs_full_space": main_vs_full_space,
             "fidelity": fidelity,
             "random_fidelity": random_fidelity,
             "full_space_fidelity": full_space_fidelity,
