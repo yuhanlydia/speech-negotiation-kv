@@ -167,20 +167,45 @@ def _fmt(value: object, digits: int = 1) -> str:
 def render_main_results_table(summary: Mapping) -> str:
     labels = {"static": "Static", "composed": "Composition", "dynamic": "Dynamic"}
     lines = [r"\begin{table}[t]", r"\centering",
-             r"\caption{Held-out SpeechParaling-Bench results. Preference is the percentage of pairwise decisions favoring ParaGeo over prompt-only, counting ties as 0.5.}",
-             r"\label{tab:main}", r"\begin{tabular}{lcccc}", r"\hline",
-             r"Task & ParaGeo pref. & 95\% CI & Random pref. & $\Delta$WER \\", r"\hline"]
+             r"\caption{Held-out SpeechParaling-Bench results. Preference is the percentage of pairwise decisions favoring the candidate over prompt-only, counting ties as 0.5. Full-space is the norm-matched raw-vector composition baseline and applies only to composition.}",
+             r"\label{tab:main}", r"\begin{tabular}{lccccc}", r"\hline",
+             r"Task & ParaGeo & 95\% CI & Random & Full-space & $\Delta$WER \\", r"\hline"]
     for task in ("static", "composed", "dynamic"):
         row = summary.get("tasks", {}).get(task, {})
-        main, random, fidelity = row.get("main", {}), row.get("random", {}), row.get("fidelity", {})
-        lines.append(f"{labels[task]} & {_fmt(main.get('preference_score'))} & {format_ci(main)} & "
-                     f"{_fmt(random.get('preference_score'))} & {_fmt(fidelity.get('mean_degradation'), 3)} \\\\ ")
+        main = row.get("main", {}) or {}
+        random = row.get("random", {}) or {}
+        full_space = row.get("full_space", {}) or {}
+        fidelity = row.get("fidelity", {}) or {}
+        lines.append(
+            f"{labels[task]} & {_fmt(main.get('preference_score'))} & {format_ci(main)} & "
+            f"{_fmt(random.get('preference_score'))} & {_fmt(full_space.get('preference_score'))} & "
+            f"{_fmt(fidelity.get('mean_degradation'), 3)} \\\\ "
+        )
     lines += [r"\hline", r"\end{tabular}", r"\end{table}", ""]
     return "\n".join(lines)
 
 
 def render_geometry_table(summary: Mapping) -> str:
     geo = summary.get("geometry", {})
+    null = geo.get("shuffled_geometry_null", {}) or {}
+    if null:
+        real = null.get("real", {}) or {}
+        null_stats = null.get("null", {}) or {}
+        pvals = null.get("p_value", {}) or {}
+        lines = [
+            r"\begin{table}[t]", r"\centering",
+            r"\caption{Geometry diagnostics with the preregistered within-content shuffled-label null.}",
+            r"\label{tab:geometry}", r"\begin{tabular}{lccc}", r"\hline",
+            r"Metric & Real & Shuffled null & $p$ \\", r"\hline",
+            f"LOCO accuracy (\%) & {_fmt(100 * real.get('loco_accuracy', 0.0))} & "
+            f"{_fmt(100 * (null_stats.get('loco_accuracy', {}) or {}).get('mean', 0.0))} & "
+            f"{_fmt(pvals.get('loco_accuracy'), 3)} \\\\ ",
+            f"Cross-content cosine & {_fmt(real.get('cross_content_cosine'), 3)} & "
+            f"{_fmt((null_stats.get('cross_content_cosine', {}) or {}).get('mean'), 3)} & "
+            f"{_fmt(pvals.get('cross_content_cosine'), 3)} \\\\ ",
+            r"\hline", r"\end{tabular}", r"\end{table}", "",
+        ]
+        return "\n".join(lines)
     cosine = geo.get("same_attribute_cross_content_cosine", {})
     lines = [r"\begin{table}[t]", r"\centering", r"\caption{Calibration-only geometry diagnostics.}",
              r"\label{tab:geometry}", r"\begin{tabular}{ccccc}", r"\hline",
@@ -218,18 +243,29 @@ def render_ablation_table(summary: Mapping) -> str:
 def render_result_macros(summary: Mapping) -> str:
     tasks, geometry = summary.get("tasks", {}), summary.get("geometry", {})
     cosine = geometry.get("same_attribute_cross_content_cosine", {})
-    macros = {"StaticPref": tasks.get("static", {}).get("main", {}).get("preference_score"),
-              "StaticGain": tasks.get("static", {}).get("main", {}).get("gain_vs_tie"),
-              "CompPref": tasks.get("composed", {}).get("main", {}).get("preference_score"),
-              "CompGain": tasks.get("composed", {}).get("main", {}).get("gain_vs_tie"),
-              "DynPref": tasks.get("dynamic", {}).get("main", {}).get("preference_score"),
-              "DynGain": tasks.get("dynamic", {}).get("main", {}).get("gain_vs_tie"),
-              "GeometryLOCO": 100 * geometry.get("leave_one_content_out_centroid_accuracy", 0.0),
-              "GeometryChance": 100 * geometry.get("chance", 0.0),
-              "GeometryCosine": cosine.get("mean")}
+    null = geometry.get("shuffled_geometry_null", {}) or {}
+    macros = {
+        "StaticPref": tasks.get("static", {}).get("main", {}).get("preference_score"),
+        "StaticGain": tasks.get("static", {}).get("main", {}).get("gain_vs_tie"),
+        "CompPref": tasks.get("composed", {}).get("main", {}).get("preference_score"),
+        "CompGain": tasks.get("composed", {}).get("main", {}).get("gain_vs_tie"),
+        "FullSpaceComp": (tasks.get("composed", {}).get("full_space") or {}).get("preference_score"),
+        "DynPref": tasks.get("dynamic", {}).get("main", {}).get("preference_score"),
+        "DynGain": tasks.get("dynamic", {}).get("main", {}).get("gain_vs_tie"),
+        "GeometryLOCO": 100 * geometry.get("leave_one_content_out_centroid_accuracy", 0.0),
+        "GeometryChance": 100 * geometry.get("chance", 0.0),
+        "GeometryCosine": cosine.get("mean"),
+        "GeometryNullLOCOP": (null.get("p_value", {}) or {}).get("loco_accuracy"),
+        "GeometryNullCosP": (null.get("p_value", {}) or {}).get("cross_content_cosine"),
+    }
     lines = ["% Auto-generated; do not edit by hand."]
     for name, value in macros.items():
-        text = "TBD" if value is None else (f"{float(value):.3f}" if name == "GeometryCosine" else f"{float(value):.1f}")
+        if value is None:
+            text = "TBD"
+        elif name in {"GeometryCosine", "GeometryNullLOCOP", "GeometryNullCosP"}:
+            text = f"{float(value):.3f}"
+        else:
+            text = f"{float(value):.1f}"
         lines.append(f"\\newcommand{{\\{name}}}{{{text}}}")
     lines.append(f"\\newcommand{{\\ParaGeoDecision}}{{{latex_escape(summary.get('decision', 'TBD'))}}}")
     return "\n".join(lines) + "\n"
