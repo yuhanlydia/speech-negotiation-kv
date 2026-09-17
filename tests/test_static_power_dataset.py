@@ -32,7 +32,8 @@ def test_rows_have_parseable_prompts_and_stable_ids():
     rows = module.build_rows()
 
     assert rows[0]["item_id"] == "static_power:attitude:polite_tone:00"
+    assert Path(rows[0]["audio_path"]).name == "static_power_001.wav"
+    assert Path(rows[-1]["audio_path"]).name == "static_power_180.wav"
     for row in rows:
         assert row["target_text"] in row["prompt"]
         assert row["control"] in row["prompt"].lower()
-        assert row["audio_path"].endswith(row["item_id"].replace(":", "_") + ".wav")

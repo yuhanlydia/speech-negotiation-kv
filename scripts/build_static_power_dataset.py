@@ -238,11 +238,13 @@ def _slug(value: str) -> str:
 def build_rows(*, audio_dir: str = "results/icassp2027_static_power/input_audio") -> list[dict]:
     rows = []
     seen = set()
+    global_index = 0
     for attribute_key, targets in ATTRIBUTE_CONTROLS.items():
         dimension, control = attribute_key.split("::", 1)
         if len(targets) != 10:
             raise ValueError(f"{attribute_key} has {len(targets)} targets, expected 10")
         for index, target in enumerate(targets):
+            global_index += 1
             normalized = normalize_target(target)
             if normalized in seen:
                 raise ValueError(f"duplicate target text: {target}")
@@ -256,7 +258,7 @@ def build_rows(*, audio_dir: str = "results/icassp2027_static_power/input_audio"
                 "dimensions": [dimension],
                 "control": control,
                 "attribute_key": attribute_key,
-                "audio_path": str(Path(audio_dir) / f"{item_id.replace(':', '_')}.wav"),
+                "audio_path": str(Path(audio_dir) / f"static_power_{global_index:03d}.wav"),
             })
     if len(rows) != 180:
         raise ValueError(f"expected 180 rows, got {len(rows)}")

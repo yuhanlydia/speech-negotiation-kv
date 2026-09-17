@@ -71,6 +71,8 @@ def main() -> None:
     ap.add_argument("--task", required=True, choices=sorted(TASK_SPECS))
     ap.add_argument("--candidate-dir", required=True); ap.add_argument("--baseline-dir", required=True)
     ap.add_argument("--candidate-name", required=True); ap.add_argument("--baseline-name", default="prompt_only")
+    ap.add_argument("--prompt-jsonl", default=None,
+                    help="Optional prompt JSONL whose one-based row order matches WAV filename indices")
     ap.add_argument("--output-dir", required=True)
     args = ap.parse_args()
     if not args.benchmark_root:
@@ -81,7 +83,7 @@ def main() -> None:
     output = Path(args.output_dir).resolve(); judge_json, metadata = output / "judge_json", output / "metadata"
     judge_json.mkdir(parents=True, exist_ok=True); metadata.mkdir(parents=True, exist_ok=True)
     module = load_upstream_module(root, args.task)
-    module.PROMPT_JSONL = str(root / prompt_rel)
+    module.PROMPT_JSONL = str(Path(args.prompt_jsonl).resolve()) if args.prompt_jsonl else str(root / prompt_rel)
     module.MODEL_DIRS = {args.baseline_name: str(Path(args.baseline_dir).resolve()),
                          args.candidate_name: str(Path(args.candidate_dir).resolve())}
     module.OUTPUT_DIRS = {args.baseline_name: str(judge_json / args.baseline_name),
