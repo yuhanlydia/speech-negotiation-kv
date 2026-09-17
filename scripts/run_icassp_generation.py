@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -22,6 +23,7 @@ from speech_negotiation_kv.icassp_variants import (
 from speech_negotiation_kv.parageo import direction_from_coordinate
 from speech_negotiation_kv.parageo_steering import ScheduledFusedQKVSteerer
 from speech_negotiation_kv.speechparaling import (
+    SpeechParalingItem,
     attribute_key,
     extract_target_text,
     load_prompt_jsonl,
@@ -43,10 +45,35 @@ def _expand(path: str, *, benchmark_root: str | None = None) -> str:
 
 
 def _item_index(item_id: str) -> int:
+    if str(item_id).startswith("static_power:"):
+        return int.from_bytes(hashlib.sha256(str(item_id).encode("utf-8")).digest()[:4], "big")
     try:
         return int(str(item_id).rsplit(":", 1)[-1])
     except ValueError as exc:
         raise ValueError(f"item_id does not end in an integer index: {item_id}") from exc
+
+
+def load_external_items(path: str | Path, *, task: str) -> list[SpeechParalingItem]:
+    rows = []
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        payload = json.loads(line)
+        audio_path = Path(str(payload["audio_path"]))
+        if not audio_path.exists():
+            raise FileNotFoundError(audio_path)
+        rows.append(SpeechParalingItem(
+            item_id=str(payload["item_id"]),
+            prompt=str(payload["prompt"]),
+            dimensions=tuple(str(value) for value in payload.get("dimensions", [])),
+            task=str(task),
+            audio_path=str(audio_path),
+        ))
+    return rows
+
+
+def resolve_random_seed(experiment_config: dict, override: int | None) -> int:
+    return int(experiment_config["random_seed"] if override is None else override)
 
 
 def _existing_records(path: Path) -> dict[str, dict]:
@@ -70,6 +97,8 @@ def main() -> None:
     ap.add_argument("--basis", default=None)
     ap.add_argument("--catalog", default=None)
     ap.add_argument("--output-dir", required=True)
+    ap.add_argument("--dataset-manifest", default=None)
+    ap.add_argument("--random-seed", type=int, default=None)
     ap.add_argument("--fresh", action="store_true")
     args = ap.parse_args()
 
@@ -84,12 +113,14 @@ def main() -> None:
     basis_path = args.basis or parageo_cfg["basis"]
     catalog = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
 
-    items = pair_with_audio(load_prompt_jsonl(prompt_jsonl, task=args.task), audio_dir)
+    items = (load_external_items(args.dataset_manifest, task=args.task) if args.dataset_manifest else
+             pair_with_audio(load_prompt_jsonl(prompt_jsonl, task=args.task), audio_dir))
     items = select_catalog_covered_items(items, catalog, task=args.task)
-    items = select_icassp_split(
-        items, split=args.split, modulus=int(exp_cfg["dev_modulus"]),
-        remainder=int(exp_cfg["dev_remainder"]), ablation_limit=int(exp_cfg["ablation_limit"]),
-    )
+    if not args.dataset_manifest:
+        items = select_icassp_split(
+            items, split=args.split, modulus=int(exp_cfg["dev_modulus"]),
+            remainder=int(exp_cfg["dev_remainder"]), ablation_limit=int(exp_cfg["ablation_limit"]),
+        )
     if not items:
         raise RuntimeError(f"no eligible {args.task} items for split {args.split}")
 
@@ -118,7 +149,8 @@ def main() -> None:
         raise FileExistsError(f"refusing to overwrite non-empty output directory: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     existing = {} if args.fresh else _existing_records(manifest_path)
-    rng = np.random.default_rng(int(exp_cfg["random_seed"]))
+    random_seed = resolve_random_seed(exp_cfg, args.random_seed)
+    rng = np.random.default_rng(random_seed)
     records: dict[str, dict] = dict(existing)
 
     for count, item in enumerate(items, start=1):
@@ -192,6 +224,7 @@ def main() -> None:
             "dimensions": list(item.dimensions), "prompt": item.prompt, "target_text": target_text,
             "input_audio": item.audio_path, "output_audio": generation.wav_path,
             "selected_attributes": selected_attributes, "dynamic_schedule": schedule_meta,
+            "random_seed": random_seed if spec.random_control else None,
             "seed": seed, "transcript": generation.generation.transcript,
             "text_channel_wer": word_error_rate(target_text, generation.generation.transcript),
             "audio_token_count": len(generation.generation.audio_token_ids),
