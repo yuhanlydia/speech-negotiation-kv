@@ -1,0 +1,22 @@
+experiment:
+  version: icassp2027-r2-static-power
+  alpha: 0.5
+  generation_seed: 12242424242
+  random_seeds: [15242424242, 16242424242, 17242424242, 18242424242, 19242424242]
+  bootstrap_seed: 2027091701
+  bootstrap_repeats: 10000
+  items_per_attribute: 10
+
+dataset:
+  manifest: results/icassp2027_static_power/dataset.jsonl
+  input_audio_dir: results/icassp2027_static_power/input_audio
+  tts_voice: en-US-AriaNeural
+  sample_rate: 22050
+
+parageo:
+  base_config: configs/icassp2027_parageo.yaml
+  basis: results/parageo_basis.npz
+  catalog: results/parageo_attribute_catalog.json
+
+outputs:
+  root: results/icassp2027_static_power
