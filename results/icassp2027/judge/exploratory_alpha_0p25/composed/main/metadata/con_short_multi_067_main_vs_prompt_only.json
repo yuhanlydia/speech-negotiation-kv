@@ -1,0 +1,18 @@
+{
+    "sample_index": 67,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a low pitch, a dragging rhythm, and a disgusted emotion: 'Ugh, I absolutely hate sticky things like this.'",
+    "dimensions": [
+        "Emotion",
+        "Pitch",
+        "Rhythm"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1,
+    "winner_position_2": 1,
+    "winner_position_3": 1
+}

@@ -1,0 +1,14 @@
+{
+    "sample_index": 55,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a shouting manner and gradually decreasing the volume to a whisper: 'Encore! One more song! That was amazing! My throat is almost hoarse, do you think he'll sing again?'",
+    "dimensions": [
+        "Volume"
+    ],
+    "candidate_position": 2,
+    "winner_position": 2,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

@@ -1,0 +1,14 @@
+{
+    "sample_index": 161,
+    "candidate_name": "alpha_1",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with laughter: 'Look, that cat is chasing its tail again, so amusing.'",
+    "dimensions": [
+        "Non-Linguistic Vocalizations"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0
+}

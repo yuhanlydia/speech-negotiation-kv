@@ -1,0 +1,15 @@
+{
+  "composed": {
+    "evaluation_status": "exploratory",
+    "exploratory_tag": "alpha_0p25",
+    "reason": "No development alpha satisfies the frozen 0.02 WER-degradation gate; alpha 0.25 held-out results are reported as exploratory only.",
+    "missing_results": [
+      "random: deterministic generation NaN after 27/38 held-out items"
+    ]
+  },
+  "dynamic": {
+    "evaluation_status": "exploratory",
+    "exploratory_tag": "alpha_0p25",
+    "reason": "The development-selected alpha 1.5 deterministically produced invalid sampling probabilities and stopped after 16/60 held-out items; the pre-generated alpha 0.25 held-out results are reported as exploratory only."
+  }
+}

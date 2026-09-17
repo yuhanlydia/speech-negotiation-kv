@@ -1,0 +1,16 @@
+{
+    "sample_index": 32,
+    "candidate_name": "alpha_1",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a medium pitch and a confident tone: 'No problem, I can handle this project.'",
+    "dimensions": [
+        "Cognitive State",
+        "Pitch"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2,
+    "winner_position_2": 1
+}

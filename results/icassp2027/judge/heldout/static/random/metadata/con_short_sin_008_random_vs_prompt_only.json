@@ -1,0 +1,14 @@
+{
+    "sample_index": 8,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with an adult voice: 'Kids, remember to tidy up your rooms after dinner.'",
+    "dimensions": [
+        "Age"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

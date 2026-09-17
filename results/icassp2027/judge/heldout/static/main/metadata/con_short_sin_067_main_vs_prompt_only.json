@@ -1,0 +1,14 @@
+{
+    "sample_index": 67,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a normal volume: 'Let's go out for dinner tonight.'",
+    "dimensions": [
+        "Volume"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0
+}

@@ -1,0 +1,14 @@
+{
+    "sample_index": 131,
+    "candidate_name": "alpha_0p5",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a fearful emotion: 'There's a strange noise outside, who is it?'",
+    "dimensions": [
+        "Emotion"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0
+}

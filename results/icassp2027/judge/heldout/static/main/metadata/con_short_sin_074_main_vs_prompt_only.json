@@ -1,0 +1,14 @@
+{
+    "sample_index": 74,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a whisper: 'This news, absolutely cannot be leaked.'",
+    "dimensions": [
+        "Volume"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1
+}

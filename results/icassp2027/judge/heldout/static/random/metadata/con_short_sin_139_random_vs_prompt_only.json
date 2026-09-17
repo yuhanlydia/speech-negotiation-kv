@@ -1,0 +1,14 @@
+{
+    "sample_index": 139,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a confused tone: 'I can't figure out how to solve this problem, no matter how I try.'",
+    "dimensions": [
+        "Cognitive State"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1
+}

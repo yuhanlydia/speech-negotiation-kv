@@ -1,0 +1,14 @@
+{
+    "sample_index": 2,
+    "candidate_name": "dyn_end",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a very low pitch and gradually transitioning to a medium pitch: 'This internal news is extremely important; we must ensure the project proceeds as planned, without any errors.'",
+    "dimensions": [
+        "Pitch"
+    ],
+    "candidate_position": 1,
+    "winner_position": 0,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

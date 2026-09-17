@@ -1,0 +1,14 @@
+{
+    "sample_index": 87,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a disgusted emotion and gradually calming down to a neutral emotion: 'It's my least favorite math class again, so boring. But for graduation, I still have to listen carefully.'",
+    "dimensions": [
+        "Emotion"
+    ],
+    "candidate_position": 1,
+    "winner_position": 1,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

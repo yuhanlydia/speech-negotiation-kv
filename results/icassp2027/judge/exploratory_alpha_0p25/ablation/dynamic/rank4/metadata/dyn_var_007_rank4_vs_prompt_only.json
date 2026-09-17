@@ -1,0 +1,14 @@
+{
+    "sample_index": 7,
+    "candidate_name": "rank4",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a medium pitch and gradually raising the pitch to a very high pitch: 'The report shows everything is normal, but I found an anomaly in the data; this could be a huge breakthrough!'",
+    "dimensions": [
+        "Pitch"
+    ],
+    "candidate_position": 2,
+    "winner_position": 1,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

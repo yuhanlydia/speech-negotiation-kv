@@ -1,0 +1,14 @@
+{
+    "sample_index": 12,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a very high pitch and gradually lowering the pitch to a low pitch: 'This project has endless prospects! However, considering the current budget and manpower, we might need to adjust our expected goals.'",
+    "dimensions": [
+        "Pitch"
+    ],
+    "candidate_position": 1,
+    "winner_position": 1,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

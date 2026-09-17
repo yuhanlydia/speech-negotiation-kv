@@ -1,0 +1,14 @@
+{
+    "sample_index": 77,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a clear pause after the word 'but': 'I understand your feelings, but, we must follow the rules.'",
+    "dimensions": [
+        "Pause"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

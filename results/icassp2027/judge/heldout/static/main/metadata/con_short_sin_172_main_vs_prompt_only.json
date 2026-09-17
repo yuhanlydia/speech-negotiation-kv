@@ -1,0 +1,14 @@
+{
+    "sample_index": 172,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a scream: 'Ah! There's a mouse there!'",
+    "dimensions": [
+        "Non-Linguistic Vocalizations"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

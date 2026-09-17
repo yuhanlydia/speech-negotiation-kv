@@ -1,0 +1,14 @@
+{
+    "sample_index": 98,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a halting rhythm: 'This…answer…seems…incorrect.'",
+    "dimensions": [
+        "Rhythm"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1
+}

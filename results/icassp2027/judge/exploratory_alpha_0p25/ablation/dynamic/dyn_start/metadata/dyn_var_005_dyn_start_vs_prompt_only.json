@@ -1,0 +1,14 @@
+{
+    "sample_index": 5,
+    "candidate_name": "dyn_start",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a high pitch and suddenly dropping to a very low pitch: 'Hey, long time no see! Have you heard? The scope of the final exam has changed; we need to prepare all over again.'",
+    "dimensions": [
+        "Pitch"
+    ],
+    "candidate_position": 1,
+    "winner_position": 0,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

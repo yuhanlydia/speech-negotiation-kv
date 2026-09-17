@@ -1,0 +1,14 @@
+{
+    "sample_index": 83,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a lighthearted rhythm: 'Club activities are fun, everyone had a great time.'",
+    "dimensions": [
+        "Rhythm"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1
+}

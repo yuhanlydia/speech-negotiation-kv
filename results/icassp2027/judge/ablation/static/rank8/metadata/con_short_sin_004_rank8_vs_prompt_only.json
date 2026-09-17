@@ -1,0 +1,14 @@
+{
+    "sample_index": 4,
+    "candidate_name": "rank8",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a youthful voice: 'Let's go play basketball this weekend!'",
+    "dimensions": [
+        "Age"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

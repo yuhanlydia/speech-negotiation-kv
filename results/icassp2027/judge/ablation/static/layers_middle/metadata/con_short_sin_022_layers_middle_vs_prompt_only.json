@@ -1,0 +1,14 @@
+{
+    "sample_index": 22,
+    "candidate_name": "layers_middle",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a low pitch: 'This matter requires our serious consideration.'",
+    "dimensions": [
+        "Pitch"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0
+}

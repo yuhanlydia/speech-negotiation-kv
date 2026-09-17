@@ -1,0 +1,14 @@
+{
+    "sample_index": 17,
+    "candidate_name": "rank8",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a high pitch: 'That's great, we finally succeeded!'",
+    "dimensions": [
+        "Pitch"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0
+}

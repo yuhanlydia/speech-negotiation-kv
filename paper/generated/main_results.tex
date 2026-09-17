@@ -1,0 +1,14 @@
+\begin{table}[t]
+\centering
+\caption{Held-out SpeechParaling-Bench results. Preference is the percentage of pairwise decisions favoring the candidate over prompt-only, counting ties as 0.5. Full-space is the norm-matched raw-vector composition baseline and applies only to composition.}
+\label{tab:main}
+\begin{tabular}{lccccc}
+\hline
+Task & ParaGeo & 95\% CI & Random & Full-space & $\Delta$WER \\
+\hline
+Static & 55.4 & [49.1, 61.6] & 56.0 & -- & -0.007 \\
+Composition & 45.4 & [36.2, 54.8] & -- & 48.0 & 0.069 \\
+Dynamic & 51.7 & [40.0, 63.3] & 46.7 & -- & 0.026 \\
+\hline
+\end{tabular}
+\end{table}

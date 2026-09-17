@@ -1,0 +1,14 @@
+{
+    "sample_index": 33,
+    "candidate_name": "layers_early",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a very slow pace and gradually increasing to a medium pace: 'Let's slowly review the plot of yesterday's movie, and then discuss the potential ending.'",
+    "dimensions": [
+        "Pace"
+    ],
+    "candidate_position": 2,
+    "winner_position": 0,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

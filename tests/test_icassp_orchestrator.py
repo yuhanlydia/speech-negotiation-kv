@@ -27,6 +27,21 @@ def test_dev_matrix_covers_prompt_four_alphas_judges_and_selector():
     for alpha in ("0.25", "0.5", "1.0", "1.5"): assert f"--alpha {alpha}" in text
 
 
+def test_dev_matrix_finishes_generation_before_external_judging():
+    module = load_module()
+    commands = module.command_matrix(config(), config_path="configs/icassp.yaml", stage="dev")
+    generation_positions = [
+        i for i, command in enumerate(commands)
+        if any(part.endswith("run_icassp_generation.py") for part in command)
+    ]
+    judge_positions = [
+        i for i, command in enumerate(commands)
+        if any(part.endswith("run_official_speechparaling_judge.py") for part in command)
+    ]
+    assert generation_positions and judge_positions
+    assert max(generation_positions) < min(judge_positions)
+
+
 def test_ablation_matrix_contains_frozen_mechanism_controls():
     module = load_module(); commands = module.command_matrix(config(), config_path="configs/icassp.yaml", stage="ablations",
         selected_alphas={"static": 1.0, "composed": .5, "dynamic": .25})

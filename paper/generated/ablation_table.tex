@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Fixed-subset ablations (pairwise preference over prompt-only; higher is better).}
+\label{tab:ablation}
+\begin{tabular}{lccc}
+\hline
+Variant & Static & Composition & Dynamic \\
+\hline
+ParaGeo & 60.4 & 66.7 & 54.2 \\
+w/o semantic orthog. & 56.2 & 49.0 & 43.8 \\
+rank 4 & 52.2 & 53.1 & 58.3 \\
+rank 8 & 58.3 & 50.0 & 54.2 \\
+rank 32 & 56.2 & 56.2 & 47.9 \\
+early layers & 52.1 & 42.7 & 60.4 \\
+middle layers & 64.6 & 54.2 & 68.8 \\
+late layers & 58.3 & 46.9 & 60.4 \\
+composition: mean & -- & 59.4 & -- \\
+composition: normalized & -- & 43.8 & -- \\
+dynamic: start only & -- & -- & 56.2 \\
+dynamic: end only & -- & -- & 47.9 \\
+dynamic: midpoint & -- & -- & 45.8 \\
+\hline
+\end{tabular}
+\end{table}

@@ -1,0 +1,14 @@
+{
+    "sample_index": 83,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a fearful emotion and gradually transitioning to a surprised emotion: 'Why is it so dark in this forest? Am I lost? Wait, what's that flickering light? Is it the exit?'",
+    "dimensions": [
+        "Emotion"
+    ],
+    "candidate_position": 2,
+    "winner_position": 0,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

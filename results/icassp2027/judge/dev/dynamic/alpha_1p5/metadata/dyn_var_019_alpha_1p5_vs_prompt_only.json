@@ -1,0 +1,14 @@
+{
+    "sample_index": 19,
+    "candidate_name": "alpha_1p5",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a gentle timbre and suddenly switching to a bright timbre: 'Darling, don't be scared, Mommy is here with you. Look, there are little birds singing outside, isn't it beautiful!'",
+    "dimensions": [
+        "Timbre"
+    ],
+    "candidate_position": 1,
+    "winner_position": 2,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

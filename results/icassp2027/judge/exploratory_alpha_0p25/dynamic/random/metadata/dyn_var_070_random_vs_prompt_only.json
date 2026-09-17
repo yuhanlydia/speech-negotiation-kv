@@ -1,0 +1,14 @@
+{
+    "sample_index": 70,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a halting rhythm and gradually becoming an emphatic rhythm: 'I… I'm a bit nervous, this is my first… first time giving a presentation. But, I will try my best to deliver a fantastic report for everyone!'",
+    "dimensions": [
+        "Rhythm"
+    ],
+    "candidate_position": 1,
+    "winner_position": 2,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

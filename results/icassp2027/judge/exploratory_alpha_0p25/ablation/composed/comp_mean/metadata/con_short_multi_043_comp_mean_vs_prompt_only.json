@@ -1,0 +1,16 @@
+{
+    "sample_index": 43,
+    "candidate_name": "comp_mean",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a rich timbre and an anxious tone: 'I'm really worried, can the project be completed smoothly?'",
+    "dimensions": [
+        "Cognitive State",
+        "Timbre"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2,
+    "winner_position_2": 1
+}

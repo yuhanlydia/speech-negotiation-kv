@@ -179,7 +179,7 @@ def render_main_results_table(summary: Mapping) -> str:
         lines.append(
             f"{labels[task]} & {_fmt(main.get('preference_score'))} & {format_ci(main)} & "
             f"{_fmt(random.get('preference_score'))} & {_fmt(full_space.get('preference_score'))} & "
-            f"{_fmt(fidelity.get('mean_degradation'), 3)} \\\\ "
+            f"{_fmt(fidelity.get('mean_degradation'), 3)} \\\\"
         )
     lines += [r"\hline", r"\end{tabular}", r"\end{table}", ""]
     return "\n".join(lines)
@@ -199,10 +199,10 @@ def render_geometry_table(summary: Mapping) -> str:
             r"Metric & Real & Shuffled null & $p$ \\", r"\hline",
             f"LOCO accuracy (\%) & {_fmt(100 * real.get('loco_accuracy', 0.0))} & "
             f"{_fmt(100 * (null_stats.get('loco_accuracy', {}) or {}).get('mean', 0.0))} & "
-            f"{_fmt(pvals.get('loco_accuracy'), 3)} \\\\ ",
+            f"{_fmt(pvals.get('loco_accuracy'), 3)} \\\\ ".rstrip(),
             f"Cross-content cosine & {_fmt(real.get('cross_content_cosine'), 3)} & "
             f"{_fmt((null_stats.get('cross_content_cosine', {}) or {}).get('mean'), 3)} & "
-            f"{_fmt(pvals.get('cross_content_cosine'), 3)} \\\\ ",
+            f"{_fmt(pvals.get('cross_content_cosine'), 3)} \\\\ ".rstrip(),
             r"\hline", r"\end{tabular}", r"\end{table}", "",
         ]
         return "\n".join(lines)
@@ -212,7 +212,7 @@ def render_geometry_table(summary: Mapping) -> str:
              r"Attr. & LOCO acc. & Chance & Cross-content cos. & EV@16 \\", r"\hline",
              f"{int(geo.get('attributes', 0))} & {_fmt(100 * geo.get('leave_one_content_out_centroid_accuracy', 0.0))} & "
              f"{_fmt(100 * geo.get('chance', 0.0))} & {_fmt(cosine.get('mean'), 3)} & "
-             f"{_fmt(100 * geo.get('explained_variance_at_main_rank', 0.0))} \\\\ ",
+             f"{_fmt(100 * geo.get('explained_variance_at_main_rank', 0.0))} \\\\ ".rstrip(),
              r"\hline", r"\end{tabular}", r"\end{table}", ""]
     return "\n".join(lines)
 
@@ -235,7 +235,7 @@ def render_ablation_table(summary: Mapping) -> str:
             value = ablations.get(task, {}).get(key, {}).get("preference_score")
             vals.append(_fmt(value)); present = present or value is not None
         if present:
-            lines.append(f"{latex_escape(label)} & {vals[0]} & {vals[1]} & {vals[2]} \\\\ ")
+            lines.append(f"{latex_escape(label)} & {vals[0]} & {vals[1]} & {vals[2]} \\\\")
     lines += [r"\hline", r"\end{tabular}", r"\end{table}", ""]
     return "\n".join(lines)
 

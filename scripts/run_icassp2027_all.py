@@ -49,6 +49,7 @@ def command_matrix(config: dict, *, config_path: str, stage: str,
             [py, "scripts/fit_parageo_basis.py", "--config", config_path, "--records", str(parageo["calibration_records"]), "--kv", str(parageo["calibration_kv"]), "--output", str(parageo["basis"]), "--summary", str(parageo["basis_summary"])],
         ]
     elif stage == "dev":
+        judge_commands: list[list[str]] = []
         for task in TASKS:
             baseline = root / "dev" / task / "prompt_only"
             commands.append([py, "scripts/run_icassp_generation.py", "--config", config_path, "--task", task, "--split", "dev", "--variant", "prompt_only", "--output-dir", str(baseline)])
@@ -56,7 +57,8 @@ def command_matrix(config: dict, *, config_path: str, stage: str,
                 tag = alpha_tag(float(alpha))
                 candidate = root / "dev" / task / tag
                 commands.append([py, "scripts/run_icassp_generation.py", "--config", config_path, "--task", task, "--split", "dev", "--variant", "main", "--alpha", str(float(alpha)), "--output-dir", str(candidate)])
-                commands.append([py, "scripts/run_official_speechparaling_judge.py", "--benchmark-root", benchmark_root, "--task", task, "--candidate-dir", str(candidate), "--baseline-dir", str(baseline), "--candidate-name", tag, "--baseline-name", "prompt_only", "--output-dir", str(root / "judge" / "dev" / task / tag)])
+                judge_commands.append([py, "scripts/run_official_speechparaling_judge.py", "--benchmark-root", benchmark_root, "--task", task, "--candidate-dir", str(candidate), "--baseline-dir", str(baseline), "--candidate-name", tag, "--baseline-name", "prompt_only", "--output-dir", str(root / "judge" / "dev" / task / tag)])
+        commands.extend(judge_commands)
         commands.append([py, "scripts/select_icassp_alpha.py", "--config", config_path, "--output", str(root / "alpha_selection.json")])
     elif stage == "main":
         for task in TASKS:

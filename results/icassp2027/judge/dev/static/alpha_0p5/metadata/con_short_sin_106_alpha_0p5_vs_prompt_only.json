@@ -1,0 +1,14 @@
+{
+    "sample_index": 106,
+    "candidate_name": "alpha_0p5",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with heavy stress on 'not allowed': 'You are not allowed to be picky, finish all your vegetables!'",
+    "dimensions": [
+        "Stress"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

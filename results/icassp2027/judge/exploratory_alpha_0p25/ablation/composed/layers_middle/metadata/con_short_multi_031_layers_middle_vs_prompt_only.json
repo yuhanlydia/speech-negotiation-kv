@@ -1,0 +1,16 @@
+{
+    "sample_index": 31,
+    "candidate_name": "layers_middle",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a youthful voice and a disgusted emotion: 'Ugh, I hate eating this the most!'",
+    "dimensions": [
+        "Age",
+        "Emotion"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0,
+    "winner_position_2": 0
+}

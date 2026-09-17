@@ -1,0 +1,14 @@
+{
+    "sample_index": 149,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a curious tone: 'What have you been busy with recently? Can you tell me?'",
+    "dimensions": [
+        "Cognitive State"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

@@ -1,0 +1,18 @@
+{
+    "sample_index": 51,
+    "candidate_name": "main",
+    "baseline_name": "full_space",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a rich timbre, an emphatic rhythm, and a sincere tone: 'Colleagues, this project has made significant progress. Thank you for your hard work.'",
+    "dimensions": [
+        "Attitude",
+        "Rhythm",
+        "Timbre"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0,
+    "winner_position_2": 0,
+    "winner_position_3": 0
+}

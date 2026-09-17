@@ -28,6 +28,34 @@ def _judge_summary(path: Path, *, repeats: int, seed: int) -> dict:
     return result
 
 
+def _optional_judge_summary(path: Path, *, repeats: int, seed: int) -> dict | None:
+    if not path.exists() or not any(path.rglob("*.json")):
+        return None
+    return _judge_summary(path, repeats=repeats, seed=seed)
+
+
+def _task_layout(root: Path, task: str, limitations: dict) -> dict:
+    limitation = limitations.get(task)
+    if not limitation:
+        return {
+            "evaluation_status": "formal",
+            "limitation": None,
+            "heldout": root / "heldout" / task,
+            "judge": root / "judge" / "heldout" / task,
+            "ablation": root / "ablation" / task,
+            "ablation_judge": root / "judge" / "ablation" / task,
+        }
+    tag = str(limitation["exploratory_tag"])
+    return {
+        "evaluation_status": str(limitation["evaluation_status"]),
+        "limitation": limitation,
+        "heldout": root / "heldout_candidates" / task / tag,
+        "judge": root / "judge" / f"exploratory_{tag}" / task,
+        "ablation": root / "ablation_candidates" / task / tag,
+        "ablation_judge": root / "judge" / f"exploratory_{tag}" / "ablation" / task,
+    }
+
+
 def _manifest(root: Path, split: str, task: str, variant: str) -> Path:
     return root / split / task / variant / "manifest.jsonl"
 
@@ -51,58 +79,61 @@ def main() -> None:
     alpha_path = Path(args.alpha_selection) if args.alpha_selection else root / "alpha_selection.json"
     alpha_selection = json.loads(alpha_path.read_text(encoding="utf-8"))
     geometry = json.loads(Path(cfg["parageo"]["basis_summary"]).read_text(encoding="utf-8"))
+    limitations_path = root / "runtime_limitations.json"
+    limitations = json.loads(limitations_path.read_text(encoding="utf-8")) if limitations_path.exists() else {}
 
     tasks, ablations, any_pass = {}, {}, False
     for task in ("static", "composed", "dynamic"):
-        main = _judge_summary(
-            _judge(root, "heldout", task, "main"),
+        layout = _task_layout(root, task, limitations)
+        main = _optional_judge_summary(
+            layout["judge"] / "main" / "metadata",
             repeats=int(exp["bootstrap_repeats"]), seed=int(exp["bootstrap_seed"]),
         )
-        random = _judge_summary(
-            _judge(root, "heldout", task, "random"),
+        random = _optional_judge_summary(
+            layout["judge"] / "random" / "metadata",
             repeats=int(exp["bootstrap_repeats"]), seed=int(exp["bootstrap_seed"]) + 1,
         )
-        fidelity = paired_wer_degradation(
-            _manifest(root, "heldout", task, "main"),
-            _manifest(root, "heldout", task, "prompt_only"),
-        )
-        random_fidelity = paired_wer_degradation(
-            _manifest(root, "heldout", task, "random"),
-            _manifest(root, "heldout", task, "prompt_only"),
-        )
+        baseline_manifest = root / "heldout" / task / "prompt_only" / "manifest.jsonl"
+        main_manifest = layout["heldout"] / "main" / "manifest.jsonl"
+        random_manifest = layout["heldout"] / "random" / "manifest.jsonl"
+        fidelity = paired_wer_degradation(main_manifest, baseline_manifest) if main_manifest.exists() else None
+        random_fidelity = paired_wer_degradation(random_manifest, baseline_manifest) if random_manifest.exists() else None
         full_space = None
         full_space_fidelity = None
         main_vs_full_space = None
         if task == "composed":
-            full_space = _judge_summary(
-                _judge(root, "heldout", task, "full_space"),
+            full_space = _optional_judge_summary(
+                layout["judge"] / "full_space" / "metadata",
                 repeats=int(exp["bootstrap_repeats"]), seed=int(exp["bootstrap_seed"]) + 2,
             )
-            full_space_fidelity = paired_wer_degradation(
-                _manifest(root, "heldout", task, "full_space"),
-                _manifest(root, "heldout", task, "prompt_only"),
-            )
-            main_vs_full_space = _judge_summary(
-                _judge(root, "heldout", task, "main_vs_full_space"),
+            full_manifest = layout["heldout"] / "full_space" / "manifest.jsonl"
+            full_space_fidelity = paired_wer_degradation(full_manifest, baseline_manifest) if full_manifest.exists() else None
+            direct_path = layout["judge"] / "main_vs_full_space" / "metadata"
+            if not direct_path.exists() and layout["limitation"]:
+                direct_path = root / "judge" / "heldout" / task / f"main_vs_full_space_{layout['limitation']['exploratory_tag']}" / "metadata"
+            main_vs_full_space = _optional_judge_summary(
+                direct_path,
                 repeats=int(exp["bootstrap_repeats"]), seed=int(exp["bootstrap_seed"]) + 3,
             )
         threshold = float(exp["stop_dynamic_gain"] if task == "dynamic" else exp["stop_static_or_composed_gain"])
-        score_ok = bool(main.get("gain_vs_tie") is not None and float(main["gain_vs_tie"]) >= threshold)
+        score_ok = bool(main and main.get("gain_vs_tie") is not None and float(main["gain_vs_tie"]) >= threshold)
         fidelity_ok = bool(
-            fidelity.get("mean_degradation") is not None
+            fidelity and fidelity.get("mean_degradation") is not None
             and float(fidelity["mean_degradation"]) <= float(exp["max_absolute_text_wer_degradation"])
         )
         random_ok = bool(
-            random.get("gain_vs_tie") is not None
+            random and random.get("gain_vs_tie") is not None
             and float(random["gain_vs_tie"]) < threshold
-            and main.get("preference_score") is not None
+            and main and main.get("preference_score") is not None
             and random.get("preference_score") is not None
             and float(main["preference_score"]) > float(random["preference_score"])
         )
-        passes = bool(score_ok and fidelity_ok and random_ok)
+        passes = bool(layout["evaluation_status"] == "formal" and score_ok and fidelity_ok and random_ok)
         any_pass = any_pass or passes
         tasks[task] = {
             "selected_alpha": alpha_selection["selected"][task],
+            "evaluation_status": layout["evaluation_status"],
+            "limitation": layout["limitation"],
             "main": main,
             "random": random,
             "full_space": full_space,
@@ -117,10 +148,10 @@ def main() -> None:
             "task_passes": passes,
         }
         task_ablations = {}
-        baseline_manifest = _manifest(root, "ablation", task, "prompt_only")
+        baseline_manifest = root / "ablation" / task / "prompt_only" / "manifest.jsonl"
         for index, variant in enumerate(TASK_ABLATIONS[task]):
-            metadata = _judge(root, "ablation", task, variant)
-            manifest = _manifest(root, "ablation", task, variant)
+            metadata = layout["ablation_judge"] / variant / "metadata"
+            manifest = layout["ablation"] / variant / "manifest.jsonl"
             if not metadata.exists() or not manifest.exists():
                 continue
             pref = _judge_summary(

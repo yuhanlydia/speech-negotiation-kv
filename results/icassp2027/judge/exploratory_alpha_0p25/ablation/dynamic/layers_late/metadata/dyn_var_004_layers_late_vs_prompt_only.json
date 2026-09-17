@@ -1,0 +1,14 @@
+{
+    "sample_index": 4,
+    "candidate_name": "layers_late",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a high pitch and suddenly dropping to a very low pitch: 'Fantastic, I'm going to win! Wait, how is this possible? My base was ambushed.'",
+    "dimensions": [
+        "Pitch"
+    ],
+    "candidate_position": 1,
+    "winner_position": 1,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

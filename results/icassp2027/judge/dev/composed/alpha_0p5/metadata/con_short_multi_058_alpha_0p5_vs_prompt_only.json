@@ -1,0 +1,18 @@
+{
+    "sample_index": 58,
+    "candidate_name": "alpha_0p5",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a medium pitch, a steady rhythm, and a confident tone: 'With thorough planning, we are confident in completing this challenge.'",
+    "dimensions": [
+        "Cognitive State",
+        "Pitch",
+        "Rhythm"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1,
+    "winner_position_2": 1,
+    "winner_position_3": 1
+}

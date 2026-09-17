@@ -1,28 +1,52 @@
 {
-  "rows": 591,
+  "rows": 590,
   "contents": 8,
   "attributes": 80,
-  "raw_rank": 16,
-  "orthogonal_rank": 16,
-  "cross_content_centroid_accuracy": 0.08038585209003216,
+  "main_rank_requested": 16,
+  "main_raw_rank": 16,
+  "main_orthogonal_rank": 16,
+  "max_raw_rank": 32,
+  "max_orthogonal_rank": 32,
+  "rank_95_energy": 32,
+  "explained_variance_at_main_rank": 0.6176210014074587,
+  "leave_one_content_out_centroid_accuracy": 0.11694915254237288,
   "chance": 0.0125,
-  "top_explained_variance": [
-    0.2080237177298047,
-    0.10188299134129206,
-    0.05057128548164795,
-    0.0473595167688368,
-    0.03463525579530687,
-    0.029095317100825652,
-    0.026108672593047253,
-    0.019476428731798702,
-    0.017008725311472926,
-    0.0159978592448344,
-    0.014703239656237372,
-    0.012170404308543926,
-    0.01136347407459491,
-    0.010625390660881522,
-    0.010528116706822868,
-    0.009581131281871899
-  ],
+  "same_attribute_cross_content_cosine": {
+    "n": 1915,
+    "mean": 0.15171037838613854,
+    "median": 0.13874062389601827,
+    "p05": -0.16115173440380237,
+    "p95": 0.5330530508496677,
+    "attributes": 80
+  },
+  "shuffled_geometry_null": {
+    "protocol": "independent attribute-label permutation within each lexical content",
+    "repeats": 1000,
+    "seed": 15242424242,
+    "real": {
+      "loco_accuracy": 0.09491525423728814,
+      "cross_content_cosine": 0.28531051249460565
+    },
+    "null": {
+      "loco_accuracy": {
+        "n": 1000,
+        "mean": 0.012467796610169493,
+        "median": 0.011864406779661017,
+        "p05": 0.005084745762711864,
+        "p95": 0.020338983050847456
+      },
+      "cross_content_cosine": {
+        "n": 1000,
+        "mean": 0.017032013027308168,
+        "median": 0.01647259750562644,
+        "p05": 0.004430794087871572,
+        "p95": 0.03116812029873826
+      }
+    },
+    "p_value": {
+      "loco_accuracy": 0.000999000999000999,
+      "cross_content_cosine": 0.000999000999000999
+    }
+  },
   "output": "results/parageo_basis.npz"
 }

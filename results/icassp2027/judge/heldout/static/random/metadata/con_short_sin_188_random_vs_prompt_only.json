@@ -1,0 +1,14 @@
+{
+    "sample_index": 188,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a sincere tone: 'Thank you very much for your help, I truly appreciate it.'",
+    "dimensions": [
+        "Attitude"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

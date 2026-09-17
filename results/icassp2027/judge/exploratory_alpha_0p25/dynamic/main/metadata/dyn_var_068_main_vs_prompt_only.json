@@ -1,0 +1,14 @@
+{
+    "sample_index": 68,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a rushed rhythm and suddenly switching to a halting rhythm: 'Only a few minutes left in the game, we must score! Pass the ball quickly, shoot… Oh no, the ball was stolen!'",
+    "dimensions": [
+        "Rhythm"
+    ],
+    "candidate_position": 2,
+    "winner_position": 2,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

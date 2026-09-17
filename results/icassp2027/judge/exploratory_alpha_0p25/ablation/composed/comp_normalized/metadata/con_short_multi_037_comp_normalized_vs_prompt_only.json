@@ -1,0 +1,16 @@
+{
+    "sample_index": 37,
+    "candidate_name": "comp_normalized",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a low pitch and a perfunctory tone: 'Yeah, got it, you go ahead.'",
+    "dimensions": [
+        "Attitude",
+        "Pitch"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 0,
+    "winner_position_2": 0
+}

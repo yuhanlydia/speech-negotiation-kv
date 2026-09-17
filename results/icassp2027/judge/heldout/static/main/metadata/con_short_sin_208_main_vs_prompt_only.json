@@ -1,0 +1,14 @@
+{
+    "sample_index": 208,
+    "candidate_name": "main",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with a teasing tone: 'Oh, isn't it the busy bee? Finally decided to show your face.'",
+    "dimensions": [
+        "Attitude"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 2
+}

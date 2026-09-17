@@ -1,0 +1,18 @@
+{
+    "sample_index": 65,
+    "candidate_name": "alpha_1p5",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with laughter, with a lighthearted rhythm, and a teasing tone: 'Oh, you're late again! Did you stay up too late last night?'",
+    "dimensions": [
+        "Attitude",
+        "Non-Linguistic Vocalizations",
+        "Rhythm"
+    ],
+    "candidate_position": 1,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1,
+    "winner_position_2": 0,
+    "winner_position_3": 1
+}

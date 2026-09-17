@@ -1,0 +1,14 @@
+{
+    "sample_index": 76,
+    "candidate_name": "alpha_0p5",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence starting with a happy emotion and suddenly switching to a sad emotion: 'Wow! I got the promotion opportunity I've always dreamed of, this is fantastic! But why did Grandma get sick at this very moment…'",
+    "dimensions": [
+        "Emotion"
+    ],
+    "candidate_position": 1,
+    "winner_position": 1,
+    "status": "Success",
+    "category": "dynamic_adjustment"
+}

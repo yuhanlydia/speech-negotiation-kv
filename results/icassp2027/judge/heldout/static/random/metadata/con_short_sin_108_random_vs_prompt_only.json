@@ -1,0 +1,14 @@
+{
+    "sample_index": 108,
+    "candidate_name": "random",
+    "baseline_name": "prompt_only",
+    "judger_model": "google/gemini-2.5-pro",
+    "demand": "Please read this sentence with heavy stress on 'must': 'This time, we must succeed, there's no turning back!'",
+    "dimensions": [
+        "Stress"
+    ],
+    "candidate_position": 2,
+    "status": "Success",
+    "category": "feature_control",
+    "winner_position_1": 1
+}
