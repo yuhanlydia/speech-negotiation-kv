@@ -38,6 +38,7 @@ parageo = [
   "setuptools<81",
   "soundfile==0.12.1",
   "google-genai==1.49.0",
+  "edge-tts==7.2.3",
 ]
 
 [tool.setuptools.packages.find]
