@@ -1,0 +1,576 @@
+{
+  "protocol": "balanced 18-attribute static direct ParaGeo-vs-five-random-seeds evaluation",
+  "experiment_version": "icassp2027-r2-static-power",
+  "alpha": 0.5,
+  "items": 180,
+  "attributes": 18,
+  "items_per_attribute": 10,
+  "random_seeds": [
+    15242424242,
+    16242424242,
+    17242424242,
+    18242424242,
+    19242424242
+  ],
+  "per_seed": {
+    "15242424242": {
+      "n_attributes": 18,
+      "n_items": 180,
+      "macro_preference": 49.44444444444444,
+      "lower_95": 41.11111111111111,
+      "upper_95": 58.05555555555555,
+      "repeats": 10000,
+      "by_attribute": {
+        "Attitude::cold tone": {
+          "n": 10,
+          "preference_score": 35.0
+        },
+        "Attitude::contemptuous tone": {
+          "n": 10,
+          "preference_score": 35.0
+        },
+        "Attitude::enthusiastic tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::perfunctory tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Attitude::polite tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Attitude::rude tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Attitude::sarcastic tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Attitude::sincere tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Attitude::teasing tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Cognitive State::anxious tone": {
+          "n": 10,
+          "preference_score": 70.0
+        },
+        "Cognitive State::confident tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::confused tone": {
+          "n": 10,
+          "preference_score": 35.0
+        },
+        "Cognitive State::curious tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Cognitive State::doubting tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Cognitive State::helpless tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::hesitant tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Cognitive State::nervous tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Cognitive State::tired tone": {
+          "n": 10,
+          "preference_score": 70.0
+        }
+      },
+      "wins": 75,
+      "ties": 28,
+      "losses": 77,
+      "complete": true
+    },
+    "16242424242": {
+      "n_attributes": 18,
+      "n_items": 180,
+      "macro_preference": 53.05555555555556,
+      "lower_95": 43.611111111111114,
+      "upper_95": 62.22222222222222,
+      "repeats": 10000,
+      "by_attribute": {
+        "Attitude::cold tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::contemptuous tone": {
+          "n": 10,
+          "preference_score": 30.0
+        },
+        "Attitude::enthusiastic tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Attitude::perfunctory tone": {
+          "n": 10,
+          "preference_score": 30.0
+        },
+        "Attitude::polite tone": {
+          "n": 10,
+          "preference_score": 75.0
+        },
+        "Attitude::rude tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Attitude::sarcastic tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Attitude::sincere tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::teasing tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::anxious tone": {
+          "n": 10,
+          "preference_score": 20.0
+        },
+        "Cognitive State::confident tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::confused tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Cognitive State::curious tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Cognitive State::doubting tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::helpless tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::hesitant tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::nervous tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::tired tone": {
+          "n": 10,
+          "preference_score": 70.0
+        }
+      },
+      "wins": 81,
+      "ties": 29,
+      "losses": 70,
+      "complete": true
+    },
+    "17242424242": {
+      "n_attributes": 18,
+      "n_items": 180,
+      "macro_preference": 49.166666666666664,
+      "lower_95": 38.888888888888886,
+      "upper_95": 59.166666666666664,
+      "repeats": 10000,
+      "by_attribute": {
+        "Attitude::cold tone": {
+          "n": 10,
+          "preference_score": 10.0
+        },
+        "Attitude::contemptuous tone": {
+          "n": 10,
+          "preference_score": 35.0
+        },
+        "Attitude::enthusiastic tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Attitude::perfunctory tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Attitude::polite tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::rude tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Attitude::sarcastic tone": {
+          "n": 10,
+          "preference_score": 35.0
+        },
+        "Attitude::sincere tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::teasing tone": {
+          "n": 10,
+          "preference_score": 70.0
+        },
+        "Cognitive State::anxious tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Cognitive State::confident tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Cognitive State::confused tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::curious tone": {
+          "n": 10,
+          "preference_score": 30.0
+        },
+        "Cognitive State::doubting tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::helpless tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::hesitant tone": {
+          "n": 10,
+          "preference_score": 20.0
+        },
+        "Cognitive State::nervous tone": {
+          "n": 10,
+          "preference_score": 75.0
+        },
+        "Cognitive State::tired tone": {
+          "n": 10,
+          "preference_score": 70.0
+        }
+      },
+      "wins": 79,
+      "ties": 19,
+      "losses": 82,
+      "complete": true
+    },
+    "18242424242": {
+      "n_attributes": 18,
+      "n_items": 180,
+      "macro_preference": 50.55555555555556,
+      "lower_95": 40.55555555555556,
+      "upper_95": 60.27777777777777,
+      "repeats": 10000,
+      "by_attribute": {
+        "Attitude::cold tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Attitude::contemptuous tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Attitude::enthusiastic tone": {
+          "n": 10,
+          "preference_score": 70.0
+        },
+        "Attitude::perfunctory tone": {
+          "n": 10,
+          "preference_score": 30.0
+        },
+        "Attitude::polite tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::rude tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Attitude::sarcastic tone": {
+          "n": 10,
+          "preference_score": 80.0
+        },
+        "Attitude::sincere tone": {
+          "n": 10,
+          "preference_score": 35.0
+        },
+        "Attitude::teasing tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::anxious tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::confident tone": {
+          "n": 10,
+          "preference_score": 35.0
+        },
+        "Cognitive State::confused tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Cognitive State::curious tone": {
+          "n": 10,
+          "preference_score": 30.0
+        },
+        "Cognitive State::doubting tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Cognitive State::helpless tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Cognitive State::hesitant tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Cognitive State::nervous tone": {
+          "n": 10,
+          "preference_score": 15.0
+        },
+        "Cognitive State::tired tone": {
+          "n": 10,
+          "preference_score": 80.0
+        }
+      },
+      "wins": 74,
+      "ties": 34,
+      "losses": 72,
+      "complete": true
+    },
+    "19242424242": {
+      "n_attributes": 18,
+      "n_items": 180,
+      "macro_preference": 55.27777777777778,
+      "lower_95": 45.55555555555555,
+      "upper_95": 64.72222222222223,
+      "repeats": 10000,
+      "by_attribute": {
+        "Attitude::cold tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::contemptuous tone": {
+          "n": 10,
+          "preference_score": 20.0
+        },
+        "Attitude::enthusiastic tone": {
+          "n": 10,
+          "preference_score": 80.0
+        },
+        "Attitude::perfunctory tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Attitude::polite tone": {
+          "n": 10,
+          "preference_score": 75.0
+        },
+        "Attitude::rude tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Attitude::sarcastic tone": {
+          "n": 10,
+          "preference_score": 70.0
+        },
+        "Attitude::sincere tone": {
+          "n": 10,
+          "preference_score": 55.00000000000001
+        },
+        "Attitude::teasing tone": {
+          "n": 10,
+          "preference_score": 75.0
+        },
+        "Cognitive State::anxious tone": {
+          "n": 10,
+          "preference_score": 50.0
+        },
+        "Cognitive State::confident tone": {
+          "n": 10,
+          "preference_score": 65.0
+        },
+        "Cognitive State::confused tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::curious tone": {
+          "n": 10,
+          "preference_score": 40.0
+        },
+        "Cognitive State::doubting tone": {
+          "n": 10,
+          "preference_score": 60.0
+        },
+        "Cognitive State::helpless tone": {
+          "n": 10,
+          "preference_score": 25.0
+        },
+        "Cognitive State::hesitant tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Cognitive State::nervous tone": {
+          "n": 10,
+          "preference_score": 45.0
+        },
+        "Cognitive State::tired tone": {
+          "n": 10,
+          "preference_score": 65.0
+        }
+      },
+      "wins": 85,
+      "ties": 29,
+      "losses": 66,
+      "complete": true
+    }
+  },
+  "pooled": {
+    "n_attributes": 18,
+    "n_items": 180,
+    "macro_preference": 51.5,
+    "lower_95": 45.38888888888889,
+    "upper_95": 57.55555555555555,
+    "repeats": 10000,
+    "by_attribute": {
+      "Attitude::cold tone": {
+        "n": 10,
+        "preference_score": 41.0
+      },
+      "Attitude::contemptuous tone": {
+        "n": 10,
+        "preference_score": 34.0
+      },
+      "Attitude::enthusiastic tone": {
+        "n": 10,
+        "preference_score": 59.0
+      },
+      "Attitude::perfunctory tone": {
+        "n": 10,
+        "preference_score": 38.0
+      },
+      "Attitude::polite tone": {
+        "n": 10,
+        "preference_score": 63.99999999999999
+      },
+      "Attitude::rude tone": {
+        "n": 10,
+        "preference_score": 51.0
+      },
+      "Attitude::sarcastic tone": {
+        "n": 10,
+        "preference_score": 62.0
+      },
+      "Attitude::sincere tone": {
+        "n": 10,
+        "preference_score": 48.00000000000001
+      },
+      "Attitude::teasing tone": {
+        "n": 10,
+        "preference_score": 65.00000000000001
+      },
+      "Cognitive State::anxious tone": {
+        "n": 10,
+        "preference_score": 51.0
+      },
+      "Cognitive State::confident tone": {
+        "n": 10,
+        "preference_score": 54.99999999999999
+      },
+      "Cognitive State::confused tone": {
+        "n": 10,
+        "preference_score": 54.0
+      },
+      "Cognitive State::curious tone": {
+        "n": 10,
+        "preference_score": 38.0
+      },
+      "Cognitive State::doubting tone": {
+        "n": 10,
+        "preference_score": 55.00000000000001
+      },
+      "Cognitive State::helpless tone": {
+        "n": 10,
+        "preference_score": 50.0
+      },
+      "Cognitive State::hesitant tone": {
+        "n": 10,
+        "preference_score": 43.0
+      },
+      "Cognitive State::nervous tone": {
+        "n": 10,
+        "preference_score": 48.0
+      },
+      "Cognitive State::tired tone": {
+        "n": 10,
+        "preference_score": 71.00000000000001
+      }
+    }
+  },
+  "positive_seeds": 3,
+  "fidelity_main_minus_random": {
+    "15242424242": {
+      "n": 180,
+      "candidate_mean_wer": 0.1950932400932401,
+      "baseline_mean_wer": 0.18863560821894154,
+      "mean_degradation": 0.006457631874298539
+    },
+    "16242424242": {
+      "n": 180,
+      "candidate_mean_wer": 0.1950932400932401,
+      "baseline_mean_wer": 0.20081153414486744,
+      "mean_degradation": -0.005718294051627384
+    },
+    "17242424242": {
+      "n": 180,
+      "candidate_mean_wer": 0.1950932400932401,
+      "baseline_mean_wer": 0.20120114453447788,
+      "mean_degradation": -0.0061079044412377746
+    },
+    "18242424242": {
+      "n": 180,
+      "candidate_mean_wer": 0.1950932400932401,
+      "baseline_mean_wer": 0.19700261158594493,
+      "mean_degradation": -0.0019093714927048244
+    },
+    "19242424242": {
+      "n": 180,
+      "candidate_mean_wer": 0.1950932400932401,
+      "baseline_mean_wer": 0.19621938246938248,
+      "mean_degradation": -0.0011261423761423797
+    }
+  },
+  "failures": {
+    "15242424242": [],
+    "16242424242": [],
+    "17242424242": [],
+    "18242424242": [],
+    "19242424242": []
+  },
+  "all_complete": true,
+  "claim_rule": "pooled hierarchical 95% CI above 50% and >50% macro preference for at least 4/5 seeds",
+  "claim_passes": false,
+  "decision": "no_reliable_parageo_advantage",
+  "limitations": [
+    "All expanded input instructions use one synthetic neutral TTS voice."
+  ]
+}

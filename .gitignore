@@ -1,3 +1,4 @@
+.venv
 .venv/
 .worktrees/
 __pycache__/
