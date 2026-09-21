@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "Please cite this research code when using the ParaGeo implementation or recorded result summaries."
+type: software
+title: "ParaGeo: Decomposing Paralinguistic Variation into a Shared Latent Geometry"
+authors:
+  - family-names: Liu
+    given-names: Yuhan
+  - family-names: Ou
+    given-names: Yuxuan
+  - family-names: Su
+    given-names: Ruoxi
+  - family-names: Zaki
+    given-names: Mohamed Ahmed
+  - family-names: Long
+    given-names: Yunbo
+repository-code: "https://github.com/yuhanlydia/speech-negotiation-kv"
+url: "https://github.com/yuhanlydia/speech-negotiation-kv"
+abstract: >-
+  Research implementation and recorded result summaries for matched-content
+  decomposition of paralinguistic variation in a frozen speech language model.
+  ParaGeo combines audio-token replay, K/V pooling, within-content centering,
+  a shared low-rank basis, and content-associated projection. The repository
+  separates fixed-basis representation probes from generation interventions.
+keywords:
+  - paralinguistic representation
+  - speech language models
+  - latent geometry
+  - activation steering
+  - reproducibility
