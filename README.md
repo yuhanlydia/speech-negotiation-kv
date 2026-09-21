@@ -1,190 +1,112 @@
-# ParaGeo — ICASSP 2027
+<div align="center">
 
-**Compositional Paralinguistic Geometry for Controllable Speech Generation**
+# ParaGeo
+### Decomposing Paralinguistic Variation into a Shared Latent Geometry
 
-Current experiment version: **`icassp2027-r2-reviewer-controls`**.
+**Yuhan Liu · Yuxuan Ou · Ruoxi Su · Mohamed Ahmed Zaki · Yunbo Long**
 
-This repository is frozen around the ICASSP 2027 four-page submission. The paper asks whether a pretrained speech language model contains a shared, content-invariant geometry for broad paralinguistic behavior, and whether that geometry supports training-free **unseen attribute composition** and **intra-utterance dynamic control**.
+[Quick start](#quick-start-no-gpu) · [Results](docs/PARAGEO_RESULTS.md) · [Reproduction guide](docs/PARAGEO_REPRODUCIBILITY.md) · [Research history](docs/PARAGEO_HISTORY.md) · [Citation](#citation)
 
-The older CRAD speech-negotiation experiments remain only as discovery history. Gate F/F2 were negative and should not be rerun for favorable seeds.
+**Frozen speech model · Shared coordinates · Reproducible measurements**
 
-## Paper claim
+</div>
 
-For matched lexical content `x` and paralinguistic control `a`, ParaGeo centers the internal speech representation within content,
+## Overview
 
-\[
-\tilde h(x,a)=h(x,a)-\mathbb E_{a'}[h(x,a')],
-\]
+**Do different ways of saying the same words share a reusable internal structure?**
 
-fits a low-rank shared basis, and removes a semantic content subspace. Each vocal behavior is represented by a coordinate `c_a` in the resulting basis.
+ParaGeo studies this question in GLM-4-Voice. It synthesizes matched-content renditions, replays their audio tokens under a common listening prompt, and extracts pooled key/value representations. Within-sentence centering, low-rank decomposition, and projection against a content-associated reference express requested attributes in a shared coordinate system. The speech-model weights remain frozen.
 
-The ICASSP paper tests:
+The repository contains the implementation, experiment configurations, tests, and recorded result summaries. Its historical name, `speech-negotiation-kv`, is retained so existing links and experiment paths keep working. The present focus is **paralinguistic representation analysis**, with separately evaluated generation interventions.
 
-1. **Static control**
-   \[
-   \Delta h=\alpha B_{\rm para}c_a.
-   \]
-2. **Unseen composition**
-   \[
-   c_{a_1+\cdots+a_m}=\sum_i c_{a_i}.
-   \]
-3. **Dynamic control**
-   \[
-   c_t=(1-\lambda_t)c_a+\lambda_t c_b.
-   \]
-
-Activation steering itself is not claimed as novel. The contribution is the **shared content-invariant geometry**, plus its compositional and time-varying use.
-
-## Current empirical status
-
-Historical discovery evidence:
-
-- vocal causal channel: **PASS**;
-- shared action-side vocal-strategy K/V geometry: **STRONG PASS** (held-out six-way decoding median `0.8500`, chance `0.1667`; `126/126` scenario splits above shuffled p95; `15/15` pairwise style directions BH-FDR significant);
-- immediate-to-terminal alignment in CRAD: **STRONG PASS**;
-- negotiation selector/search Gate F/F2: **NEGATIVE**.
-
-Real GLM-4-Voice waveform development runs also established a safe steering regime. The composition dev subset has **zero additional text-channel WER for every tested alpha**; dynamic has safe settings at `0.25`, `1.0`, and `1.5`; static is safest at `1.5`. These are fidelity results, not yet a held-out control-score claim.
-
-## ICASSP r2 reviewer controls
-
-Two reviewer-critical controls are now part of the default pipeline.
-
-### 1. Shuffled geometry null
-
-During geometry fitting, attribute labels are **independently permuted within each lexical content**. This preserves each sentence's marginal activation structure while destroying cross-content attribute identity. The summary reports real vs null:
-
-- leave-one-content-out (LOCO) attribute decoding;
-- same-attribute cross-content cosine;
-- permutation p-values.
-
-Default: `1000` permutations with frozen seed `15242424242`.
-
-### 2. Norm-matched full-space composition baseline
-
-For composition only, the pipeline now evaluates ordinary full-dimensional mean-difference vector addition:
-
-\[
-d^{\rm full}_{a+b}=d^{\rm full}_a+d^{\rm full}_b.
-\]
-
-The resulting vector is **norm-matched per sample** to the corresponding ParaGeo direction before intervention. Therefore the comparison tests directional structure rather than injection magnitude.
-
-Held-out composition now compares:
-
-- prompt-only;
-- ParaGeo;
-- norm-matched random direction;
-- **norm-matched full-space vector addition**.
-
-The final summary reports ParaGeo's preference advantage over this full-space baseline.
-
-## Backbone and benchmark
-
-- Backbone: `zai-org/glm-4-voice-9b`, NF4/int4.
-- Official waveform path: benchmark WAV -> Whisper-VQ -> GLM-4-Voice-9B -> Flow/HiFT -> 22.05-kHz WAV.
-- Benchmark: SpeechParaling-Bench English.
-- Main tasks:
-  - `para_con/short_sin`: static single-attribute control;
-  - `para_con/short_multi`: unseen multi-attribute composition;
-  - `dyn_var`: dynamic variation.
-- Current catalog: 80 reusable controls across 12 dimensions.
-
-## Frozen protocol
-
-After catalog filtering:
-
-```text
-dev:     eligible index % 5 == 0
-heldout: all remaining eligible items
+```mermaid
+flowchart LR
+    A["Same target sentence<br/>Different vocal requests"] --> B["Synthesize speech<br/>Frozen GLM-4-Voice"]
+    B --> C["Replay audio tokens<br/>Common listening prompt"]
+    C --> D["Pool audio-position K/V<br/>Center within sentence"]
+    D --> E["Shared low-rank basis<br/>Content-associated projection"]
+    E --> F["Attribute coordinates"]
+    F --> G["Cross-content probes"]
+    F --> H["Static / additive / temporal<br/>generation interventions"]
 ```
 
-Development selects alpha independently for each task from:
+*Method schematic. Replay-time representation measurements and generation-time interventions are separate experiments.*
 
-```text
-0.25, 0.5, 1.0, 1.5
-```
+## Recorded findings
 
-using the official SpeechParaling pairwise judge subject to mean text-channel WER degradation `<= 0.02`. Held-out data never change hyperparameters.
+The broad probe crosses **80 requested controls from 12 families** with **eight fixed sentences**. It retains **590 representation records** from 640 requested pairs. This is an author-constructed probe using benchmark-derived request labels, not an official 80-way recognition benchmark.
 
-Main methods:
+| Representation | 80-way centroid accuracy | Same-label cross-content cosine |
+|---|---:|---:|
+| Content-centered full K/V | 11.69% | 0.152 |
+| Shared 16-dimensional coordinates | 9.49% | 0.285 |
 
-- `prompt_only`
-- `main` ParaGeo: semantic-orthogonal rank-16 basis, all six layers
-- `random`: norm-matched random direction
-- `full_space`: **composition only**, norm-matched raw full-dimensional vector addition
+For the projected representation, the within-content permutation means are **1.247%** and **0.017**, respectively; both conditional tests report **p = 1/1001**. The basis is fitted once on the full calibration pool; label centroids are held out by sentence. These are fixed-basis cross-content measurements, not fold-wise refitting of the projection.
 
-Fixed ablations (first 24 benchmark-index-sorted held-out eligible items per task):
+A separate six-style CRAD discovery study reports **85.0% median cross-scenario decoding**, versus 16.7% uniform chance, and reproducible style-contrast directions. The dialogue study motivates the broader probe; its label space and scenarios differ from the 80-control calibration.
 
-- no semantic orthogonalization (`raw_basis`)
-- rank `4/8/16/32`
-- early `[16,20]`, middle `[24,28]`, late `[32,36]`, all six layers
-- composition: sum / mean / unit-normalized sum
-- dynamic: scheduled trajectory / static start / static end / static midpoint
+**Sources:** [geometry summary](results/parageo_basis_summary.json), [six-style report](results/gate_d_strategy_geometry_report.md). The [results guide](docs/PARAGEO_RESULTS.md) maps each finding to its source and includes all generation comparisons. Current intervention results show attribute- and configuration-specific responses, rather than an established aggregate advantage over norm-matched controls.
 
-## Evaluation
+## Quick start (no GPU)
 
-The wrapper calls the official SpeechParaling English pairwise judge and changes only runtime file paths. It does not rewrite the upstream evaluation prompt.
-
-Candidate win/tie/loss is mapped to `1 / 0.5 / 0`, giving a 0--100 preference score where 50 is parity. The pipeline reports sample-level 10,000-repeat bootstrap 95% CIs, per-dimension preference, and paired text-channel WER degradation.
-
-A core task passes the paper gate only if:
-
-- static/composition gain is at least `+5`, or dynamic gain at least `+8`;
-- mean WER degradation is `<= 0.02`;
-- norm-matched random steering stays below the threshold and below ParaGeo.
-
-For the **composition geometry claim**, also report ParaGeo minus full-space preference. If full-space vector addition matches ParaGeo, do not claim that the low-rank geometry itself is necessary.
-
-## One-command run
+Read and inspect the released summaries without downloading a model or invoking a judge:
 
 ```bash
-git pull origin main
-source .venv/bin/activate
-pip install -e '.[dev,glm,parageo]'
-pytest -q
-python -m compileall -q src scripts
-
-export GLM_VOICE_REPO=/absolute/path/to/GLM-4-Voice
-export GLM_VOICE_DECODER=/absolute/path/to/glm-4-voice-decoder
-export SPEECHPARALING_ROOT=/absolute/path/to/SpeechParaling-Bench
-
-python scripts/run_icassp2027_all.py --stage all --dry-run
-python scripts/run_icassp2027_all.py --stage all
+git clone https://github.com/yuhanlydia/speech-negotiation-kv.git
+cd speech-negotiation-kv
+python -m json.tool results/parageo_basis_summary.json
 ```
 
-Stages remain resumable:
+Print the primary projected-probe statistics with the Python standard library:
 
 ```bash
-python scripts/run_icassp2027_all.py --stage geometry
-python scripts/run_icassp2027_all.py --stage dev
-python scripts/run_icassp2027_all.py --stage main
-python scripts/run_icassp2027_all.py --stage ablations
-python scripts/run_icassp2027_all.py --stage judge
-python scripts/run_icassp2027_all.py --stage summarize
+python - <<'PY'
+import json
+from pathlib import Path
+
+summary = json.loads(Path("results/parageo_basis_summary.json").read_text())
+probe = summary["shuffled_geometry_null"]
+print(f"Calibration: {summary['rows']} records, {summary['attributes']} labels")
+print(f"Projected accuracy: {100 * probe['real']['loco_accuracy']:.2f}%")
+print(f"Cross-content cosine: {probe['real']['cross_content_cosine']:.3f}")
+print(f"Conditional p-values: {probe['p_value']}")
+PY
 ```
 
-## Outputs
+This inspects saved results; it does not rerun the original experiments. For numerical tests, saved-feature analysis, or new GPU generation, follow the [reproduction guide](docs/PARAGEO_REPRODUCIBILITY.md). Start with its dry-run and artifact checks rather than an unattended full experiment run.
 
-After `summarize`:
+## What is available?
 
-```text
-results/parageo_basis_summary.json              # includes shuffled geometry null
-results/icassp2027/summary.json                 # includes full-space composition baseline
-paper/generated/main_results.tex
-paper/generated/geometry_table.tex
-paper/generated/ablation_table.tex
-paper/generated/result_macros.tex
+| Resource | Location |
+|---|---|
+| Geometry construction and diagnostics | [`src/speech_negotiation_kv/parageo.py`](src/speech_negotiation_kv/parageo.py) |
+| K/V recording and intervention hooks | [`src/speech_negotiation_kv/kv_hooks.py`](src/speech_negotiation_kv/kv_hooks.py) |
+| Main experiment configuration | [`configs/icassp2027_parageo.yaml`](configs/icassp2027_parageo.yaml) |
+| Generation, variants, and evaluation | [`scripts/`](scripts/) and [`src/speech_negotiation_kv/`](src/speech_negotiation_kv/) |
+| Geometry measurements | [`results/parageo_basis_summary.json`](results/parageo_basis_summary.json) |
+| Task results and ablations | [`results/icassp2027/summary.json`](results/icassp2027/summary.json) |
+| Balanced 18-label, five-control study | [`results/icassp2027_static_power/summary.json`](results/icassp2027_static_power/summary.json) |
+| Tests | [`tests/`](tests/) |
+| Historical manuscript drafts | [`paper/`](paper/README.md) |
+
+The reported experiments correspond to snapshot [`b71c6cc`](https://github.com/yuhanlydia/speech-negotiation-kv/tree/b71c6cc5a1faf51f3e95245068b4c9c9241f8c0e). Documentation updates do not constitute new experimental runs. Raw local K/V arrays, generated waveforms, model weights, and complete run-level judge metadata are **not bundled with this public summary release**. See the [artifact and measurement notes](docs/PARAGEO_REPRODUCIBILITY.md#artifact-and-measurement-notes).
+
+## Citation
+
+The author order follows the current manuscript. This entry identifies the research code; it does not assert conference acceptance or an assigned DOI.
+
+```bibtex
+@misc{liu2026parageo,
+  title        = {ParaGeo: Decomposing Paralinguistic Variation into a Shared Latent Geometry},
+  author       = {Liu, Yuhan and Ou, Yuxuan and Su, Ruoxi and Zaki, Mohamed Ahmed and Long, Yunbo},
+  year         = {2026},
+  howpublished = {Research code and result summaries},
+  url          = {https://github.com/yuhanlydia/speech-negotiation-kv}
+}
 ```
 
-Key implementation files:
+Machine-readable author and repository metadata are provided in [`CITATION.cff`](CITATION.cff).
 
-- `src/speech_negotiation_kv/icassp_reviewer_controls.py` — shuffled null + norm-matched full-space composition;
-- `src/speech_negotiation_kv/icassp_variants.py` — rank/raw/layer/composition/dynamic variants;
-- `src/speech_negotiation_kv/icassp_eval.py` — judge aggregation and LaTeX output;
-- `scripts/fit_parageo_basis.py` — geometry fit + null test;
-- `scripts/run_icassp_generation.py` — main/ablation/full-space generation;
-- `scripts/run_icassp2027_all.py` — one-command orchestrator;
-- `scripts/summarize_icassp2027.py` — final JSON + paper tables.
+## Questions and reuse
 
-The supplied ICASSP template permits four content pages plus a fifth references-only page; keep all experimental analysis inside the four content pages.
+For a reproducibility issue, include the repository commit, command, environment, and relevant item or branch IDs. Do not post API keys, private audio, or credentials in an issue. The repository currently does not include a license grant; contact the authors about reuse permissions. External models and datasets remain subject to their own terms.
